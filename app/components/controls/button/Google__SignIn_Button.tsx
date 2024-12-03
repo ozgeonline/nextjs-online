@@ -1,6 +1,6 @@
 "use client"
 
-import {Button, ButtonGroup} from "@nextui-org/button";
+import {Button} from "@nextui-org/button";
 import Image from "next/image"
 import GoogleIcon from "../../../../public/google.svg"
 import { signIn } from "next-auth/react"
