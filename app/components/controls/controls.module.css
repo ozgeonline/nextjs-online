@@ -1,0 +1,23 @@
+.input-field {
+  font-size: 16px;
+  opacity: 80%;
+  color: white;
+  border-radius: 4px;
+  transition: all .2s ease;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.input-field:focus::placeholder {
+    font-size: 12px;
+    position: absolute;
+    top: 0.2rem;
+    left: 1.5rem;
+    transition: all .2s ease;
+    color: #8c8c8c;
+}
+.input-field:focus {
+  background-color: #444;
+  opacity: .9;
+}
+

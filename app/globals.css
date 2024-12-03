@@ -2,20 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    --background: 240 10% 3.9%;                   /*#08080a*/
+    --foreground: 0 0% 98%;                       /*#f9f9f9*/
+    --card: 240 10% 3.9%;                         /*#08080a*/
+    --card-foreground: 0 0% 98%;                  /*#f9f9f9*/
+    --popover: 240 10% 3.9%;                      /*#08080a*/
+    --popover-foreground: 0 0% 98%;               /*#f9f9f9*/
+    --primary: 0 0% 98%;                          /*#f9f9f9*/
+    --primary-foreground: 240 5.9% 10%;           /*#17171b*/
+    --secondary: 240 3.7% 15.9%;                  /*#27272a*/
+    --secondary-foreground: 0 0% 98%;             /*#f9f9f9*/
+    --muted: 240 3.7% 15.9%;                      /*#27272a*/
+    --muted-foreground: 240 5% 64.9%;             /*#a1a1a9*/
+    --accent: 240 3.7% 15.9%;                     /*#27272a*/
+    --accent-foreground: 0 0% 98%;                /*#f9f9f9*/
+    --destructive: 0 62.8% 30.6%;                 /*#7f1d1d*/
+    --destructive-foreground: 0 0% 98%;           /*#f9f9f9*/
+    --border: 240 3.7% 15.9%;                     /*#27272a*/
+    --input: 240 3.7% 15.9%;                      /*#27272a*/
+    --ring: 240 4.9% 83.9%;                       /*#d3d3d7*/
+    --inputInfoError: 357, 82%, 57%;              /*#eb3942*/
+    --inputInfoSuccess: 150, 62%, 45%;            /*#2bb871*/
+    --main_red: 357, 92%, 47%;                    /*#e50914*/
+    --main_dark: 0, 0%, 8%;                       /*#141414*/
+    --main_white_100: 60, 100%, 99%;              /*#fffff9*/
+    --main_white_300: 0, 0%, 74%;                 /*#bcbcbc*/
+    --main_match_color: 135, 62%, 55%;            /*#46d369*/
+    --main_login_input_info_color: 32, 97%, 46%;  /*#e87c03*/
+
+    --radius: 0.5rem;
+    overflow-x: hidden;
+  }
+ 
+  .dark {
+    --background: 240 10% 3.9%;                  /*#08080a*/
+    --foreground: 0 0% 98%;                      /*#f9f9f9*/
+    --card: 240 10% 3.9%;                        /*#08080a*/
+    --card-foreground: 0 0% 98%;                 /*#f9f9f9*/
+    --popover: 240 10% 3.9%;                     /*#08080a*/
+    --popover-foreground: 0 0% 98%;              /*#f9f9f9*/
+    --primary: 0 0% 98%;                         /*#f9f9f9*/
+    --primary-foreground: 240 5.9% 10%;          /*#17171b*/
+    --secondary: 240 3.7% 15.9%;                 /*#27272a*/
+    --secondary-foreground: 0 0% 98%;            /*#f9f9f9*/
+    --muted: 240 3.7% 15.9%;                     /*#27272a*/
+    --muted-foreground: 240 5% 64.9%;            /*#a1a1a9*/
+    --accent: 240 3.7% 15.9%;                    /*#27272a*/
+    --accent-foreground: 0 0% 98%;               /*#f9f9f9*/
+    --destructive: 0 62.8% 30.6%;                /*#7f1d1d*/
+    --destructive-foreground: 0 0% 98%;          /*#f9f9f9*/
+    --border: 240 3.7% 15.9%;                    /*#27272a*/
+    --input: 240 3.7% 15.9%;                     /*#27272a*/
+    --ring: 240 4.9% 83.9%;                      /*#d3d3d7*/
+    --inputInfoError: 357, 82%, 57%;             /*#eb3942*/
+    --inputInfoSuccess: 150, 62%, 45%;           /*#2bb871*/
+    --main_red: 357, 92%, 47%;                   /*#e50914*/
+    --main_dark: 0, 0%, 8%;                      /*#141414*/
+    --main_white_100: 60, 100%, 99%;             /*#fffff9*/
+    --main_white_300: 0, 0%, 74%;                /*#bcbcbc*/
+    --main_match_color: 135, 62%, 55%;           /*#46d369*/
+    --main_login_input_info_color: 32, 97%, 46%; /*#e87c03*/
+
+    --radius: 0.5rem;
+    overflow-x: hidden;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #141414;
     --foreground: #ededed;
   }
+}
+
+* {
+  @apply border-border;
+  box-sizing: border-box;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+canvas {
+  width: 100%;
 }
