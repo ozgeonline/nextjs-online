@@ -1,0 +1,111 @@
+// Prisma generator configuration
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+// Database source configuration
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
+}
+
+// User-related models
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String? @db.Text
+  access_token             String? @db.Text
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String? @db.Text
+  session_state            String?
+  refresh_token_expires_in Int?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@schema("auth")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("auth")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[] // Relation to Account model
+  sessions      Session[] // Relation to Session model
+ 
+
+  @@schema("auth")
+}
+
+// Application-related models
+model Movie {
+  id           Int            @id @unique @default(autoincrement())
+  imageString  String
+  title        String         @unique
+  age          Int
+  duration     Float
+  overview     String
+  release      Int
+  videoSource  String
+  category     String
+  cast         String
+  genres       String
+  WatchLists   WatchList[] // Relation to WatchList model
+
+  createdAt DateTime @default(now())
+
+  @@schema("public")
+
+  WatchHistory WatchHistory[]
+}
+
+model WatchList {
+  id     String @id @default(uuid())
+  userId String @unique
+  movieId Int? @unique
+  Movie   Movie? @relation(fields: [movieId], references: [id])
+
+  @@schema("public")
+}
+
+model WatchHistory {
+  id           String @id @default(uuid())
+  userId       String
+  WatchHistory String
+  videoSource  String
+
+  Movie   Movie? @relation(fields: [movieId], references: [id])
+  movieId Int?
+
+  createdAt DateTime @default(now())
+
+  @@schema("public")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@schema("public")
+}

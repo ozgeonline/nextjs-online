@@ -1,3 +1,6 @@
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/utils/auth";
+import { redirect } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import dynamic from "next/dynamic";
 
@@ -8,6 +11,11 @@ const Footer = dynamic(() => import("@/app/components/ui/Footer"));
 
 
 export default async function Tr() {
+  const session = await getServerSession(authOptions);
+  if (session) {
+    return redirect("/home")
+  }
+  
   return (
     <div className="flex flex-col">
       <div className="flex flex-col text-center items-center justify-center h-[80vh] sm:h-[95vh] px-8 space-y-8 sm:space-y-4">
