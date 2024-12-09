@@ -3,15 +3,15 @@
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { memo } from "react"
-import styles from "../controls.module.css"
+import styles from "./controlsInput.module.css"
 
-const GithubSignInButton = dynamic(() => import("../../../components/controls/button/Github__SignIn_Button"));
-const GoogleSignInButton = dynamic(() => import("../../../components/controls/button/Google__SignIn_Button"));
+const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/Github__SignIn_Button"));
+const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/Google__SignIn_Button"));
 const LoginInputModal = dynamic(() => import("./LoginInputModal"));
-const Footer = dynamic(() => import("@/app/components/ui/Footer"));
+const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
+
 type formInfo = {
   title: string
-  buttonTitle: string
   linkTitle: string
   linkInfo: string
   linkRef: string
@@ -19,31 +19,26 @@ type formInfo = {
 
 const UserAuthLoginPage = ({
   title,
-  buttonTitle,
   linkTitle,
   linkInfo,
   linkRef
 }: formInfo) => {
   return (
     <div className="mt-0 md:mt-28 z-10">
-      <div 
-        className={`
-          ${styles['form-wrapper-style']}
-        `}
-      >
+      <div className={`${styles['form-wrapper-style']} `}>
         <form 
           method="post"
           action="/api/auth/signin"
           encType="multipart/form-data"
-          className="w-full md:w-[314px]"
+          className="w-full md:w-80"
         >
-          <h1 className="text-3xl font-semibold text-white pt-2 ">
+          <h1 className="text-3xl font-semibold text-white pt-2">
             {title}
           </h1>
           <div className="space-y-7 mt-5">
             <LoginInputModal
-              inputStyle="bg-[#333] md:w-[314px] py-3"
               inputWrapper="relative"
+              inputStyle="bg-main-gray md:w-80 py-3 px-6"
               errorMsgColor="text-main-login_input_info_color"
               validValueColor="border-none"
               invalidValueColor="border-b-2 border-main-login_input_info_color outline-none"
@@ -54,14 +49,14 @@ const UserAuthLoginPage = ({
                 placeholder="Password"
                 autoComplete="off"
                 disabled
-                className="input-field bg-[#333] opacity-80 rounded-sm w-full md:w-[314px] py-3 px-6 cursor-not-allowed mt-8"
+                className="bg-main-gray opacity-80 rounded-sm w-full md:w-80 py-3 px-6 cursor-not-allowed mt-8"
               />
             </LoginInputModal>
             <button
               type="submit"
-              className="bg-main-red w-full md:w-[314px] py-3 rounded-sm"
+              className="bg-main-red w-full md:w-80 py-3 rounded-sm"
             >
-              {buttonTitle}
+              {title}
             </button>
             <div className="flex justify-between">
               <div className="flex items-center space-x-2">
@@ -87,6 +82,7 @@ const UserAuthLoginPage = ({
             </div>
           </div>
         </form>
+
         <div className="text-muted-foreground text-xs min-[280px]:text-sm mt-2">
           {linkTitle}
           <Link 
@@ -97,12 +93,14 @@ const UserAuthLoginPage = ({
             {linkInfo}
           </Link>
         </div>
+
         <div className="flex w-full justify-center items-center gap-x-3 mt-6">
           <GithubSignInButton />
           <GoogleSignInButton />
         </div>
-        <div className="text-muted-foreground text-xs mt-5 w-full md:w-[314px]">
-          This page is protected by Google reCAPTCHA to ensure you&apos;re not a bot. 
+
+        <div className="text-muted-foreground text-xs mt-5 w-full md:w-80">
+          This page is protected by Google reCAPTCHA to ensure you are not a bot. 
           <span className="text-blue-600 hover:underline hover:cursor-pointer">
             Learn more.
           </span>

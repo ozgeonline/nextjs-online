@@ -1,20 +1,16 @@
 import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Montserrat } from "next/font/google";
-// import logo from "../public/o-logo.png"
-// import localFont from "next/font/local";
 import "./globals.css";
+import { NextAuthProvider } from "./components/providers/NextAuthProvider";
 
 const nextFont = Montserrat({
   style: ['normal', 'italic'],
   subsets: ['latin'],
   weight: ['400', '700'],
+  preload:false
 })
-// const nextFont = localFont({
-//   src: "../app/fonts/JTUQjIg1_i6t8kCHKm459WxRxy7m0dR9pBOi.woff2",
-//   variable: "--font-next",
-//   weight: "400 700",
-// });
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -29,12 +25,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="shortcut icon" href="../public/o-logo.png" />
+        <link rel="shortcut icon" href="https://gnubvphzxvsihriukkdr.supabase.co/storage/v1/object/public/nextjs/o-logo.png" />
       </head>
       <body className={nextFont.className}>
-            {children}
-        {/* <NextAuthProvider>
-        </NextAuthProvider> */}
+        <NextAuthProvider>
+          {children}
+        </NextAuthProvider>
         <SpeedInsights />
       </body>
     </html>

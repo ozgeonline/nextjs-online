@@ -13,7 +13,6 @@ export default async function Login() {
   return (
     <AuthLoginPage
       title="Log in"
-      buttonTitle="Log in"
       linkTitle="Need help? "
       linkInfo="Sign up now!"
       linkRef="/sign-up"

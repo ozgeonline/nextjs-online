@@ -29,7 +29,7 @@ export default function Logo_Img({logoStyle}:logoProps) {
           aria-label="logo"
         ></div>
       )}
-      <Link as="image" href="/" className={logoStyle} >
+      <Link href="/" className={logoStyle} prefetch={false}>
         <Image
           onLoad={handleImageLoad}
           onError={handleImageError}

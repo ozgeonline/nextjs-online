@@ -11,7 +11,7 @@ import {
 } from "react";
 
 import debounce from 'lodash.debounce';
-import styles from "../controls.module.css"
+import styles from "./controlsInput.module.css"
 
 type UserLoginInputModalProps = {
   children?:ReactNode
@@ -97,18 +97,14 @@ export default function LoginInputModal({
           htmlFor="email"
           className={`
             ${errorMsgColor}
-            absolute top-14 left-0 w-full max-w-[370px] text-xs sm:text-sm text-start
+            absolute top-14 left-0 w-full max-w-96 text-[10px] sm:text-sm text-start
           `}
         >
           Please enter a valid email address.
         </label>
       )}
 
-      <div 
-        className={`
-          ${isTouched && !emailIsValid && "max-sm:mt-7"}
-        `}
-      >
+      <div className={`${isTouched && !emailIsValid && "max-sm:mt-7"}`}>
         {children}
       </div>
     </div>

@@ -2,7 +2,9 @@ import { Languages } from "lucide-react"
 
 export default function Lang__Select () {
   return (
-    <div className="flex items-center relative space-x-3 bg-main-dark/70 border border-gray-500 rounded-sm">
+    <div 
+      className="flex items-center relative space-x-3 bg-main-dark/80 border border-muted-foreground rounded-sm"
+    >
       <Languages className="absolute size-4 ml-2" />
       <label 
         htmlFor="language" 

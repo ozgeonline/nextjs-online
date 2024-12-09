@@ -1,0 +1,15 @@
+.iconBtn {
+  background-color: transparent;
+  border: 1px solid ;
+  transition: all ease-in;
+}
+
+.iconBtn:hover {
+  background-color: transparent;
+  filter: brightness(1.1);
+  border: 2px solid ;
+}
+
+/* .signupBtn {
+
+} */

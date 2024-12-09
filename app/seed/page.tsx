@@ -631,7 +631,7 @@ export default function SeedDatabase() {
   return (
     <div className="m-5 flex flex-col">
       <form action={postData}>
-        <button type="submit">Submit</button>
+        <button className="border " type="submit">Submit</button>
       </form>
     </div>
   );

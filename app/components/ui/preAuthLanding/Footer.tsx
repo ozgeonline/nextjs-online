@@ -1,7 +1,7 @@
 import links from "@/app/data/footerLinks"
 import dynamic from "next/dynamic";
 
-const Lang_Select = dynamic(() => import("@/app/components/ui/Lang_Selection"));
+const Lang_Select = dynamic(() => import("@/app/components/ui/preAuthLanding/Lang_Selection"));
 
 export default function Footer() {
   return (
@@ -21,7 +21,7 @@ export default function Footer() {
           <Lang_Select/>
         </div>
         <p className="text-main-white_100 text-sm mt-5">
-          ozgeonline Türkiye
+          ozgeonline
         </p>
       </div>
     </div>
