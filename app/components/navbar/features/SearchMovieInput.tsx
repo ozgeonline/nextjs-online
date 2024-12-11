@@ -31,7 +31,7 @@ const SearchMovieInput: React.FC = () => {
     }
   };
 
-  const handleOpenSearch = (_openSearch?: boolean) => {
+  const handleOpenSearch = () => {
     setOpenSearch(prevState => !prevState);
   }
 
@@ -67,7 +67,7 @@ const SearchMovieInput: React.FC = () => {
         `}
       >
         <Search
-          onClick={() => handleOpenSearch(openSearch)}
+          onClick={() => handleOpenSearch()}
           className='flex size-6 sm:size-8 p-1 cursor-pointer'
         />
         <input
