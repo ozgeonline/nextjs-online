@@ -31,7 +31,7 @@ const SearchMovieInput: React.FC = () => {
     }
   };
 
-  const handleOpenSearch = (openSearch?: boolean) => {
+  const handleOpenSearch = (_openSearch?: boolean) => {
     setOpenSearch(prevState => !prevState);
   }
 

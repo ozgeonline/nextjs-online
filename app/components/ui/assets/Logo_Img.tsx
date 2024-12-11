@@ -40,7 +40,7 @@ export default function Logo_Img({logoStyle}:logoProps) {
           fill
           aria-label="Logo"
           className="z-50"
-          priority={false}
+          priority
         />
       </Link>
     </>

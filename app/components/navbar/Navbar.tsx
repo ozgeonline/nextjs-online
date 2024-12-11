@@ -8,7 +8,7 @@ import styles from "./navbar.module.css"
 const DropdownNavbarMenu = dynamic(() => import('./navigation/DropdownNavbarMenu'));
 const SearchMovieInput = dynamic(() => import('./features/SearchMovieInput'));
 const ScrollingElementSSR = dynamic(() => import('./features/ScrollingElementSSR'));
-const UserSettingsButton = dynamic(() => import('./features/UserSettingsButton'));
+const UserSettingsMenu = dynamic(() => import('./features/UserSettingsMenu'));
 
 export default function Navbar() {
   return (
@@ -16,7 +16,7 @@ export default function Navbar() {
       <div className="flex w-full justify-between items-start p-2 md:p-5">
         <div className="flex mx-5">
           <Logo_Img
-            logoStyle="relative flex items-center w-24 h-10 md:w-[15vw] md:h-[3vw] lg:w-[10vw] lg:h-[2vw]"
+            logoStyle="relative flex items-center w-24 h-10 md:w-[15vw] md:h-[3vw] lg:w-[8vw] lg:h-[2vw]"
           />
           <ul className="hidden lg:flex lg:px-4 lg:gap-x-5">
             {links.map((link) => (
@@ -51,9 +51,10 @@ export default function Navbar() {
             Kids
           </Link>
           <Bell className="hidden lg:flex size-5 text-gray-300 cursor-not-allowed" />
-          <UserSettingsButton />
+
+          {/* User Profile Controls */}
+          <UserSettingsMenu />
         </div>
-        
       </div>
     </ScrollingElementSSR>
   )
