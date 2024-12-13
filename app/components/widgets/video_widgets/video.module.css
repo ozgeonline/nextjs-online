@@ -5,10 +5,10 @@
   border-radius: calc(var(--radius) - 4px);
   transition: all ease-in 150ms;
   height: 6vw;
+}
 
-  :hover {
-    filter: brightness(0.9);
-  }
+.movieButtons:hover {
+  filter: brightness(0.9);
 }
 
 .content-info {
