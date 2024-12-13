@@ -1,0 +1,51 @@
+.movieButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) - 4px);
+  transition: all ease-in 150ms;
+  height: 6vw;
+
+  :hover {
+    filter: brightness(0.9);
+  }
+}
+
+.content-info {
+  position: absolute;
+  width: 70%;
+  padding-left: 1.25rem;
+  margin-top: 7vw;
+}
+
+@media (min-width:640px) {
+  .movieButtons {
+    height: 5vw;
+  }
+
+  .content-info {
+    padding-left: 3vw;
+  }
+}
+
+@media (min-width:768px) {
+  .movieButtons {
+    height: 4vw;
+  }
+}
+
+@media (min-width:1024px) {
+  .movieButtons {
+    height: 3vw;
+  }
+
+  .content-info {
+    width: 40%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .content-info {
+    padding-left: 3.5vw;
+  }
+}

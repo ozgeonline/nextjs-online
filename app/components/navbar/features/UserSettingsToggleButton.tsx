@@ -24,6 +24,8 @@ export default function UserSettingsToggleButton({
     setOpenMenu(!openMenu)
   }
   // console.log(openMenu)
+  const handleClick = () => setOpenMenu(false);
+  const handleLeave = () => setOpenMenu(false);
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -32,15 +34,13 @@ export default function UserSettingsToggleButton({
   };
 
   useEffect(() => {
-    document.addEventListener('mouseout', handleClickOutside);
+    document.addEventListener('mouseleave', handleClickOutside);
     document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mouseout', handleClickOutside);
+      document.removeEventListener('mouseleave', handleClickOutside);
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
-
-  const handleClick = () => setOpenMenu(false);
+  }, [openMenu]);
 
   const debouncedHandleOpenMenu = debounce(() => {
     setOpenMenu(true);
@@ -50,8 +50,9 @@ export default function UserSettingsToggleButton({
     debouncedHandleOpenMenu();
   };
 
+  //console.log(menuRef.current)
   return (
-    <div ref={menuRef}>
+    <div>
       <Button
         variant="ghost"
         className="relative size-7 sm:size-8 rounded-sm"
@@ -72,12 +73,16 @@ export default function UserSettingsToggleButton({
       </Button>
       {
         openMenu && (
-          <div onClick={handleClick} className="absolute top-5 right-0">
+          <div 
+            ref={menuRef}
+            onMouseLeave={handleLeave} 
+            onClick={handleClick} 
+            className="absolute top-5 right-0"
+          >
             {children}
           </div>
         )
       }
-      
     </div>
   )
 }
