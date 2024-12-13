@@ -5,11 +5,7 @@ import ShowDialogButton from "../ShowDialogButton"
 import { MovieProps } from "@/app/types/props"
 import styles from "./video.module.css"
 
-interface iAppProps extends MovieProps {
-  //
-}
-
-export default function MovieButtons({ ...movieProps}: iAppProps) {
+export default function MovieButtons({ ...movieProps}: MovieProps) {
   return (
     <div className="flex text-[3vw] sm:text-lg font-semibold">
       <ShowDialogButton

@@ -154,7 +154,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
       <>
         <video
           ref={videoModalRef}
-          poster={imageString}
+          poster={isLoaded ? imageString : undefined}
           aria-label={alt}
           muted
           playsInline
