@@ -15,8 +15,17 @@ export const authOptions = {
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
+      // accessTokenUrl: process.env.REDIRECT_URL
     }),
+
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -28,6 +37,6 @@ export const authOptions = {
       },
       from: process.env.EMAIL_FROM
     }),
-  ],
+  ]
   
 } satisfies NextAuthOptions;
