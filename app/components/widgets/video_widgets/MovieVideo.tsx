@@ -73,4 +73,5 @@ const MovieVideo = forwardRef<HTMLVideoElement, videoProps>((
   )
 })
 
+MovieVideo.displayName = 'MovieVideo';
 export default MovieVideo;
