@@ -22,7 +22,7 @@ type VideoProps = {
 // export type ModalRef = {
 //   videoModalRef: React.RefObject<HTMLVideoElement | null>;
 // }
-const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
+const VideoModals = forwardRef<HTMLVideoElement, VideoProps>((
   { 
     id,
     imageString, 
@@ -115,7 +115,9 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
         videoElement.addEventListener('play', playCurrentVideo);
         videoElement.addEventListener('pause', handlePause);
         videoElement.addEventListener('ended', handleEnded);
-        !isMovieVideo && videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        if(!isMovieVideo){
+          videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        }
       }
   
       return () => {
@@ -123,7 +125,9 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
           videoElement.removeEventListener('play', playCurrentVideo);
           videoElement.removeEventListener('pause', handlePause);
           videoElement.removeEventListener('ended', handleEnded);
-          !isMovieVideo && videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+          if(!isMovieVideo) {
+            videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+          }
         }
       };
     }, [ enableTimeUpdate]);
@@ -145,9 +149,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
     };
   
     const handleVideoLoadedData = () => {
-      // if (enableLoadedMetadata) {
-        setIsLoaded(true);
-      // }
+      return  setIsLoaded(true);
     };
 
     return (
@@ -178,5 +180,5 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
    );
   })
 
-
-export default VideoModal;
+VideoModals.displayName = 'VideoModals';
+export default VideoModals;
