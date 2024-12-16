@@ -8,6 +8,26 @@ import EmailProvider from "next-auth/providers/email";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      console.log("SignIn callback:", { user, account, profile });
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log("Redirect callback:", { url, baseUrl });
+      return baseUrl;
+    },
+    async session({ session, user }) {
+      console.log("Session callback:", { session, user });
+      return session;
+    },
+  },
+  
+  session: {
+    strategy:"database",
+    maxAge: 30 * 24 * 60 * 60, 
+    updateAge: 24 * 60 * 60,
+  },
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -37,6 +57,8 @@ export const authOptions = {
       },
       from: process.env.EMAIL_FROM
     }),
-  ]
+  ],
+  // secret: process.env.NEXTAUTH_SECRET as string,
+  debug: process.env.NODE_ENV === "development",
   
 } satisfies NextAuthOptions;

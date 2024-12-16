@@ -9,6 +9,7 @@ export default async function Login() {
   if (session) {
     return redirect("/home")
   }
+  // console.log(session)
 
   return (
     <AuthLoginPage
