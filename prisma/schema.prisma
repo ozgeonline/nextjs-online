@@ -26,7 +26,7 @@ model Account {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([providerId, providerAccountId])
+  @@unique([providerId, providerAccountId],name: "provider_providerAccountId")
   @@schema("auth")
 }
 
