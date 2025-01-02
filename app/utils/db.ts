@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client"; // Correct import path
 const prismaClientSingleton = () => {
   return new PrismaClient({
     log: ["query", "info", "warn", "error"],
+    errorFormat: "pretty",
+
   })
 }
 

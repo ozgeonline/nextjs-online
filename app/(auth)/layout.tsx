@@ -1,12 +1,21 @@
 import { ReactNode } from "react"
 import dynamic from "next/dynamic"
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../utils/auth";
+import { redirect } from "next/navigation";
 
 const Background_Img = dynamic(() => import("../components/ui/assets/Background_Img"));
 const Logo_Img = dynamic(() => import("../components/ui/assets/Logo_Img"));
 const Lang_Selection = dynamic(() => import("../components/ui/preAuthLanding/Lang_Selection"));
 const SignIn_Button = dynamic(() => import("../components/controls/button/SignIn_Button"));
 
-export default function AuthLayout({children}:{children: ReactNode}){
+export default async function AuthLayout({children}:{children: ReactNode}){
+
+  const session = await getServerSession(authOptions);
+    if (session) {
+      return redirect("/home")
+    }
+
   return (
     <main className="flex flex-col relative">
       <Background_Img />

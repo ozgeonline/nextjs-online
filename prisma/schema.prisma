@@ -8,10 +8,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "auth"]
+  schemas  = ["public","auth"]
 }
 
 // User-related models
+
 model Account {
   id                 String    @id @default(cuid())
   userId             String
@@ -23,11 +24,10 @@ model Account {
   accessTokenExpires DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([providerId, providerAccountId],name: "provider_providerAccountId")
-  @@schema("auth")
+  @@unique([providerId, providerAccountId], name: "provider_providerAccountId")
+  @@schema("public")
 }
 
 model Session {
@@ -38,7 +38,7 @@ model Session {
   accessToken  String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id])
 
   @@schema("auth")
 }
@@ -51,8 +51,8 @@ model User {
   image         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  accounts      Account[] // Relation to Account model
-  sessions      Session[] // Relation to Session model
+  accounts      Account[]
+  sessions      Session[]
 
   @@schema("auth")
 }
@@ -71,12 +71,10 @@ model Movie {
   cast         String
   genres       String
   WatchLists   WatchList[] // Relation to WatchList model
-
+  WatchHistory WatchHistory[]
   createdAt DateTime @default(now())
 
   @@schema("public")
-
-  WatchHistory WatchHistory[]
 }
 
 model WatchList {
@@ -84,8 +82,7 @@ model WatchList {
   userId String @unique
   movieId Int? @unique
   Movie   Movie? @relation(fields: [movieId], references: [id])
-
-  @@schema("public")
+  @@schema("auth")
 }
 
 model WatchHistory {
@@ -93,13 +90,10 @@ model WatchHistory {
   userId       String
   WatchHistory String
   videoSource  String
-
   Movie   Movie? @relation(fields: [movieId], references: [id])
   movieId Int?
-
   createdAt DateTime @default(now())
-
-  @@schema("public")
+  @@schema("auth")
 }
 
 model VerificationRequest {
