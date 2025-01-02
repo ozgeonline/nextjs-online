@@ -27,7 +27,7 @@ model Account {
   user               User      @relation(fields: [userId], references: [id])
 
   @@unique([providerId, providerAccountId], name: "provider_providerAccountId")
-  @@schema("public")
+  @@schema("auth")
 }
 
 model Session {
@@ -82,7 +82,7 @@ model WatchList {
   userId String @unique
   movieId Int? @unique
   Movie   Movie? @relation(fields: [movieId], references: [id])
-  @@schema("auth")
+  @@schema("public")
 }
 
 model WatchHistory {
@@ -93,7 +93,7 @@ model WatchHistory {
   Movie   Movie? @relation(fields: [movieId], references: [id])
   movieId Int?
   createdAt DateTime @default(now())
-  @@schema("auth")
+  @@schema("public")
 }
 
 model VerificationRequest {
