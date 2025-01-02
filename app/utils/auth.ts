@@ -35,7 +35,7 @@ export const authOptions = {
   //   // newUser: '/home',       // Redirect new users to /home
   // },
   callbacks: {
-    async signIn({ account, profile, email }) {
+    async signIn({ account, profile }) {
       if(!profile?.email) return false;
       console.log("Account:", account);
       console.log("Profile:", profile);
