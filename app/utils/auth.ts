@@ -8,61 +8,57 @@ import EmailProvider from "next-auth/providers/email";
 import { AdapterAccount, AdapterUser } from "next-auth/adapters";
 
 export const authOptions = {
-  //adapter: PrismaAdapter(prisma),
-
   adapter: {
     ...PrismaAdapter(prisma),
     async getUserByAccount(account: Pick<AdapterAccount, "providerAccountId" | "provider">): Promise<AdapterUser | null> {
       const result = await prisma.account.findUnique({
         where: {
           provider_providerAccountId: {
-            providerId: account.provider,
+            provider: account.provider,
             providerAccountId: account.providerAccountId,
           },
         },
+
         select: {
           user: true,
         },
       });
 
-      // Flatten the user object to match the AdapterUser type
       return result?.user?.email ? { ...result.user, email: result.user.email! } : null;
     }
   },
   // pages: {
-  //   signIn: '/sign-up',       // Custom sign-in page
-  //   //error: '',   // Error page
-  //   // newUser: '/home',       // Redirect new users to /home
+  //   signIn: '/sign-up',
+  //   error: '',   // Error page
   // },
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ profile }) {
+    //async signIn({ account, profile }) {
       if(!profile?.email) return false;
-      console.log("Account:", account);
-      console.log("Profile:", profile);
+      // console.log("Account:", account);
+      // console.log("Profile:", profile);
       return true;
     },
-    async session({ session, user }) {
-      console.log("Session:", session);
-      console.log("User:", user);
+    async session({ session }) {
+    //async session({ session, user }) {
+      // console.log("Session:", session);
+      // console.log("User:", user);
       return session;
     },
     async redirect({ url, baseUrl }) {
-      // Allows relative callback URLs (e.g., /home or /dashboard)
+      //console.log("baseUrl:", baseUrl, "url:", url);
       if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allows callback URLs on the same origin
       if (new URL(url).origin === baseUrl) return url;
-      // Fallback to baseUrl if none of the above conditions are met
-      return baseUrl;
+      return baseUrl; //if conditions are not met fallback to baseUrl
     },
     async jwt({ token, account }) {
-      console.log("JWT Token:", token);
+      //console.log("Token:", token);
       if (account) {
         token.accessToken = account.access_token;
       }
       return token;
     },
   },
-  
   // session: {
   //   strategy:"database",
   //   maxAge: 30 * 24 * 60 * 60, 
@@ -82,21 +78,20 @@ export const authOptions = {
           access_type: "offline",
           response_type: "code",
           scope: "openid profile email",
-
         }
       },
-      // profile(profile) {
-      //   //console.log("Google Profile:", profile);
-      //   return {
-      //     id: profile.sub,
-      //     name: profile.name,
-      //     email: profile.email,
-      //     image: profile.picture,
-      //   };
-      // },
+      profile(profile) {
+        //console.log("Google Profile:", profile);
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+        };
+      },
       accessTokenUrl: process.env.NEXTAUTH_URL,
+      wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
     }),
-
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -111,6 +106,5 @@ export const authOptions = {
   ],
   secret: process.env.AUTH_SECRET,
 
-  debug: true
-  // debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthOptions;

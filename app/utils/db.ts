@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client"; // Correct import path
-
+import { PrismaClient } from "@prisma/client";
 const prismaClientSingleton = () => {
   return new PrismaClient({
     log: ["query", "info", "warn", "error"],
     errorFormat: "pretty",
-
-  })
+  });
 }
 
 declare const globalThis: {

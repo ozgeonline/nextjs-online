@@ -86,7 +86,7 @@ const VideoModals = forwardRef<HTMLVideoElement, VideoProps>((
         handleVideoTimeUpdate(id, updateTime);
         //onUpdateTime(videoModalRef.current.currentTime);
       } else {
-        console.log("onTimeUpdate is not a function");
+        //console.log("onTimeUpdate is not a function");
       }
     };
 

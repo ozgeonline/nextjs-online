@@ -8,10 +8,9 @@ const CardAnimationWatch = dynamic(() => import("@/app/components/ui/preAuthLand
 const FAQ = dynamic(() => import("@/app/components/ui/preAuthLanding/FAQ"));
 const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
 
-
 export default async function Tr() {
   const session = await getServerSession(authOptions);
-  if (session) {
+  if (session?.user?.email) {
     return redirect("/home")
   }
   

@@ -8,8 +8,8 @@ import BoxLoading_Animation from "../components/animation/BoxLoading_Animation"
 export default async function HomeLayout({children} : {children: ReactNode}){
   const session = await getServerSession(authOptions)
 
-  if (session?.user?.email) {
-    redirect("/home"); // Redirect only if a valid session exists
+  if (!session?.user?.email) {
+    redirect("/tr-en");
   }
 
   return (
