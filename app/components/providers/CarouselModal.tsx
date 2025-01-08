@@ -2,7 +2,7 @@
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import React, {  useEffect, useRef, useState } from 'react'
-import { carouselBreakpointSettings } from '../ui/carouselBreakpointSettings';
+import { CarouselBreakpointSettings } from '../ui/useCarouselBreakpointSettings';
 import { useCardContext } from '../providers/CardContext';
 import { useVideoContext } from '../providers/VideoContext';
 import styles from "./providers.module.css"
@@ -40,7 +40,7 @@ export default function CarouselModal ({
 
   const { isHover } = useCardContext();
   const { isWatched, hasSavedTime } = useVideoContext();
-  const { sliderWidth, slidesPerView } = carouselBreakpointSettings(sliderRef);
+  const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
     
   const handleClick = (direction: "prev" | "next") => {
     setClickCount((prev)=>prev+1)

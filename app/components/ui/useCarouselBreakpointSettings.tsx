@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 // Define the breakpoints
 type Breakpoint = 'sm' | 'md' | 'lg' | 'xl';
@@ -12,7 +12,7 @@ const breakpointConditions: Record<Breakpoint, (width: number) => boolean> = {
 };
 
 // Hook to calculate slider width and number of slides
-export const carouselBreakpointSettings = (sliderRef: React.RefObject<HTMLDivElement>) => {
+export const CarouselBreakpointSettings = (sliderRef: React.RefObject<HTMLDivElement>) => {
   const [sliderWidth, setSliderWidth] = useState<number>(0);
   const [slidesPerView, setSlidesPerView] = useState<number>(2); // Default to 2 slides
 
