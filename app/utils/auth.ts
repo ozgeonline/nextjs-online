@@ -45,12 +45,12 @@ export const authOptions = {
       // console.log("User:", user);
       return session;
     },
-    async redirect({ url, baseUrl }) {
-      //console.log("baseUrl:", baseUrl, "url:", url);
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl; //if conditions are not met fallback to baseUrl
-    },
+    // async redirect({ url, baseUrl }) {
+    //   //console.log("baseUrl:", baseUrl, "url:", url);
+    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
+    //   if (new URL(url).origin === baseUrl) return url;
+    //   return baseUrl; //if conditions are not met fallback to baseUrl
+    // },
     async jwt({ token, account }) {
       //console.log("Token:", token);
       if (account) {
@@ -106,5 +106,6 @@ export const authOptions = {
   ],
   secret: process.env.AUTH_SECRET,
 
-  debug: process.env.NODE_ENV === "development",
+  debug:true
+  //debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthOptions;

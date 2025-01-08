@@ -4,7 +4,8 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 
 interface VideoContextType {
   currentVideoRef: React.MutableRefObject<HTMLVideoElement | null>;
-  continueWatchingVideoElement:  React.RefObject<HTMLVideoElement> | null;
+  continueWatchingVideoElement:  React.RefObject<HTMLVideoElement | null>;
+
 
   isActive: boolean;
 
@@ -41,6 +42,7 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const continueVideoElement = useRef<HTMLVideoElement | null>(null);
+
   //console.log("videoRef",videoRef)
 
   const [isActive, setIsActive] = useState<boolean>(true);

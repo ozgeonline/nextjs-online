@@ -1,0 +1,168 @@
+/******************** Carousel Module Styles ********************/
+/* Button Style */
+.carouselButtons {
+  position: absolute;
+  bottom: 0px;
+  transition: all ease-in;
+  background-color: rgb(0 0 0 / 0.6);
+  padding: auto 0;
+  transition: all ease-in 100ms;
+}
+
+.carouselButtons:hover {
+  background-color: rgb(0 0 0 / 0.7);
+}
+.prevButton {
+  left: -1.25rem;
+  border-top-right-radius: calc(var(--radius) - 4px);
+  border-bottom-right-radius: calc(var(--radius) - 4px);
+}
+
+.nextButton {
+  right: -1.25rem;
+  border-top-left-radius: calc(var(--radius) - 4px);
+  border-bottom-left-radius: calc(var(--radius) - 4px);
+  outline: none;
+}
+
+.buttonIcon {
+  width: 0.5em;
+  height: 1em;
+  color: transparent;
+}
+
+.sliderButtonSectionSize {
+  height: 25vw;
+}
+
+.sliderButtonSectionTop10Size {
+  height: 30vw;
+}
+
+/*wrapper*/
+
+/* .carouselWrapper:not(:hover) {
+  opacity: 0.99;
+} */
+/*?--scroll---*/
+.overflow-css::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+/* Track */
+.overflow-css::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* Handle */
+.overflow-css::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+/* Handle on hover */
+.overflow-css::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+
+@media (min-width: 640px) {
+  .prevButton {
+    left: -3vw;
+    width: 2.5vw;
+  }
+
+  .nextButton {
+    right: -3vw;
+    width: 2.5vw;
+  }
+
+  .buttonIcon {
+    width: 2em;
+    height: 2em;
+  }
+  
+  .prevButton .buttonIcon {
+    padding-right: 0.75em;
+  }
+  .nextButton .buttonIcon {
+    padding-right: 0.75em;
+  }
+
+  .sliderButtonSectionSize {
+    height: 20vw;
+  }
+
+  .sliderButtonSectionTop10Size {
+    height: 22vw;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .sliderButtonSectionSize {
+    height: 13vw;
+  }
+
+  .sliderButtonSectionTop10Size {
+    height: 17vw;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .buttonIcon {
+    width: 2.5em;
+    height: 2.5em;
+  }
+
+  .sliderButtonSectionSize {
+    height: 10vw;
+  }
+
+  .sliderButtonSectionTop10Size {
+    height: 14vw;
+  }
+}
+
+@media (min-width: 1280px) {
+
+  .nextButton .buttonIcon {
+    padding-right: 0;
+  }
+
+  .prevButton .buttonIcon {
+    padding-right: 0;
+  }
+
+  .prevButton {
+    left: -3.5vw;
+    width: 3vw;
+  }
+
+  .nextButton {
+    right: -3.5vw;
+    width: 3vw;
+  }
+
+  .sliderButtonSectionSize {
+    height: 8.3vw;
+  }
+
+  .sliderButtonSectionTop10Size {
+    height: 10.5vw;
+  }
+}
+
+@media (min-width: 1536px) {
+  .prevButton {
+    border-start-start-radius: 0px;
+    border-end-start-radius: 0px;
+    border-start-end-radius: calc(var(--radius) - 4px);
+    border-end-end-radius: calc(var(--radius) - 4px);
+  }
+
+  .nextButton {
+    border-start-end-radius: 0px;
+    border-end-end-radius: 0px;
+    border-start-start-radius: calc(var(--radius) - 4px);
+    border-end-start-radius: calc(var(--radius) - 4px);
+  }
+}
