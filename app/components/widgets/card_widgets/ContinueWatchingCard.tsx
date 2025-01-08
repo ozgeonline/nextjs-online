@@ -65,6 +65,7 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
 }
 )
 
+ContinueWatchingCardModal.displayName = "ContinueWatchingCardModal";
 export default ContinueWatchingCardModal;
 // function useImperativeHandle(ref: ForwardedRef<HTMLVideoElement>, arg1: () => HTMLVideoElement) {
 //   throw new Error('Function not implemented.');
