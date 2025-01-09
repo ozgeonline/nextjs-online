@@ -7,7 +7,7 @@ import dynamic from "next/dynamic"
 const Background_Img = dynamic(() => import("../components/ui/assets/Background_Img"));
 const Logo_Img = dynamic(() => import("../components/ui/assets/Logo_Img"));
 const Lang_Selection = dynamic(() => import("../components/ui/preAuthLanding/Lang_Selection"));
-const SignIn_Button = dynamic(() => import("../components/controls/button/SignIn_Button"));
+const SignIn_Button = dynamic(() => import("../components/controls/button/auth/SignIn_Button"));
 
 export default  function AuthLayout({children}:{children: ReactNode}){
   // const session = await getServerSession(authOptions);

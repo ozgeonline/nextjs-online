@@ -2,7 +2,7 @@
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import React, {  useEffect, useRef, useState } from 'react'
-import { CarouselBreakpointSettings } from '../ui/useCarouselBreakpointSettings';
+import { CarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
 import { useCardContext } from '../providers/CardContext';
 import { useVideoContext } from '../providers/VideoContext';
 import styles from "./providers.module.css"

@@ -5,8 +5,8 @@ import dynamic from "next/dynamic"
 import { memo } from "react"
 import styles from "./controlsInput.module.css"
 
-const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/Github__SignIn_Button"));
-const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/Google__SignIn_Button"));
+const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Github__SignIn_Button"));
+const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Google__SignIn_Button"));
 const LoginInputModal = dynamic(() => import("./LoginInputModal"));
 const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { InfoIcon, Play } from "lucide-react"
-import ShowDialogButton from "../ShowDialogButton"
+import ShowDialogButton from "../../controls/button/action/ShowDialogButton"
 import { MovieProps } from "@/app/types/props"
 import styles from "./video.module.css"
 
