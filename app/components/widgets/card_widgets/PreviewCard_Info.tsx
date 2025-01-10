@@ -6,6 +6,7 @@ import { MovieProps } from "@/app/types/props";
 import styles from "./card.module.css";
 
 const ShowDialogButton = dynamic(() => import('@/app/components/controls/button/action/ShowDialogButton'));
+const ActionWatchlist = dynamic(() => import('@/app/components/controls/button/action/ActionWatchlist'));
 const MovieInfo = dynamic(() => import('../info/MovieInfo'));
 const GenreList = dynamic(() => import('../info/GenreList'));
 
@@ -19,7 +20,9 @@ export function PreviewCard_Info({...movieProps}: PreviewModalProps) {
       <div 
         aria-label="preview card info"
         className={`
-          ${movieProps.infohover} ${styles.infoWrapper} shadow-md shadow-black/90
+          ${movieProps.infohover} 
+          ${styles.infoWrapper} 
+          shadow-md shadow-black/90
         `}
       >
         <h1
@@ -40,9 +43,13 @@ export function PreviewCard_Info({...movieProps}: PreviewModalProps) {
           </ShowDialogButton>
 
           <div className="size-6 me-2">
-            ActionBtn
+            <ActionWatchlist 
+              watchList={movieProps.watchList ?? false}
+              watchlistId={movieProps.watchlistId ?? ''}
+              movieId={movieProps.movieId ?? 0}
+              actionStyle="p-1 h-6 w-6"
+            />
           </div>
-          
 
           <ShowDialogButton
             buttonStyle="size-6 ml-auto"

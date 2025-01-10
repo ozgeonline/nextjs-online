@@ -13,3 +13,21 @@
 /* .signupBtn {
 
 } */
+
+/*************** ActionWatchlist ***************/
+.watchlistBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-radius: 100%;
+  border-color: hsl(var(--main_white_100));
+  background-color: hsl(var(--main_dark));
+  filter: brightness(0.9);
+
+}
+
+.watchlistBtn:hover {
+  filter: brightness(1.5);
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}

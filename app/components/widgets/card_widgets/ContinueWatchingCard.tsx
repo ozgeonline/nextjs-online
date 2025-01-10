@@ -52,7 +52,10 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
           imageString={props.imageString}
           source={props.videoSource}
           alt={props.alt}
-          videoStyle={`${styles.cardSize} z-50 continueVideo w-full object-cover rounded-sm flex overflow-hidden`}
+          videoStyle={`
+            ${styles.cardSize} 
+            z-50 continueVideo w-full object-cover rounded-sm flex overflow-hidden
+          `}
           id={props.id}  
         />)
       }

@@ -75,7 +75,7 @@ export default async function HomePage() {
           movieId={movie.id} 
         />
 
-          <CardProvider>
+          <CardProvider> {/* //! Don't forget to edit for no render afterwards */}
         <div 
           className={`
             ${styles.sectionsWrapper}
@@ -107,15 +107,13 @@ export default async function HomePage() {
                 </div>
               ))}
             </CarouselModal>
+
+          
         </div>
-          </CardProvider>
+          </CardProvider> {/*//!-end */}
 
       </VideoProvider>
     </div>
   </>
   );
 }
-
-
-
-

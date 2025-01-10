@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image"
-import GoogleIcon from "../../../../public/google.svg"
+import GoogleIcon from "@/public/google.svg"
 import styles from "../controlsButton.module.css"
 import { signIn } from "next-auth/react"
 
