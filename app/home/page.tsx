@@ -149,7 +149,7 @@ export default async function HomePage() {
 
 interface SectionProps {
   sectionTitle: string;
-  movies: any[];
+  movies: Awaited<ReturnType<typeof getData>>;
 }
 
 const Section: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
@@ -202,7 +202,6 @@ const SectionTop10: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
         <Top10TV
           key={index}
           index={index}
-          id={movie.id}
           imageString={movie.imageString}
           videoSource={movie.videoSource}
           title={movie.title}

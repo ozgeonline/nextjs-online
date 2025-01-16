@@ -8,11 +8,9 @@ import { useCardContext } from '@/app/components/providers/CardContext';
 
 interface top10Props extends MovieProps {
   index:number
-  id:number
 }
 export default function Top10TVShows({
   index,
-  id,
   ...movieProps
 }: top10Props) {
 

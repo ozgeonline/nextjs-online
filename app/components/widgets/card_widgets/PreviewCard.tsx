@@ -35,7 +35,7 @@ export default function PreviewCard({
     } else {
       setOpenDialog(false)
     }
-  }, [showDialog, openDialog]);
+  }, [showDialog, openDialog, movieProps.title]);
 
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);

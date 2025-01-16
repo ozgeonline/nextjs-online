@@ -6,7 +6,7 @@ interface SvgData {
   className: string;
   pathData: string;
   stroke: string;
-  strokeLinejoin: any;
+  strokeLinejoin: string;
   strokeWidth: string;
 }
 

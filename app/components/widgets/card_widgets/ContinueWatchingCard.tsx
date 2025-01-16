@@ -31,7 +31,7 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
      } else {
          throw new Error("continueWatchingVideoElement.current is null");
        }
-   },[]);
+   },[continueWatchingVideoElement?.current]);
 
 
 
