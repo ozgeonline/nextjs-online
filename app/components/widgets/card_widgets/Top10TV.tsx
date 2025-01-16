@@ -5,37 +5,47 @@ import { useEffect, useState } from "react";
 import styles from "./card.module.css";
 import PreviewCard from './PreviewCard';
 import { useCardContext } from '@/app/components/providers/CardContext';
+import { SvgData } from "@/app/data/SvgData";
 
 interface top10Props extends MovieProps {
   index:number
 }
+
 export default function Top10TVShows({
   index,
   ...movieProps
 }: top10Props) {
 
-  const [svgDataArray, setSvgDataArray] = useState<any[]>([]);
+  const [svgDataArray, setSvgDataArray] = useState<SvgData[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { setIsHover } = useCardContext();
 
   useEffect(() => {
     const fetchData = async () => {
-      await new Promise(resolve => setTimeout(resolve, 1500)); 
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      const [svgData] = await Promise.all([
-        import("@/app/data/SvgData"),
-      ]);
-
-      setSvgDataArray(svgData.default);
-      setIsLoading(false);
+        const svgDataModule = await import("@/app/data/SvgData");
+        setSvgDataArray(svgDataModule.default);
+      } catch (error) {
+        console.error("Error loading SVG data:", error);
+        setSvgDataArray([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchData();
-    
   }, []);
+
+  if (isLoading || !svgDataArray || !svgDataArray[index]) {
+    return <div className={styles.top10cardWrapper}>Loading box...</div>;
+  }
+
+  const svgData = svgDataArray[index]; 
 
   // if (isLoading) return null;
 
-  const { setIsHover } = useCardContext();
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
 
@@ -46,22 +56,20 @@ export default function Top10TVShows({
       onMouseLeave={handleMouseLeave} 
       aria-label={`${movieProps.movieId}.poster`}
     >
-      {!isLoading && (
-        <svg
-          id={svgDataArray[index].id}
-          width={svgDataArray[index].width}
-          height={svgDataArray[index].height}
-          viewBox={svgDataArray[index].viewBox}
-          className={`${svgDataArray[index].className}`}
-        >
-          <path
-            stroke={svgDataArray[index].stroke}
-            strokeLinejoin={svgDataArray[index].strokeLinejoin}
-            strokeWidth={svgDataArray[index].strokeWidth}
-            d={svgDataArray[index].pathData}
-          ></path>
-        </svg>
-      )}
+      <svg
+        id={svgData.id}
+        width={svgData.width}
+        height={svgData.height}
+        viewBox={svgData.viewBox}
+        className={svgData.className}
+      >
+        <path
+          stroke={svgData.stroke}
+          strokeLinejoin={svgData.strokeLinejoin as "miter" | "round" | "bevel" | "inherit"}
+          strokeWidth={svgData.strokeWidth}
+          d={svgData.pathData}
+        />
+      </svg>
       
       <PreviewCard
         {...movieProps}

@@ -1,4 +1,4 @@
-interface SvgData {
+export interface SvgData {
   id: string;
   width: string;
   height: string;
