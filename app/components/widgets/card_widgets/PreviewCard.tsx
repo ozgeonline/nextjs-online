@@ -16,21 +16,18 @@ interface PreviewModalProps extends MovieProps {
   imageCardWrapper?: boolean
   top10Wrapper?: boolean
   imageStyle?: string
-  id: number
 }
-
 export default function PreviewCard({
   imageCardWrapper,
   top10Wrapper,
   imageStyle,
-  id,
   ...movieProps
 }: PreviewModalProps) {
+  const {setIsHover, isHover } = useCardContext();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+
   const searchParams = useSearchParams();
   const showDialog = searchParams.get('showDialog')
-
-  const {setIsHover, isHover } = useCardContext();
 
   useEffect(() => {
     if (showDialog === movieProps.title) {
@@ -50,13 +47,12 @@ export default function PreviewCard({
       className="group/card"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave} 
-      aria-label='preview card'
+      aria-label={`${movieProps.movieId}.poster`}
     >
       <div
         className={`
           relative cursor-pointer slide
           ${imageCardWrapper ? styles.cardSize : top10Wrapper ? styles.top10cardSize : undefined}
-        
         `}
       >
         <ImageModal
@@ -66,9 +62,8 @@ export default function PreviewCard({
         />
 
         <ShowDialogButton
-          buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
-          // key={movieProps.movieId}
           {...movieProps}
+          buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
         >
           <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
         </ShowDialogButton>
@@ -89,11 +84,10 @@ export default function PreviewCard({
           imageStyle="rounded-t-sm w-full h-full "
         />
         <PreviewCard_Info
-          infohover={`
-             ${isHover ? 'opacity-100 z-50' : 'opacity-45 -z-50'}
-             `}
-          // key={id}
           {...movieProps}
+          infohover={`
+            ${isHover ? 'opacity-100 z-50' : 'opacity-45 -z-50'}
+          `}
         />
       </div>
     </div>
