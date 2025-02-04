@@ -1,0 +1,230 @@
+/*?-----scroll------*/
+.overflow-css::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+/* Track */
+.overflow-css::-webkit-scrollbar-track {
+  background: transparent;
+}
+/* Handle */
+.overflow-css::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+/* Handle on hover */
+.overflow-css::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+.dialog-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--radius) - 4px);
+  background-color: hsl(var(--main_dark));
+  padding-bottom: 1.25rem;
+  cursor: context-menu;
+  font-weight: 500;
+}
+
+.dialog-circleButtonSize {
+  height: 7vw;
+  width: 7vw;
+  border-radius: 100%;
+}
+
+.close-btn-style {
+  position: fixed;
+  margin-top: 1.25rem ;
+  margin-bottom: 0.5rem ;
+  padding: 0.25rem;
+  color: white;
+  cursor: pointer;
+  border-radius: 100%;
+  border-style: none;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: all ease-in;
+  background-color: hsl(var(--main_dark));
+}
+
+.close-btn-style:hover {
+  filter: brightness(1.4);
+}
+
+.dialog-playButton {
+  z-index: 50;
+  width: 23vw;
+  height: 7vw;
+  font-weight: 800;
+  background-color: white;
+  border-radius: calc(var(--radius) - 4px);
+  column-gap: 0.5rem;
+  transition: all ease-in 150ms;
+}
+
+.dialog-playButton:hover {
+  filter: brightness(1.25);
+  filter: opacity(0.95);
+  cursor: pointer;
+}
+
+.dialog-muteButton {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #262626;
+  border-width: 2px;
+  border-color: #71717a;
+  transition: all ease-in 150ms;
+  opacity: 0.9;
+  z-index: 50;
+}
+
+.dialog-muteButton:hover {
+  filter: brightness(1.5);
+}
+
+.dialog-overview {
+  color: white;
+  margin-top: 1.25rem;
+  text-align: justify;
+  transition: all ease-in 100ms;
+  cursor: pointer;
+}
+
+.subtitles {
+  color: #9ca3af;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.subtitles ~ p {
+  display: none;
+  position: absolute;
+  padding: 1em 2em;
+  top: -2.5rem;
+  left: -15rem;
+  width: auto;
+  height: auto;
+  padding: 0.25rem;
+  background-color: #e4e4e7;
+  text-align: center;
+  font-weight: 500;
+  text-wrap: nowrap;
+  border-radius: calc(var(--radius) - 4px);
+  transition: all ease-in 150ms;
+}
+
+.subtitles ~ p > span {
+  position: absolute;
+  top: 75%;
+  left: 15rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  transform: rotate(45deg);
+  background-color: #e4e4e7;
+}
+
+.durationRelease-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 380px) {
+  .durationRelease-wrapper {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
+}
+
+@media (max-width:640px) {
+  .dialog-overview {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+}
+
+@media (min-width:640px) {
+  .dialog-playButton {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    width: 14vw;
+    height: 5vw;
+  }
+
+  .dialog-circleButtonSize {
+    height: 5vw;
+    width: 5vw;
+  }
+
+  .dialog-overview {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+@media (min-width:768px) {
+  .dialog-playButton {
+    width: 12vw;
+    height: 4vw;
+  }
+
+  .dialog-circleButtonSize {
+    height: 4vw;
+    width: 4vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dialog-wrapper {
+    max-width: 850px;
+  }
+
+  .dialog-playButton {
+    width: 9vw;
+    height: 3vw;
+  }
+
+  .dialog-circleButtonSize {
+    height: 3vw;
+    width: 3vw;
+  }
+
+  .dialog-overview {
+    line-clamp: 3;
+  }
+
+  .dialog-overview:hover {
+    line-clamp: 6;
+  }
+}
+
+@media (max-width: 1024px){
+  .dialog-wrapper {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+@media (min-width:1280px) {
+  .dialog-playButton {
+    height: 2.5vw;
+  }
+
+  .dialog-circleButtonSize {
+    height: 2.5vw;
+    width: 2.5vw;
+  }
+
+  .subtitles:hover ~ p {
+    display: block;
+  }
+  
+}

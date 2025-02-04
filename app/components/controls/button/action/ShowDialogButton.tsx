@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 import { MovieProps } from "@/app/types/props";
+import Dialog from "@/app/components/widgets/dialog_widgets/Dialog";
 
 interface PlayProps extends MovieProps {
   buttonStyle: string;
@@ -22,10 +23,17 @@ export default function ShowDialogButton({
   const { setDialogOpen, currentVideoPause, currentVideoPlay,isDialogOpen } = useVideoContext();
 
   const clickOpenDialog = () => {
-    //console.log("show dialog open")
+    console.log("show dialog open")
     setOpen(true)
     setDialogOpen(true)
     currentVideoPause()
+  }
+
+  const clickCloseDialog = () => {
+    console.log("show dialog closed")
+    setOpen(false)
+    setDialogOpen(false)
+    currentVideoPlay()
   }
 
   useEffect(() => {
@@ -60,6 +68,13 @@ export default function ShowDialogButton({
       >
         {children}
       </Link>
+
+      {open == true && 
+        <Dialog
+          onClose={() => clickCloseDialog()}
+          {...movieProps}
+        />
+      }
     </>
   );
 }

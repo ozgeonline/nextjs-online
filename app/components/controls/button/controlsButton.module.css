@@ -31,3 +31,30 @@
   filter: brightness(1.5);
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
+
+/*************** Like Dislike Button ***************/
+
+.likeBtnDefaultStyle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsl(var(--main_dark));
+  border: 1px solid hsl(var(--main_white_100));
+  filter: brightness(0.9);
+  border-radius: 100%;
+}
+
+.likeBtnDefaultStyle:hover {
+  filter: brightness(1.5);
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+.likeBtnIconStyle {
+  padding: 2px;
+  color: hsl(var(--main_white_100));
+}
+
+@media not all and (min-width: 640px) {
+  .likeBtnIconStyle {
+    padding: 0.25rem;
+  }
+}

@@ -50,7 +50,7 @@ export default function ActionWatchlist({
           <input type="hidden" name="pathname" value={pathName} />
           <button 
             className={`
-              ${actionStyle}
+              ${actionStyle} 
               ${styles.watchlistBtn}
             `}
           > 
