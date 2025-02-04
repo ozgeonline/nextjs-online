@@ -132,7 +132,7 @@ const Dialog =(
   }
   
   const handleMuteToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //  event.stopPropagation();
+   event.stopPropagation();
     if (continueWatchingVideoElement.current) {
       continueWatchingVideoElement.current.muted = !muted
       setMuted(!muted)
