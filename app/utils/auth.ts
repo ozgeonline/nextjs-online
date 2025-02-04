@@ -104,6 +104,9 @@ export const authOptions = {
       from: process.env.EMAIL_FROM
     }),
   ],
+  session: {
+    updateAge :86400
+  },
   secret: process.env.AUTH_SECRET,
 
   debug:true
