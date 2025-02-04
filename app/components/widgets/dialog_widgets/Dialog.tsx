@@ -33,15 +33,12 @@ const Dialog =(
   const showDialog = searchParams.get('showDialog');
 
   const { 
-    isActive,
     continueWatchingVideoElement,
   } = useVideoContext();
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [muted, setMuted] = useState<boolean>(true);
-
-  isActive == true;
 
   useEffect(() => {
     const handleDialogOpen = () => {
@@ -54,12 +51,10 @@ const Dialog =(
           continueWatchingVideoElement.current.pause();
           setPlaying(false);
         }
-        isActive === true;
       } else {
         console.log("Setting dialog as closed"); 
         dialogRef.current?.close();
         closeDialog()
-        isActive === false;
       }
     };
     handleDialogOpen();
