@@ -121,12 +121,11 @@ export default async function CategoryPage({
     searchParams
   }: CategoryPageProps) {
 
-    const genre = await Promise.resolve(params.genre);
     const session = await getServerSession(authOptions);
     const sortOrder = searchParams.sortOrder || 'default';
     const query = searchParams.query || '';
     const data = await getData(
-      genre ?? '', 
+      params.genre ?? '', 
       session?.user?.email ?? '', 
       sortOrder,
       query
@@ -147,8 +146,8 @@ export default async function CategoryPage({
     //const openDialogCardStyle = params.genre === "query" || params.genre === "audio";
 
     const sectionTitle =  
-      genre === "new" ? "New on web" : 
-      genre === "kids" ? "We Think You’ll Love These" : 
+      params.genre === "new" ? "New on web" : 
+      params.genre === "kids" ? "We Think You’ll Love These" : 
       movie.category === "show" ? "Popular TV Series" :
       movie.category === "movie" ? "Popular Movie Series" : 
       "more Series"
