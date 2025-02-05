@@ -105,27 +105,34 @@ const normalizeTurkishCharacters = (str: string) => {
     .replace(/ğ/g, "g")
     .replace(/Ğ/g, "G");
 };
+// type CategoryPageProps = {
+//   params: {
+//     genre?: string;
+//     title?: string;
+//   };
+//   searchParams: {
+//     sortOrder?: 'default' | 'asc' | 'desc';
+//     query?: string;
+//   };
+// };
 
 type CategoryPageProps = {
-  params: {
-    genre?: string;
-    title?: string;
-  };
-  searchParams: {
-    sortOrder?: 'default' | 'asc' | 'desc';
-    query?: string
-  };
+  params: Record<string, string>; 
+  searchParams: Record<string, string>;
 };
+
 export default async function CategoryPage({
     params,
     searchParams
   }: CategoryPageProps) {
 
+    const genre = params.genre ?? '';
+    const title = params.title ?? '';
     const session = await getServerSession(authOptions);
-    const sortOrder = searchParams.sortOrder || 'default';
+    const sortOrder = (searchParams.sortOrder as 'default' | 'asc' | 'desc') || 'default';
     const query = searchParams.query || '';
     const data = await getData(
-      params.genre ?? '', 
+      genre, 
       session?.user?.email ?? '', 
       sortOrder,
       query
@@ -146,8 +153,8 @@ export default async function CategoryPage({
     //const openDialogCardStyle = params.genre === "query" || params.genre === "audio";
 
     const sectionTitle =  
-      params.genre === "new" ? "New on web" : 
-      params.genre === "kids" ? "We Think You’ll Love These" : 
+      genre === "new" ? "New on web" : 
+      genre === "kids" ? "We Think You’ll Love These" : 
       movie.category === "show" ? "Popular TV Series" :
       movie.category === "movie" ? "Popular Movie Series" : 
       "more Series"
@@ -158,7 +165,7 @@ export default async function CategoryPage({
       <CardProvider>
       <div>
       {
-        params.genre === "audio" ? (
+        genre === "audio" ? (
           <>
           <div className="top-14 sm:top-24 relative padding-layout">
             <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
@@ -168,7 +175,7 @@ export default async function CategoryPage({
               <BrowseBySortClientPage 
                 initialData={data} 
                 initialSortOrder={sortOrder} 
-                title={params.title ?? ''}
+                title={title ?? ''}
               />
             </div>
 
@@ -198,7 +205,7 @@ export default async function CategoryPage({
         </div>
         </>
         
-        ) : params.genre === "query" && data.length>0 ? (
+        ) : genre === "query" && data.length>0 ? (
           <div className="flex flex-col top-14 sm:top-32 relative padding-layout">
             <div className="genre-grid-layout">
               {data.map((movie) => (
@@ -225,7 +232,7 @@ export default async function CategoryPage({
             </div>
           </div>
 
-        ) : params.genre === "query" && data.length<=0 ? (
+        ) : genre === "query" && data.length<=0 ? (
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
             <p>{`Your search for "${query}" did not have any matches.`}</p>
             <p>Suggestions:</p>
@@ -239,7 +246,7 @@ export default async function CategoryPage({
 
         ):(
           <>
-            {movie &&  params.genre !== "new" && (
+            {movie &&  genre !== "new" && (
               <MovieVideo
                       key={movie.id}
                       imageString={movie.imageString}
@@ -256,7 +263,7 @@ export default async function CategoryPage({
                       movieId={movie.id} id={movie.id}              />
             )}
 
-            <div className={`${params.genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
+            <div className={`${genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
               {/* <h1 className="relative title sm:text-xl">
                 {
                   params.genre === "new" ? "New on web" : 
