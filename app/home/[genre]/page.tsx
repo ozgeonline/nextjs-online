@@ -106,16 +106,16 @@ const normalizeTurkishCharacters = (str: string) => {
     .replace(/Ğ/g, "G");
 };
 
-interface CategoryPageProps  {
-  params: {
-    genre?: string;
+interface CategoryPageProps {
+  params: Promise<{
+    genre: string;
     title?: string;
-  };
+  }>;
   searchParams: {
     sortOrder?: 'default' | 'asc' | 'desc';
     query?: string;
   };
-};
+}
 
 export default async function CategoryPage({
     params,
@@ -123,7 +123,7 @@ export default async function CategoryPage({
   }: CategoryPageProps) {
 
     const resolvedSearchParams = await Promise.resolve(searchParams);
-    const resolvedParams = await Promise.resolve(params);
+    const resolvedParams = await params;
     const genre = resolvedParams.genre ?? '';
     const title = resolvedParams.title ?? '';
     const session = await getServerSession(authOptions);
