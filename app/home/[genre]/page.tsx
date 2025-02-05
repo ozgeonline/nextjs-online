@@ -105,20 +105,16 @@ const normalizeTurkishCharacters = (str: string) => {
     .replace(/ğ/g, "g")
     .replace(/Ğ/g, "G");
 };
-// type CategoryPageProps = {
-//   params: {
-//     genre?: string;
-//     title?: string;
-//   };
-//   searchParams: {
-//     sortOrder?: 'default' | 'asc' | 'desc';
-//     query?: string;
-//   };
-// };
 
-type CategoryPageProps = {
-  params: Record<string, string>; 
-  searchParams: Record<string, string>;
+interface CategoryPageProps  {
+  params: {
+    genre?: string;
+    title?: string;
+  };
+  searchParams: {
+    sortOrder?: 'default' | 'asc' | 'desc';
+    query?: string;
+  };
 };
 
 export default async function CategoryPage({
@@ -126,11 +122,13 @@ export default async function CategoryPage({
     searchParams
   }: CategoryPageProps) {
 
-    const genre = params.genre ?? '';
-    const title = params.title ?? '';
+    const resolvedSearchParams = await Promise.resolve(searchParams);
+    const resolvedParams = await Promise.resolve(params);
+    const genre = resolvedParams.genre ?? '';
+    const title = resolvedParams.title ?? '';
     const session = await getServerSession(authOptions);
-    const sortOrder = (searchParams.sortOrder as 'default' | 'asc' | 'desc') || 'default';
-    const query = searchParams.query || '';
+    const sortOrder = (resolvedSearchParams.sortOrder as 'default' | 'asc' | 'desc') || 'default';
+    const query = resolvedSearchParams.query || '';
     const data = await getData(
       genre, 
       session?.user?.email ?? '', 
