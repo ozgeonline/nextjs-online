@@ -4,26 +4,14 @@ import { useState, useEffect, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import RedCircle_Animation from '@/app/components/animation/RedCircle_Animation';
+import { MovieProps } from '@/app/types/props';
 
 const SortBySelect = dynamic(() => import('./SortBySelect'));
 
-interface Movie {
-  id: number;
-  title: string;
-  overview: string;
-  imageString: string;
-  videoSource: string;
-  release: number;
-  duration: number;
-  age: number;
-  cast: string;
-  genres: string;
-  category: string;
-  WatchLists: any[];
-}
 
-interface CategoryPageClientProps {
-  initialData: Movie[];
+
+interface CategoryPageClientProps extends MovieProps{
+  initialData: MovieProps[];
   initialSortOrder: 'default' | 'asc' | 'desc';
   title: string;
 }
@@ -47,11 +35,14 @@ const BrowseBySortClientPage = ({ initialData, initialSortOrder, title }: Catego
 
 
   useEffect(() => {
-    const sorted = [...data].sort((a, b) =>
-      sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
-    );
-    setData(sorted)
-  }, [sortOrder]);
+    const sorted = [...data].sort((a, b) => {
+      const aTitle = a.title ?? '';
+      const bTitle = b.title ?? '';
+      return sortOrder === 'asc' ? aTitle.localeCompare(bTitle) : bTitle.localeCompare(aTitle);
+    });
+    setData(sorted);
+  }, [sortOrder, initialData]);
+
   
   
   return (
@@ -61,10 +52,20 @@ const BrowseBySortClientPage = ({ initialData, initialSortOrder, title }: Catego
           <div className='absolute z-[9999] w-full h-full top-[50vh] left-1/2 -translate-x-1/2 -translate-y-1/2 backdrop-brightness-50' >
             <RedCircle_Animation />
           </div>
-          <SortBySelect data={data} sortOrder={sortOrder} onSortChange={handleSortChange} />
+          <SortBySelect 
+            data={data.filter((movie): movie is Required<MovieProps> => 
+              movie.title !== undefined
+            )} 
+            sortOrder={sortOrder} 
+            onSortChange={handleSortChange} 
+          />
         </>
       ) : (
-        <SortBySelect data={data} sortOrder={sortOrder} onSortChange={handleSortChange} />
+        <SortBySelect 
+          data={data.filter((movie): movie is Required<MovieProps> => movie.title !== undefined)} 
+          sortOrder={sortOrder} 
+          onSortChange={handleSortChange} 
+        />
       )}
     </div>
   );

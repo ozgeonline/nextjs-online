@@ -98,6 +98,7 @@ const SortBySelect = ({data, sortOrder, onSortChange }: SortBySelectProps) => {
         </div>
       </div>
       {showDropdown && renderOptions()}
+      <div className="hidden">{JSON.stringify(sortedData)}</div>
     </div>
   );
 };
