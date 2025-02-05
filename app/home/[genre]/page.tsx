@@ -111,10 +111,10 @@ interface CategoryPageProps {
     genre: string;
     title?: string;
   }>;
-  searchParams: {
+  searchParams: Promise<{
     sortOrder?: 'default' | 'asc' | 'desc';
     query?: string;
-  };
+  }>
 }
 
 export default async function CategoryPage({
@@ -122,7 +122,7 @@ export default async function CategoryPage({
     searchParams
   }: CategoryPageProps) {
 
-    const resolvedSearchParams = await Promise.resolve(searchParams);
+    const resolvedSearchParams = await searchParams;
     const resolvedParams = await params;
     const genre = resolvedParams.genre ?? '';
     const title = resolvedParams.title ?? '';
