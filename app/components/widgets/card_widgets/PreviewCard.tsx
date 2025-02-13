@@ -2,13 +2,12 @@
 
 import { PlayCircle } from 'lucide-react'
 import { PreviewCard_Info } from "./PreviewCard_Info"
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { MovieProps } from "@/app/types/props";
 import dynamic from 'next/dynamic';
 import { useCardContext } from '@/app/components/providers/CardContext';
 import styles from "./card.module.css";
-import BoxLoading_Animation from '../../animation/BoxLoading_Animation';
 
 const ImageModal = dynamic(() => import('@/app/components/ui/assets/ImageModal'));
 const ShowDialogButton = dynamic(() => import('@/app/components/controls/button/action/ShowDialogButton'));

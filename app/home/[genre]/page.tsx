@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { CardProvider } from "@/app/components/providers/CardContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
 import styles from "../home.module.css"
-import BoxLoading_Animation from "@/app/components/animation/BoxLoading_Animation";
 
 const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
