@@ -14,7 +14,11 @@ const prismaClientSingleton = () => {
 export const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
 
 if (process.env.NODE_ENV !== 'production') {
+  // if (globalForPrisma.prisma) {
+  //   globalForPrisma.prisma.$disconnect()
+  // }
   globalForPrisma.prisma = prisma
 }
 
 export default prisma
+

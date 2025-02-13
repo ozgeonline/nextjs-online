@@ -43,7 +43,7 @@ const Dialog =(
   useEffect(() => {
     const handleDialogOpen = () => {
       if (showDialog === movieProps.title) {
-        console.log("Setting dialog as open");
+        // console.log("Setting dialog as open");
         dialogRef.current?.showModal();
         openDialog();
 
@@ -52,7 +52,7 @@ const Dialog =(
           setPlaying(false);
         }
       } else {
-        console.log("Setting dialog as closed"); 
+        // console.log("Setting dialog as closed"); 
         dialogRef.current?.close();
         closeDialog()
       }
@@ -84,7 +84,7 @@ const Dialog =(
   }
 
   const openDialog = () => {
-    console.log("openDialog")
+    // console.log("openDialog")
     dialogRef.current?.showModal();
   }
   

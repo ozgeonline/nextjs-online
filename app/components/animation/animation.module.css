@@ -36,6 +36,35 @@
   animation: pulse 1.5s linear infinite ;
   animation-delay: 5s;
 }
+.boxSize {
+  height: 25vw;
+  width: 100%;
+  background-color: hsl(var(--muted-foreground) / 0.8);
+}
+
+@media (min-width: 640px) {
+  .boxSize {
+    height: 20vw;
+  }
+}
+
+@media (min-width: 768px) {
+  .boxSize {
+    height: 13vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .boxSize {
+    height: 10vw;
+  }
+}
+
+@media (min-width: 1280px) {
+  .boxSize {
+    height: 8.3vw;
+  }
+}
 
 @keyframes pulse {
   0% {

@@ -60,20 +60,20 @@ export default async function HomePage() {
     <div className="overflow-hidden ">
       <VideoProvider>
         <MovieVideo
-          key={movie.id}
-          id={movie.id}
-          imageString={movie.imageString}
-          videoSource={movie.videoSource}
-          title={movie.title}
-          overview={movie.overview}
-          cast={movie.cast}
-          genres={movie.genres}
-          age={movie.age}
-          release={movie.release}
-          duration={movie.duration}
-          watchList={movie.WatchLists.length > 0 ? true : false}
-          watchlistId={movie.WatchLists[0]?.id as string}
-          movieId={movie.id} 
+          key={movie?.id}
+          id={movie?.id}
+          imageString={movie?.imageString}
+          videoSource={movie?.videoSource}
+          title={movie?.title}
+          overview={movie?.overview}
+          cast={movie?.cast}
+          genres={movie?.genres}
+          age={movie?.age}
+          release={movie?.release}
+          duration={movie?.duration}
+          watchList={movie?.WatchLists?.length > 0 ? true : false}
+          watchlistId={movie?.WatchLists[0]?.id as string}
+          movieId={movie?.id} 
         />
 
         <CardProvider> {/* //! */}
@@ -169,6 +169,7 @@ const Section: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
         >
           <PreviewCard
             key={movie.id}
+            id={movie.id}
             imageString={movie.imageString}
             videoSource={movie.videoSource}
             title={movie.title}
@@ -201,6 +202,7 @@ const SectionTop10: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
       {movies.map((movie,index) => (
         <Top10TV
           key={index}
+          id={movie.id}
           index={index}
           imageString={movie.imageString}
           videoSource={movie.videoSource}

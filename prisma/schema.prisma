@@ -5,24 +5,24 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -35,30 +35,30 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
 
@@ -66,7 +66,7 @@ model VerificationToken {
 model Movie {
   id           Int            @id @unique @default(autoincrement())
   imageString  String
-  title        String        
+  title        String
   age          Int
   duration     Float
   overview     String
@@ -77,23 +77,24 @@ model Movie {
   genres       String
   WatchLists   WatchList[] // Relation to WatchList model
   WatchHistory WatchHistory[]
-  createdAt DateTime @default(now())
+  createdAt    DateTime       @default(now())
 }
 
 model WatchList {
-  id     String @id @default(uuid())
-  userId String @unique
-  movieId Int? @unique
+  id      String @id @default(uuid())
+  userId  String
+  movieId Int
   Movie   Movie? @relation(fields: [movieId], references: [id])
+
+  @@unique([userId, movieId])
 }
 
 model WatchHistory {
-  id           String @id @default(uuid())
+  id           String   @id @default(uuid())
   userId       String
   WatchHistory String
   videoSource  String
-  Movie   Movie? @relation(fields: [movieId], references: [id])
-  movieId Int?
-  createdAt DateTime @default(now())
+  Movie        Movie?   @relation(fields: [movieId], references: [id])
+  movieId      Int?
+  createdAt    DateTime @default(now())
 }
-

@@ -6,6 +6,7 @@ import styles from "./card.module.css";
 import PreviewCard from './PreviewCard';
 import { useCardContext } from '@/app/components/providers/CardContext';
 import { SvgData } from "@/app/data/SvgData";
+import BoxLoading_Animation from "../../animation/BoxLoading_Animation";
 
 interface top10Props extends MovieProps {
   index:number
@@ -39,7 +40,7 @@ export default function Top10TVShows({
   }, []);
 
   if (isLoading || !svgDataArray || !svgDataArray[index]) {
-    return <div className={styles.top10cardWrapper}>Loading box...</div>;
+    return ;
   }
 
   const svgData = svgDataArray[index]; 

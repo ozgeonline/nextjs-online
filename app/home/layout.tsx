@@ -15,11 +15,11 @@ export default async function HomeLayout({children} : {children: ReactNode}){
   return (
     <div className="w-full">
       <Navbar />
-      <Suspense fallback={<BoxLoading_Animation />}>
         <div className="w-full">
-          {children}
+          <Suspense fallback={<BoxLoading_Animation />}>
+            {children}
+          </Suspense>
         </div>
-      </Suspense>
     </div>
   )
 }

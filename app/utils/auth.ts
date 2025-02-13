@@ -105,7 +105,7 @@ export const authOptions = {
     }),
   ],
   session: {
-    updateAge :86400
+    updateAge :3500
   },
   secret: process.env.AUTH_SECRET,
 

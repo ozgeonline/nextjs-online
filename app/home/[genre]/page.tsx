@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { CardProvider } from "@/app/components/providers/CardContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
 import styles from "../home.module.css"
+import BoxLoading_Animation from "@/app/components/animation/BoxLoading_Animation";
 
 const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
@@ -135,7 +136,7 @@ export default async function CategoryPage({
       sortOrder,
       query
     );
-    const movie = data[0]
+    const movie = data.length > 0 ? data[0] : null;
         
     data.forEach((movie) => {
       movie.title = normalizeTurkishCharacters(movie.title);
@@ -153,8 +154,8 @@ export default async function CategoryPage({
     const sectionTitle =  
       genre === "new" ? "New on web" : 
       genre === "kids" ? "We Think You’ll Love These" : 
-      movie.category === "show" ? "Popular TV Series" :
-      movie.category === "movie" ? "Popular Movie Series" : 
+      movie?.category === "show" ? "Popular TV Series" :
+      movie?.category === "movie" ? "Popular Movie Series" : 
       "more Series"
     
 
@@ -171,9 +172,11 @@ export default async function CategoryPage({
                 Browse by sort
               </h1>
               <BrowseBySortClientPage 
-                initialData={data} 
-                initialSortOrder={sortOrder} 
-                title={title ?? ''}
+                initialData={data}
+                initialSortOrder={sortOrder}
+                title={title ?? ''} 
+                
+
               />
             </div>
 
@@ -182,6 +185,7 @@ export default async function CategoryPage({
                 <div key={movie.title} className="relative w-full">
                   <PreviewCard
                     key={movie.id}
+                    id={movie.id}
                     imageString={movie.imageString}
                     videoSource={movie.videoSource}
                     title={movie.title}
@@ -203,13 +207,14 @@ export default async function CategoryPage({
         </div>
         </>
         
-        ) : genre === "query" && data.length>0 ? (
+        ) : genre === "query" && data.length>0  ? (
           <div className="flex flex-col top-14 sm:top-32 relative padding-layout">
-            <div className="genre-grid-layout">
+            <div className={styles['genre-grid-layout']}>
               {data.map((movie) => (
                 <div key={movie.title} className="relative w-full">
                   <PreviewCard
                     key={movie.id}
+                    id={movie.id}
                     imageString={movie.imageString}
                     videoSource={movie.videoSource}
                     title={movie.title}
@@ -230,8 +235,8 @@ export default async function CategoryPage({
             </div>
           </div>
 
-        ) : genre === "query" && data.length<=0 ? (
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
+        ) : genre === "query" && data.length === 0 ? (
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
             <p>{`Your search for "${query}" did not have any matches.`}</p>
             <p>Suggestions:</p>
             <ul className="list-disc ml-10">
@@ -245,20 +250,24 @@ export default async function CategoryPage({
         ):(
           <>
             {movie &&  genre !== "new" && (
+              <>
               <MovieVideo
-                      key={movie.id}
-                      imageString={movie.imageString}
-                      videoSource={movie.videoSource}
-                      title={movie.title}
-                      overview={movie.overview}
-                      cast={movie.cast}
-                      genres={movie.genres}
-                      age={movie.age}
-                      release={movie.release}
-                      duration={movie.duration}
-                      watchList={movie.WatchLists.length > 0 ? true : false}
-                      watchlistId={movie.WatchLists[0]?.id as string}
-                      movieId={movie.id} id={movie.id}              />
+                key={movie.id}
+                imageString={movie.imageString}
+                videoSource={movie.videoSource}
+                title={movie.title}
+                overview={movie.overview}
+                cast={movie.cast}
+                genres={movie.genres}
+                age={movie.age}
+                release={movie.release}
+                duration={movie.duration}
+                watchList={movie.WatchLists.length > 0 ? true : false}
+                watchlistId={movie.WatchLists[0]?.id as string}
+                movieId={movie.id} id={movie.id}
+              />
+              
+              </>
             )}
 
             <div className={`${genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
@@ -271,7 +280,6 @@ export default async function CategoryPage({
                   "more Series"
                 }
               </h1> */}
-              <>
                 <CarouselModal 
                   sliderButtonSection={true}
                   sectionTitle={sectionTitle}// optional
@@ -282,6 +290,7 @@ export default async function CategoryPage({
                     <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
                       <PreviewCard 
                         key={movie.id}
+                        id={movie.id}
                         imageString={movie.imageString}
                         videoSource={movie.videoSource}
                         title={movie.title}
@@ -299,7 +308,6 @@ export default async function CategoryPage({
                     </div>
                   ))}
                 </CarouselModal>
-              </>
             </div>
           </>
         )}

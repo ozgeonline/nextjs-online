@@ -7,13 +7,7 @@ import { useVideoContext } from "../../providers/VideoContext";
 import { MovieProps } from "@/app/types/props";
 import styles from "./video.module.css"
 
-interface videoProps extends MovieProps {
-  id:number
-}
-
-const MovieVideo = forwardRef<HTMLVideoElement, videoProps>((
-  {
-  id,
+const MovieVideo = forwardRef<HTMLVideoElement, MovieProps>(({
   ...movieProps
 },ref) => {
 
@@ -32,7 +26,7 @@ const MovieVideo = forwardRef<HTMLVideoElement, videoProps>((
       <div className="flex relative top-0 left-0 w-full h-[80vw] md:h-[75vh] lg:h-[110vh]">
         <VideoModal
           ref={currentVideoRef}
-          id={id}
+          id={movieProps.id ?? 0}
           imageString={movieProps.imageString ?? ""}
           source={movieProps.videoSource ?? ""}
           alt={`${movieProps.title}-video player home page`}
@@ -64,9 +58,7 @@ const MovieVideo = forwardRef<HTMLVideoElement, videoProps>((
           {movieProps.overview}
         </p>
         <div className="relative">
-          <MovieButtons
-            {...movieProps}
-          />
+          <MovieButtons {...movieProps} />
         </div>
       </div>
     </div>

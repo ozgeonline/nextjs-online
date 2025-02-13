@@ -2,12 +2,13 @@
 
 import { PlayCircle } from 'lucide-react'
 import { PreviewCard_Info } from "./PreviewCard_Info"
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { MovieProps } from "@/app/types/props";
 import dynamic from 'next/dynamic';
 import { useCardContext } from '@/app/components/providers/CardContext';
 import styles from "./card.module.css";
+import BoxLoading_Animation from '../../animation/BoxLoading_Animation';
 
 const ImageModal = dynamic(() => import('@/app/components/ui/assets/ImageModal'));
 const ShowDialogButton = dynamic(() => import('@/app/components/controls/button/action/ShowDialogButton'));
@@ -49,6 +50,7 @@ export default function PreviewCard({
       onMouseLeave={handleMouseLeave} 
       aria-label={`${movieProps.movieId}.poster`}
     >
+      {/* <Suspense fallback={<BoxLoading_Animation />}> */}
       <div
         className={`
           relative cursor-pointer slide
@@ -58,7 +60,7 @@ export default function PreviewCard({
         <ImageModal
           imageString={movieProps.imageString ?? ''}
           imageText={`preview card open ${movieProps.title}-movie poster`}
-          imageStyle={`${imageStyle} max-lg:brightness-75 h-full w-full`}
+          imageStyle={`${imageStyle} max-lg:brightness-75 h-full w-full `}
         />
 
         <ShowDialogButton
@@ -68,6 +70,10 @@ export default function PreviewCard({
           <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
         </ShowDialogButton>
       </div>
+
+      {/* </Suspense> */}
+
+
       <div
         className={`
           ${styles.previewCardDefault}
@@ -91,5 +97,6 @@ export default function PreviewCard({
         />
       </div>
     </div>
+    
   )
 }

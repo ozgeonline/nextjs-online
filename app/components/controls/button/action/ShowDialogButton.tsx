@@ -23,14 +23,14 @@ export default function ShowDialogButton({
   const { setDialogOpen, currentVideoPause, currentVideoPlay,isDialogOpen } = useVideoContext();
 
   const clickOpenDialog = () => {
-    console.log("show dialog open")
+    // console.log("show dialog open")
     setOpen(true)
     setDialogOpen(true)
     currentVideoPause()
   }
 
   const clickCloseDialog = () => {
-    console.log("show dialog closed")
+    // console.log("show dialog closed")
     setOpen(false)
     setDialogOpen(false)
     currentVideoPlay()
