@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import LoginInputModal from "./LoginInputModal";
+import styles from "./controlsSignin.module.css"
 
 export default function LoginInput() {
   return (
@@ -18,7 +19,7 @@ export default function LoginInput() {
       />
       <button 
         type="submit"
-        className="z-10 flex items-center justify-center rounded-sm text-lg sm:text-2xl bg-main-red hover:brightness-90 w-40 sm:w-52 h-12 sm:h-14"
+        className={styles.getStartedBtn}
       >
         Get Started 
         <ChevronRight className="ml-2 max-sm:p-1" size="32px"/>

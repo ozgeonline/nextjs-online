@@ -32,9 +32,33 @@
   background-color: black;
 }
 
+.getStartedBtn {
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: calc(var(--radius) - 4px);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  background-color: hsl(var(--main_red));
+  width: 10rem;
+  height: 3rem;
+}
+
+.getStartedBtn:hover {
+  filter: brightness(0.9);
+}
+
 @media (min-width: 640px) {
   .form-wrapper-style {
     padding: 10rem 8rem;
+  }
+
+  .getStartedBtn {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    width: 13rem;
+    height: 3.5rem;
   }
 }
 

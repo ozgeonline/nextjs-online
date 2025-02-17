@@ -61,6 +61,14 @@
   font-size: 0.875rem;
 }
 
+/**** ---------- User Settings Menu ---------- *************/
+.infoIcon {
+  margin-inline-start: 0px;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: hsl(var(--muted-foreground));
+}
+
 @media (min-width: 640px) {
   .search-container {
     width: 13rem;

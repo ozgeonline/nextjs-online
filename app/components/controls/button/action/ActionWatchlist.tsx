@@ -19,33 +19,15 @@ export default function ActionWatchlist({
   actionStyle
 }:actionProps) {
   
-  const pathName = usePathname()
-  
-  //console.log("movieId",movieId)
-   
-  // const handleSubmit = async (action: 'add' | 'delete') => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('pathname', pathName);
+  const pathName = usePathname();
+  //console.log("pathName: " + pathName);
 
-  //     if (action === 'add' && movieId) {
-  //       formData.append('movieId', movieId.toString());
-  //       const result = await addTowatchlist(formData);
-  //       console.log(result?.message);
-  //     } else if (action === 'delete' && watchlistId) {
-  //       formData.append('watchlistId', watchlistId);
-  //       await deleteFromWatchlist(formData);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error handling watchlist:', error);
-  //   }
-  // };
   const handleSubmit = async (action: 'add' | 'delete') => {
     try {
       if (!pathName) {
         throw new Error('Pathname is missing.');
       }
-  
+
       const formData = new FormData();
       formData.append('pathname', pathName);
   
@@ -53,40 +35,31 @@ export default function ActionWatchlist({
         if (!movieId) {
           throw new Error('movieId is missing.');
         }
+        //console.log("movieId",movieId)
         formData.append('movieId', movieId.toString());
-        const result = await addTowatchlist(formData);
-        console.log('API Response:', result);
+        await addTowatchlist(formData);
+        // const result = await addTowatchlist(formData);
+        // console.log('API Response for add:', result);
+        
       } else if (action === 'delete') {
         if (!watchlistId) {
           throw new Error('watchlistId is missing.');
         }
         formData.append('watchlistId', watchlistId);
         await deleteFromWatchlist(formData);
+        // const result = await deleteFromWatchlist(formData);
+        // console.log('API Response for delete:', result);
       }
-      console.log('watchlistId', watchlistId)
+      //console.log('watchlistId', watchlistId)
   
-      // Debugging: Check FormData on every submission
-      
-      for (const pair of formData.entries()) {
-        console.log('FormData entries:',pair[0], pair[1]);
-      }
-  
-      // Ensure API request works correctly
-      // if (action === "add") {
-      //   const result = await addTowatchlist(formData);
-      //   console.log("API Response:", result);
-      // } else if (action === "delete") {
-      //   await deleteFromWatchlist(formData);
+      // Debugging
+      // for (const pair of formData.entries()) {
+      //   console.log('FormData entries:',pair[0], pair[1]);
       // }
     } catch (error) {
       console.error('Error handling watchlist:', error);
     }
   };
-  
- 
-  //console.log("movieId",movieId)
-  //console.log({ watchList, watchlistId, movieId, actionStyle });
-
 
   return (
     <>

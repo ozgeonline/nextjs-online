@@ -1,4 +1,4 @@
-import AuthLoginPage from "@/app/components/controls/input/AuthLoginPage"
+import AuthLoginPage from "@/app/components/controls/signin/AuthLoginPage"
 import { authOptions } from "@/app/utils/auth";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";

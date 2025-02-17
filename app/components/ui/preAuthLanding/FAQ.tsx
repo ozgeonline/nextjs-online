@@ -6,7 +6,7 @@ import { Plus } from 'lucide-react'
 import FAQData from '@/app/data/FAQ'
 import dynamic from 'next/dynamic'
 
-const LoginInput = dynamic(() => import("../../controls/input/LoginInput"));
+const LoginInput = dynamic(() => import("../../controls/signin/LoginInput"));
 
 export default function FQA() {
 

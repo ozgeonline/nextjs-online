@@ -1,32 +1,26 @@
 /*? ----------- RedCircle__Animation ---------- */
 .animate {
   animation: spin-slow 1s linear infinite;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  width: 50px;
-  height: 50px;
-  border-bottom-width: 0px;
-  border-width: 4px;
-  border-top-color: hsl(var(--main_red));
-  border-bottom-color: hsl(var(--main_red));
-  border-left-color: hsl(var(--main_red));
-  border-color: transparent;
-  margin-bottom: 8rem;
-  border-radius: 100%;
-
 }
 .animate::before{
   content: '';
   position: absolute;
   width: 4px;
   height: 4px;
-  background-color: #e50914;
+  background-color: hsl(var(--main_red));
   border-radius: 100%;
   top: 2.6px;
   right: -1px;
   transform: translateX(-100%);
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 
@@ -34,7 +28,6 @@
 
 .animate-box {
   animation: pulse 1.5s linear infinite ;
-  animation-delay: 5s;
 }
 .boxSize {
   height: 25vw;

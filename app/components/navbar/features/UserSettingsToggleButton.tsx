@@ -71,8 +71,7 @@ export default function UserSettingsToggleButton({
           />
         </Suspense>
       </Button>
-      {
-        openMenu && (
+      {openMenu && (
           <div 
             ref={menuRef}
             onMouseLeave={handleLeave} 
@@ -81,8 +80,7 @@ export default function UserSettingsToggleButton({
           >
             {children}
           </div>
-        )
-      }
+        )}
     </div>
   )
 }

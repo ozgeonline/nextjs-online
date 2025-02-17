@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/utils/auth";
 import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
-import LoginInput from "@/app/components/controls/input/LoginInput";
+import LoginInput from "@/app/components/controls/signin/LoginInput";
 
 const CardAnimationWatch = dynamic(() => import("@/app/components/ui/preAuthLanding/CardAnimationWatch"));
 const FAQ = dynamic(() => import("@/app/components/ui/preAuthLanding/FAQ"));

@@ -1,6 +1,8 @@
 "use client"
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import RedCircle_Animation from "../../animation/RedCircle_Animation";
 
 interface Props {
   path: string;
@@ -9,6 +11,23 @@ interface Props {
 
 export default function NavbarLink({ path, label }: Props) {
   const pathName = usePathname();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    startTransition(() => {
+      router.push(path);
+    });
+  };
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [pathName]);
+  
   return (
     <>
       {pathName === path ? (
@@ -24,14 +43,23 @@ export default function NavbarLink({ path, label }: Props) {
         ) : (
         <li>
           <Link
-            className="text-white text-xs xl:text-sm tracking-wider hover:text-main-white_300 transition-colors ease-in"
             href={path}
+            onClick={handleClick}
+            className="text-white text-xs xl:text-sm tracking-wider hover:text-main-white_300 transition-colors ease-in"
             prefetch={true}
           >
             {label}
           </Link>
         </li>
-    )}
-  </>
+      )}
+    
+      {
+        isPending || isLoading ? 
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <RedCircle_Animation />
+          </div>
+        : null
+      }
+    </>
   )
-}
+};

@@ -173,7 +173,6 @@ export default async function CategoryPage({
               <BrowseBySortClientPage 
                 initialData={data}
                 initialSortOrder={sortOrder}
-                title={title ?? ''} 
                 
 
               />

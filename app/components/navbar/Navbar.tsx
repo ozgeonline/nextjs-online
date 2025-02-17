@@ -1,3 +1,4 @@
+
 import { Bell } from "lucide-react"
 import { links } from "../../data/Navlinks.constant"
 import NavbarLink from "./navigation/NavbarLinks"
@@ -11,6 +12,7 @@ const ScrollingElementSSR = dynamic(() => import('./features/ScrollingElementSSR
 const UserSettingsMenu = dynamic(() => import('./features/UserSettingsMenu'));
 
 export default function Navbar() {
+  
   return (
     <ScrollingElementSSR>
       <div className="flex w-full justify-between items-start p-2 md:p-5">

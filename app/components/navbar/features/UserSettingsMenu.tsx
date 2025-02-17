@@ -6,6 +6,7 @@ import { Pencil, FolderSync, UserRound, HelpCircle } from 'lucide-react'
 import SignOutButton from "./SignOutButton"
 import Image  from "next/image"
 import UserSettingsToggleButton from "./UserSettingsToggleButton"
+import styles from "../navbar.module.css"
 
 export default async function UserSettingsMenu() {
   const session = await getServerSession(authOptions)
@@ -47,22 +48,22 @@ export default async function UserSettingsMenu() {
           {/* Menu Info */}
           <div className="px-3 space-y-1 *:hover:cursor-not-allowed *:flex *:items-center">
             <div className="hover:underline">
-              <Pencil className="ms-0 size-5 text-zinc-400"/>
+              <Pencil className={styles.infoIcon} />
               <span className="ps-2">Manage Profiles</span>
             </div>
 
             <div className="hover:underline">
-              <FolderSync className="ms-0 size-5  text-zinc-400"/>
+              <FolderSync className={styles.infoIcon}/>
               <span className="ps-2">Transfer Profiles</span>
             </div>
 
             <div className="hover:underline">
-              <UserRound className="ms-0 size-5  text-zinc-400"/>
+              <UserRound className={styles.infoIcon}/>
               <span className="ps-2">Account</span>
             </div>
             
             <div className="hover:underline">
-              <HelpCircle className="ms-0 size-5  text-zinc-400"/>
+              <HelpCircle className={styles.infoIcon}/>
               <span className="ps-2">Help Center</span>
             </div>
           </div>
