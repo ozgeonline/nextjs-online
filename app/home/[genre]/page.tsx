@@ -109,7 +109,6 @@ const normalizeTurkishCharacters = (str: string) => {
 interface CategoryPageProps {
   params: Promise<{
     genre: string;
-    title?: string;
   }>;
   searchParams: Promise<{
     sortOrder?: 'default' | 'asc' | 'desc';
@@ -125,7 +124,6 @@ export default async function CategoryPage({
     const resolvedSearchParams = await searchParams;
     const resolvedParams = await params;
     const genre = resolvedParams.genre ?? '';
-    const title = resolvedParams.title ?? '';
     const session = await getServerSession(authOptions);
     const sortOrder = (resolvedSearchParams.sortOrder as 'default' | 'asc' | 'desc') || 'default';
     const query = resolvedSearchParams.query || '';
@@ -173,8 +171,6 @@ export default async function CategoryPage({
               <BrowseBySortClientPage 
                 initialData={data}
                 initialSortOrder={sortOrder}
-                
-
               />
             </div>
 
