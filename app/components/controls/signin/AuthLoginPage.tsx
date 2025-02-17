@@ -3,7 +3,7 @@
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { memo } from "react"
-import styles from "./controlsInput.module.css"
+import styles from "./controlsSignin.module.css"
 
 const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Github__SignIn_Button"));
 const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Google__SignIn_Button"));
