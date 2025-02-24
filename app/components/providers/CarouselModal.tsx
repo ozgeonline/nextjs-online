@@ -39,7 +39,7 @@ export default function CarouselModal ({
   const [isContentLoaded, setIsContentLoaded] = useState(false);
 
   const { isHover } = useCardContext();
-  const { isWatched, hasSavedTime } = useVideoContext();
+  const { hasSavedTime } = useVideoContext();
   const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
     
   const handleClick = (direction: "prev" | "next") => {
@@ -119,7 +119,7 @@ export default function CarouselModal ({
           style={{
             width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`,
           }}
-          className={!isWatched ? "pr-[0.5vw]" : "px-[0.5vw]"}
+          className= "px-[0.5vw]"
           onLoad={handleImageLoad}
         >
           {child}
