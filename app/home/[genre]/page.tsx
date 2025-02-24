@@ -143,10 +143,7 @@ export default async function CategoryPage({
       data.sort((a, b) => 
         sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
       );
-      //PreviewCard.propTypes.openDialogCardStyle.prototype === false
     }
-
-    //const openDialogCardStyle = params.genre === "query" || params.genre === "audio";
 
     const sectionTitle =  
       genre === "new" ? "New on web" : 
@@ -154,14 +151,12 @@ export default async function CategoryPage({
       movie?.category === "show" ? "Popular TV Series" :
       movie?.category === "movie" ? "Popular Movie Series" : 
       "more Series"
-    
 
   return (
     <VideoProvider>
       <CardProvider>
-      <div>
-      {
-        genre === "audio" ? (
+        <>
+        {genre === "audio" ? (
           <>
           <div className="top-14 sm:top-24 relative padding-layout">
             <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
@@ -230,7 +225,7 @@ export default async function CategoryPage({
           </div>
 
         ) : genre === "query" && data.length === 0 ? (
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
+          <div className="absolute top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
             <p>{`Your search for "${query}" did not have any matches.`}</p>
             <p>Suggestions:</p>
             <ul className="list-disc ml-10">
@@ -243,70 +238,60 @@ export default async function CategoryPage({
 
         ):(
           <>
-            {movie &&  genre !== "new" && (
-              <>
-              <MovieVideo
-                key={movie.id}
-                imageString={movie.imageString}
-                videoSource={movie.videoSource}
-                title={movie.title}
-                overview={movie.overview}
-                cast={movie.cast}
-                genres={movie.genres}
-                age={movie.age}
-                release={movie.release}
-                duration={movie.duration}
-                watchList={movie.WatchLists.length > 0 ? true : false}
-                watchlistId={movie.WatchLists[0]?.id as string}
-                movieId={movie.id} id={movie.id}
-              />
-              
-              </>
-            )}
+          {movie &&  genre !== "new" && (
+            <>
+            <MovieVideo
+              key={movie.id}
+              imageString={movie.imageString}
+              videoSource={movie.videoSource}
+              title={movie.title}
+              overview={movie.overview}
+              cast={movie.cast}
+              genres={movie.genres}
+              age={movie.age}
+              release={movie.release}
+              duration={movie.duration}
+              watchList={movie.WatchLists.length > 0 ? true : false}
+              watchlistId={movie.WatchLists[0]?.id as string}
+              movieId={movie.id} id={movie.id}
+            />
+            </>
+          )}
 
-            <div className={`${genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
-              {/* <h1 className="relative title sm:text-xl">
-                {
-                  params.genre === "new" ? "New on web" : 
-                  params.genre === "kids" ? "We Think You’ll Love These" : 
-                  movie.category === "show" ? "Popular TV Series" :
-                  movie.category === "movie" ? "Popular Movie Series" : 
-                  "more Series"
-                }
-              </h1> */}
-                <CarouselModal 
-                  sliderButtonSection={true}
-                  sectionTitle={sectionTitle}// optional
-                  id={data.map(movie => movie.id)}
-                  key={data.map(movie => movie.id).join('-')}
-                >
-                  {data.map((movie) => (
-                    <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
-                      <PreviewCard 
-                        key={movie.id}
-                        id={movie.id}
-                        imageString={movie.imageString}
-                        videoSource={movie.videoSource}
-                        title={movie.title}
-                        overview={movie.overview}
-                        age={movie.age}
-                        cast={movie.cast}
-                        genres={movie.genres}
-                        release={movie.release}
-                        duration={movie.duration}
-                        watchList={movie.WatchLists.length > 0 ? true : false}
-                        watchlistId={movie.WatchLists[0]?.id as string}
-                        movieId={movie.id}
-                        imageCardWrapper={true}
-                        imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
-                    </div>
-                  ))}
-                </CarouselModal>
-            </div>
+          <div className={`${genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
+            <CarouselModal 
+              sliderButtonSection={true}
+              sectionTitle={sectionTitle}
+              id={data.map(movie => movie.id)}
+              key={data.map(movie => movie.id).join('-')}
+            >
+              {data.map((movie) => (
+                <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
+                  <PreviewCard 
+                    key={movie.id}
+                    id={movie.id}
+                    imageString={movie.imageString}
+                    videoSource={movie.videoSource}
+                    title={movie.title}
+                    overview={movie.overview}
+                    age={movie.age}
+                    cast={movie.cast}
+                    genres={movie.genres}
+                    release={movie.release}
+                    duration={movie.duration}
+                    watchList={movie.WatchLists.length > 0 ? true : false}
+                    watchlistId={movie.WatchLists[0]?.id as string}
+                    movieId={movie.id}
+                    imageCardWrapper={true}
+                    imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
+                </div>
+              ))}
+            </CarouselModal>
+          </div>
           </>
         )}
-      </div>
+        </>
       </CardProvider>
-      </VideoProvider>
-    )
-  }
+    </VideoProvider>
+  )
+}

@@ -65,6 +65,7 @@ export default function ShowDialogButton({
         scroll={false}
         aria-label={`${movieProps.title} Dialog Open`}
         onClick={clickOpenDialog}
+        prefetch={false}
       >
         {children}
       </Link>

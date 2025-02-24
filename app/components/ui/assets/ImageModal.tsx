@@ -6,17 +6,20 @@ interface ImageCard {
   imageString: string
   imageText: string
   imageStyle: string
+  onLoad?: () => void 
 }
 
 export default function ImageModal({
   imageString,
   imageText,
   imageStyle,
+  onLoad
 }: ImageCard) {
   const [loading, setLoading] = useState(true);
 
   const handleImageLoad = () => {
     setLoading(false);
+    if (onLoad) onLoad();
   };
   
   return (
@@ -24,7 +27,7 @@ export default function ImageModal({
       {loading && (
         <div 
           className={`${imageStyle} bg-primary-foreground`}
-          aria-label={`${imageStyle} poster`}
+          aria-label={`${imageText} poster`}
         ></div>
       )}
       <Image

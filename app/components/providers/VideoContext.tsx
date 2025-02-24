@@ -1,18 +1,15 @@
 "use client";
-
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 interface VideoContextType {
   currentVideoRef: React.MutableRefObject<HTMLVideoElement | null>;
   continueWatchingVideoElement:  React.RefObject<HTMLVideoElement | null>;
 
-
   isActive: boolean;
 
   isDialogOpen: boolean; 
   setDialogOpen: (isOpen: boolean) => void; 
 
-  isWatched: (id: number) => boolean;
   watchedVideos:number[];
   markAsWatched: (id: number, watched: boolean) => void;
 
@@ -22,7 +19,6 @@ interface VideoContextType {
 
   hasSavedTime: (id: number) => boolean;
   savedTime: { [id: number]: number };
-  //isTime: (id: number) => boolean;
 
   currentVideoPlay: () => void;
   currentVideoPause: () => void;
@@ -46,41 +42,42 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
   // }, [videoRef]);
   
   const continueVideoElement = useRef<HTMLVideoElement | null>(null);
-
   const [isActive, setIsActive] = useState<boolean>(true);
   //console.log("active",isActive)
-
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   //console.log("isDialogOpen",isDialogOpen)
 
-  //? watched video series
+  //********* watched video series
   const [watchedVideos, setWatchedVideos] = useState<number[]>([]);
-  //? current play time
-  const [savedTime, setSavedTime] = useState<{ [id: number]: number }>({});
 
-  //! After the component is connected, localStorage data is loaded to eliminate client-server incompatibilities.
+  //********* current play time
+  const [savedTime, setSavedTime] = useState<{ [id: number]: number }>({});
+  // useEffect(() => {
+  //   console.log("savedTime: ", savedTime);
+  // }, [savedTime]);
+
+  //! ********* After the component is connected, localStorage data is loaded to eliminate client-server incompatibilities.
   useEffect(() => {
     const savedVideos = localStorage.getItem('watchedVideos');
     if (savedVideos) {
       setWatchedVideos(JSON.parse(savedVideos));
     }
 
-    //? Times recorded in localStorage will be saved.
+    //* Times recorded in localStorage will be saved.
     const times = localStorage.getItem('videoTimes');
     if (times) {
       setSavedTime(JSON.parse(times));
     }
   }, []);
 
-  //const hasSavedTime = (id: number) => Boolean(savedTime[id] && (savedTime[id] > 0 && savedTime[id] !== undefined));
-
-  //! Time control of the video that has started to be watching
+  //! ********* Time control of the video that has started to be watching
   const hasSavedTime = (id: number) => {
     const savedTimes = Object.keys(savedTime).map(Number);
+    //console.log("savedTimes", savedTimes)
     return savedTimes.includes(id);
   };
 
-  //! Array checks the video has been watched or not and lists
+  //! ********* Array checks the video has been watched or not and lists
   const markAsWatched = (id: number, watched: boolean = true) => {
     setWatchedVideos((prev) => {
       const isAlreadyWatched = prev.includes(id);
@@ -94,10 +91,10 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
 
-  //? Control of videos watched
-  const isWatched = (id: number) => watchedVideos?.includes(id);
+  //********* Control of videos watched
+  // const isWatched = (id: number) => watchedVideos?.includes(id);
 
-  //! Resetting the watch time when the video is finished watching
+  //! ********* Resetting the watch time when the video is finished watching
   const resetSavedTime = (id: number) => {
     setSavedTime(prev => {
       const updatedTimes = { ...prev, [id]: 0 };
@@ -106,16 +103,13 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
  
-  const handleVideoTimeUpdate = (id: number, currentTime:number) => {
-    if (continueVideoElement?.current) {
-      localStorage.setItem(`videoTimes`, currentTime.toString());
-      setSavedTime((prev) => {
-        const updatedTimes = { ...prev, [id]: currentTime };
-        localStorage.setItem('videoTimes', JSON.stringify(updatedTimes));
-        return updatedTimes;
-      });
-      //console.log(`${id}`,currentTime)
-    }
+  const handleVideoTimeUpdate = (id: number, currentTime: number) => {
+    setSavedTime((prev) => {
+      if (prev[id] === currentTime) return prev;
+      const updatedTimes = { ...prev, [id]: currentTime };
+      localStorage.setItem('videoTimes', JSON.stringify(updatedTimes));
+      return updatedTimes;
+    });
   };
 
   const handleVideoEnded = (id: number) => {
@@ -129,20 +123,23 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
   };
 
   const currentVideoPlay = () => {
-    //console.log("play");
     setIsActive(true);
     if (videoRef.current) {
-      videoRef.current.play();
+      try {
+         videoRef.current.play();
+        //console.log("Video is playing");
+      } catch (error) {
+        console.error("Failed to play video:", error);
+      }
     }
   };
 
   const currentVideoPause = () => {
-    //console.log("pause");
     setIsActive(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
+    videoRef?.current?.pause();
   };
+
+  
 
   return (
     <VideoContext.Provider 
@@ -156,17 +153,14 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
         setDialogOpen: setIsDialogOpen,
         watchedVideos, 
         markAsWatched,
-        isWatched,
         handleVideoTimeUpdate,
         handleVideoEnded,
         resetSavedTime,
         savedTime,
-        hasSavedTime,
-        // isTime
+        hasSavedTime
       }}
     >
       {children}
     </VideoContext.Provider>
   );
-}
-
+};

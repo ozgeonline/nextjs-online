@@ -26,22 +26,20 @@ const MovieVideo = forwardRef<HTMLVideoElement, MovieProps>(({
       <div className="flex relative top-0 left-0 w-full h-[80vw] md:h-[75vh] lg:h-[110vh]">
         <VideoModal
           ref={currentVideoRef}
-          id={movieProps.id ?? 0}
-          imageString={movieProps.imageString ?? ""}
-          source={movieProps.videoSource ?? ""}
+          id={movieProps.id as number}
+          imageString={movieProps.imageString as string}
+          source={movieProps.videoSource as string}
           alt={`${movieProps.title}-video player home page`}
-          videoStyle="w-full h-full absolute top-0 left-0 object-cover -z-20 brightness-[60%]"
-          isMovieVideo={true}
-          enableControls={false}
-          enableAutoPlay={true}
+          videoStyle="w-full h-full absolute top-0 left-0 object-cover -z-50 brightness-[60%]"
+          isCurrentMovieVideo={true}
           enableLoop={true}
-          enableTimeUpdate={false}
-          enablePlay={false}
-          enableEnded={false}
-          // enableLoadedMetadata={false}
+          enableAutoPlay={true}
+          enableControls={false}
         />
         <div 
-          className="w-full absolute left-0 bottom-0 h-20 -z-10 bg-gradient-to-b from-transparent bg-main-dark/95 to-main-dark"
+          className="
+            w-full absolute left-0 bottom-0 h-14 -z-10 
+            bg-gradient-to-b from-transparent via-background/70 via-25% to-background/100"
         ></div>
       </div>
 

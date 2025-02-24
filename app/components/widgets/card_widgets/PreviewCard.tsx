@@ -25,6 +25,7 @@ export default function PreviewCard({
 }: PreviewModalProps) {
   const {setIsHover, isHover } = useCardContext();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const searchParams = useSearchParams();
   const showDialog = searchParams.get('showDialog')
@@ -39,7 +40,6 @@ export default function PreviewCard({
 
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
-
   //console.log(isHover)
 
   return (
@@ -49,7 +49,6 @@ export default function PreviewCard({
       onMouseLeave={handleMouseLeave} 
       aria-label={`${movieProps.movieId}.poster`}
     >
-      {/* <Suspense fallback={<BoxLoading_Animation />}> */}
       <div
         className={`
           relative cursor-pointer slide
@@ -60,24 +59,23 @@ export default function PreviewCard({
           imageString={movieProps.imageString ?? ''}
           imageText={`preview card open ${movieProps.title}-movie poster`}
           imageStyle={`${imageStyle} max-lg:brightness-75 h-full w-full `}
+          onLoad={() => setImageLoaded(true)} 
         />
+        {imageLoaded && (
+          <ShowDialogButton
+            {...movieProps}
+            buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
+          >
+            <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
+          </ShowDialogButton>
+        )}
 
-        <ShowDialogButton
-          {...movieProps}
-          buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
-        >
-          <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
-        </ShowDialogButton>
       </div>
-
-      {/* </Suspense> */}
-
 
       <div
         className={`
           ${styles.previewCardDefault}
-          ${
-            !openDialog 
+          ${!openDialog 
               ? ` xl:group-hover/card:visible xl:group-hover/card:scale-150 xl:group-hover/card:z-50 `
               : "group-hover/card:invisible "
           }
@@ -96,6 +94,5 @@ export default function PreviewCard({
         />
       </div>
     </div>
-    
   )
 }

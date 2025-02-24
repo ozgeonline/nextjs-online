@@ -23,6 +23,8 @@ export default function Background_Img() {
           style={loading ? { visibility: 'hidden' } : {}}
           src="https://utfs.io/f/MzCIEEnlPGFDwrIAQaYqlTOprZ9Ac2Vvs1uHfUgS0GEoeBYX"
           alt="Background Image"
+          placeholder="blur"
+          blurDataURL="https://utfs.io/f/MzCIEEnlPGFDwrIAQaYqlTOprZ9Ac2Vvs1uHfUgS0GEoeBYX"
           aria-label="Background Image"
           className="-z-10 brightness-75 object-cover"
           sizes="(min-height:640px) 95vh, 80vh, width:100vw"

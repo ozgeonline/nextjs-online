@@ -1,14 +1,12 @@
 "use client"
 
-// import { MovieProps } from '@/app/src/types/props';
 import { useVideoContext } from '../../providers/VideoContext';
 import VideoModals from '../video_widgets/VideoModals';
 import styles from "./card.module.css"
-// import { ModalRef } from '../../movie__modal/VideoModal';
 import { forwardRef, useImperativeHandle } from 'react';
 
-type VideoPlayerProps = {
-  id:number;
+interface VideoPlayerProps {
+  movieId:number;
   imageString: string;
   videoSource: string;
   title:string;
@@ -16,61 +14,40 @@ type VideoPlayerProps = {
 }
 
 const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>((props, ref) => {
-    //console.log("ref",ref)
 
-  const {
-    // currentVideoRef,
-    continueWatchingVideoElement,
-    savedTime,
-    // handleVideoTimeUpdate,
-  } = useVideoContext();
-    
-  useImperativeHandle(ref, () => {
-     if (continueWatchingVideoElement?.current ) {
-       return continueWatchingVideoElement.current ;
-     } else {
-         throw new Error("continueWatchingVideoElement.current is null");
-       }
-   },[continueWatchingVideoElement?.current]);
+  const { continueWatchingVideoElement, savedTime } = useVideoContext();
+  useImperativeHandle(ref, () => continueWatchingVideoElement.current || ({} as HTMLVideoElement));
 
-
+  // console.log("continueWatchingVideoElement",continueWatchingVideoElement.current)
+  // console.log("savedTime",savedTime)
 
   return (
-    <div className="mt-12">
-      { savedTime[props.id] > 0 &&
-       ( <VideoModals
-          //onUpdateTime={handleTimeUpdate}
-          //onUpdateTime={handleTimeUpdate}
-          ref={ref}
-          enableControls={true}
-          enableAutoPlay={false}
+    <div className="mt-12 z-50">
+      {savedTime[props.movieId as number] > 0 && (
+        <VideoModals
+          ref={continueWatchingVideoElement  as React.RefObject<HTMLVideoElement>}
+          id={props.movieId as number}
           enableLoop={false}
-          enableTimeUpdate={true}
-          // enableEnded={true}
-          enablePlay={true}
-          // enableLoadedMetadata={true}
-          imageString={props.imageString}
-          source={props.videoSource}
-          alt={props.alt}
+          enableAutoPlay={false}
+          enableControls={true}
+          isCurrentMovieVideo={false}
+          imageString={props.imageString as string}
+          source={props.videoSource as string}
+          alt={props.title as string}
           videoStyle={`
             ${styles.cardSize} 
             z-50 continueVideo w-full object-cover rounded-sm flex overflow-hidden
           `}
-          id={props.id}  
-        />)
-      }
-      <div>
-      {savedTime[props.id] > 0 && <p>{savedTime[props.id]}</p>}
-      </div>
-    
+        />
+      )}
+      {/* for update check */}
+      {/* <div>
+        {savedTime[props.movieId as number] > 0 && <p>{savedTime[props.movieId as number]}</p>}
+      </div> */}
     </div>
   );
-}
-)
+});
 
 ContinueWatchingCardModal.displayName = "ContinueWatchingCardModal";
 export default ContinueWatchingCardModal;
-// function useImperativeHandle(ref: ForwardedRef<HTMLVideoElement>, arg1: () => HTMLVideoElement) {
-//   throw new Error('Function not implemented.');
-// }
 

@@ -49,7 +49,7 @@ async function getData(userId:string) {
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
   const initialData = await getData(session?.user?.email as string);
-  const movie = initialData[0];
+  const movie = initialData[11];
 
   // if (!initialData || initialData.length === 0) {
   //   return <div>No data available</div>;
@@ -94,14 +94,14 @@ export default async function HomePage() {
                 <div
                   key={data.id}
                   className="w-auto h-full"
-                  aria-label={`${data.id} : homepage`}
+                  aria-label={`${data.id}. Home Page Movie`}
                 >
                   <ContinueWatchingCardModal
                     videoSource={data.videoSource}
                     imageString={data.imageString}
                     title={data.title}
-                    id={data.id}
-                    alt={`${data.id}:Continue Watching Video`}
+                    movieId={data.id}
+                    alt={`${data.id}. Continue Watching Movie`}                    
                   />
                 </div>
               ))}
