@@ -140,5 +140,5 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
    );
   })
 
-
+VideoModal.displayName = 'VideoModal';
 export default VideoModal;
