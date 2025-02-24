@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 interface VideoContextType {
   currentVideoRef: React.MutableRefObject<HTMLVideoElement | null>;
@@ -103,14 +103,23 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
  
-  const handleVideoTimeUpdate = (id: number, currentTime: number) => {
+  // const handleVideoTimeUpdate = (id: number, currentTime: number) => {
+  //   setSavedTime((prev) => {
+  //     if (prev[id] === currentTime) return prev;
+  //     const updatedTimes = { ...prev, [id]: currentTime };
+  //     localStorage.setItem('videoTimes', JSON.stringify(updatedTimes));
+  //     return updatedTimes;
+  //   });
+  // };
+  const handleVideoTimeUpdate = useCallback((id: number, currentTime: number) => {
     setSavedTime((prev) => {
       if (prev[id] === currentTime) return prev;
       const updatedTimes = { ...prev, [id]: currentTime };
       localStorage.setItem('videoTimes', JSON.stringify(updatedTimes));
       return updatedTimes;
     });
-  };
+  }, []);
+  
 
   const handleVideoEnded = (id: number) => {
     markAsWatched(id, true); // Mark the video as watched

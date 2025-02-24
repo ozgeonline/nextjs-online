@@ -90,19 +90,23 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
       if (videoElement) {
         videoElement.addEventListener('play', playCurrentVideo);
         videoElement.addEventListener('pause', handlePause);
-        !isCurrentMovieVideo && videoElement.addEventListener('ended', handleEnded);
-        !isCurrentMovieVideo && videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        if(!isCurrentMovieVideo) {
+          videoElement.addEventListener('ended', handleEnded);
+          videoElement.addEventListener('timeupdate', handleTimeUpdate);
+        }
       }
-  
+
       return () => {
         if (videoElement) {
           videoElement.removeEventListener('play', playCurrentVideo);
           videoElement.removeEventListener('pause', handlePause);
-          !isCurrentMovieVideo && videoElement.removeEventListener('ended', handleEnded);
-          !isCurrentMovieVideo && videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+          if(!isCurrentMovieVideo) {
+            videoElement.removeEventListener('ended', handleEnded);
+            videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+          }
         }
       };
-    }, []);
+    }, [currentVideoPause, currentVideoPlay]);
   
     const handleVideoClick = () => {
       const allVideos = document.querySelectorAll('.continueVideo') as NodeListOf<HTMLVideoElement>;
