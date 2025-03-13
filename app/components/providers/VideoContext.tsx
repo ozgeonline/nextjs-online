@@ -1,14 +1,24 @@
 "use client";
-import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext, 
+  useCallback, 
+  useContext, 
+  useEffect, 
+  useRef, 
+  useState } from 'react';
 
 interface VideoContextType {
   currentVideoRef: React.MutableRefObject<HTMLVideoElement | null>;
   continueWatchingVideoElement:  React.RefObject<HTMLVideoElement | null>;
+  setContinueWatchingVideoElement: (element: HTMLVideoElement) => void;
 
   isActive: boolean;
 
   isDialogOpen: boolean; 
   setDialogOpen: (isOpen: boolean) => void; 
+
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 
   watchedVideos:number[];
   markAsWatched: (id: number, watched: boolean) => void;
@@ -46,6 +56,7 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
   //console.log("active",isActive)
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   //console.log("isDialogOpen",isDialogOpen)
+  const [isPlaying, setIsPlayToggle] = useState<boolean>(false);
 
   //********* watched video series
   const [watchedVideos, setWatchedVideos] = useState<number[]>([]);
@@ -55,6 +66,10 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
   // useEffect(() => {
   //   console.log("savedTime: ", savedTime);
   // }, [savedTime]);
+
+  const setContinueWatchingVideoElement = (element: HTMLVideoElement | null) => {
+    continueVideoElement.current = element;
+  };
 
   //! ********* After the component is connected, localStorage data is loaded to eliminate client-server incompatibilities.
   useEffect(() => {
@@ -103,14 +118,6 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     });
   };
  
-  // const handleVideoTimeUpdate = (id: number, currentTime: number) => {
-  //   setSavedTime((prev) => {
-  //     if (prev[id] === currentTime) return prev;
-  //     const updatedTimes = { ...prev, [id]: currentTime };
-  //     localStorage.setItem('videoTimes', JSON.stringify(updatedTimes));
-  //     return updatedTimes;
-  //   });
-  // };
   const handleVideoTimeUpdate = useCallback((id: number, currentTime: number) => {
     setSavedTime((prev) => {
       if (prev[id] === currentTime) return prev;
@@ -120,7 +127,6 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     });
   }, []);
   
-
   const handleVideoEnded = (id: number) => {
     markAsWatched(id, true); // Mark the video as watched
     setSavedTime(prev => {
@@ -148,18 +154,19 @@ export const VideoProvider : React.FC<{ children: React.ReactNode }> = ({ childr
     videoRef?.current?.pause();
   };
 
-  
-
   return (
     <VideoContext.Provider 
       value={{ 
         currentVideoRef: videoRef,
         continueWatchingVideoElement: continueVideoElement,
+        setContinueWatchingVideoElement,
         isActive,
         currentVideoPlay, 
         currentVideoPause, 
         isDialogOpen, 
         setDialogOpen: setIsDialogOpen,
+        isPlaying,
+        setIsPlaying:setIsPlayToggle,
         watchedVideos, 
         markAsWatched,
         handleVideoTimeUpdate,

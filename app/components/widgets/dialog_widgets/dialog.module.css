@@ -27,7 +27,32 @@
   cursor: context-menu;
   font-weight: 500;
 }
+/*************************************** Video ***************************************/
+.videoStyle {
+  z-index: -20;
+  position: absolute;
+  width: 100%;
+  height: 55vw;
+  object-fit: fill;
+  filter: brightness(0.75);
+}
 
+.progressStyle {
+  position: absolute;
+  top: 55vw;
+  left: 0;
+  filter: brightness(0.75);
+}
+
+/*************************************** Button ***************************************/
+.buttonControlsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 45vw;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
 .dialog-circleButtonSize {
   height: 7vw;
   width: 7vw;
@@ -55,10 +80,11 @@
 
 .dialog-playButton {
   z-index: 50;
-  width: 23vw;
+  width: 15vw;
   height: 7vw;
   font-weight: 800;
   background-color: white;
+  filter: brightness(0.9);
   border-radius: calc(var(--radius) - 4px);
   column-gap: 0.5rem;
   transition: all ease-in 150ms;
@@ -78,8 +104,7 @@
   align-items: center;
   justify-content: center;
   background-color: #262626;
-  border-width: 2px;
-  border-color: #71717a;
+  border: 2px solid #71717a;
   transition: all ease-in 150ms;
   opacity: 0.9;
   z-index: 50;
@@ -89,6 +114,7 @@
   filter: brightness(1.5);
 }
 
+/*************************************** Info ***************************************/
 .dialog-overview {
   color: white;
   margin-top: 1.25rem;
@@ -106,15 +132,15 @@
 .subtitles ~ p {
   display: none;
   position: absolute;
-  padding: 1em 2em;
+  padding: 0.25em 0.70em ;
   top: -2.5rem;
   left: -15rem;
   width: auto;
   height: auto;
-  padding: 0.25rem;
   background-color: #e4e4e7;
   text-align: center;
   font-weight: 500;
+  font-size: small;
   text-wrap: nowrap;
   border-radius: calc(var(--radius) - 4px);
   transition: all ease-in 150ms;
@@ -123,7 +149,7 @@
 .subtitles ~ p > span {
   position: absolute;
   top: 75%;
-  left: 15rem;
+  right: 7rem;
   width: 0.8rem;
   height: 0.8rem;
   transform: rotate(45deg);
@@ -135,23 +161,48 @@
   align-items: center;
 }
 
+.leftGenreWrapper {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-transform: lowercase;
+}
+
 @media (max-width: 380px) {
   .durationRelease-wrapper {
     flex-wrap: wrap;
     flex-direction: column;
     align-items: flex-start;
-
   }
 }
 
-@media (max-width:640px) {
+@media not all and (min-width: 640px) {
   .dialog-overview {
     font-size: 0.75rem;
     line-height: 1rem;
   }
+
+  .leftGenreWrapper {
+    padding-top: 0.5rem;
+  }
 }
 
 @media (min-width:640px) {
+  .videoStyle {
+    height: 45vw;
+  }
+
+  .progressStyle {
+    top: 45vw;
+  }
+
+  .buttonControlsWrapper {
+    margin-top: 35vw;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
   .dialog-playButton {
     font-size: 1.125rem;
     line-height: 1.75rem;
@@ -168,9 +219,25 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
+
+  .leftGenreWrapper {
+    font-size: 0.9rem;
+    line-height: 1rem;
+  }
 }
 
 @media (min-width:768px) {
+  .videoStyle {
+    height: 30vw;
+  }
+
+  .progressStyle {
+    top: 30vw;
+  }
+
+  .buttonControlsWrapper {
+    margin-top: 25vw;
+  }
   .dialog-playButton {
     width: 12vw;
     height: 4vw;
@@ -206,10 +273,13 @@
   }
 }
 
-@media (max-width: 1024px){
+@media not all and (min-width: 1024px) {
   .dialog-wrapper {
     width: 80%;
     margin: auto;
+  }
+  .leftGenreWrapper {
+    flex-wrap: wrap;
   }
 }
 

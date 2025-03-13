@@ -17,16 +17,18 @@ export default function NavbarLink({ path, label }: Props) {
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
+    if (pathName === path) return;
     setIsLoading(true);
 
     startTransition(() => {
       router.push(path);
     });
   };
-
   useEffect(() => {
-    setIsLoading(false);
-  }, [pathName]);
+    if (!isPending) {
+      setIsLoading(false);
+    }
+  }, [isPending, pathName]);
   
   return (
     <>

@@ -44,11 +44,7 @@ const MovieVideo = forwardRef<HTMLVideoElement, MovieProps>(({
       </div>
 
       {/* video content info */}
-      <div
-        className={`
-          ${styles['content-info']} space-y-1 lg:space-y-4
-        `}
-      >
+      <div className={styles['content-info'] + " " + "space-y-1 lg:space-y-4"}>
         <p className="text-white text-[5vw] sm:text-[3vw] line-clamp-1 font-bold">
           {movieProps.title}
         </p>

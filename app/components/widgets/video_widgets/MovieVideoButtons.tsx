@@ -10,7 +10,6 @@ export default function MovieButtons({ ...movieProps}: MovieProps) {
     <div className="flex text-[3vw] sm:text-lg font-semibold">
       <ShowDialogButton
         {...movieProps}
-       
         buttonStyle={`
           ${styles.movieButtons}
           text-black bg-white me-3 hover:brightness-90
@@ -20,8 +19,7 @@ export default function MovieButtons({ ...movieProps}: MovieProps) {
         <Play 
           className="size-[3vw] sm:size-[2vw] me-[0.75vw] rounded-full fill-inherit" 
           aria-label="more info button"
-        />
-        Play
+        /> Play
       </ShowDialogButton>
 
       <div
@@ -34,8 +32,7 @@ export default function MovieButtons({ ...movieProps}: MovieProps) {
         <InfoIcon
           className="size-[3vw] sm:size-[2vw] me-2"
           aria-label="more info button"
-        />
-        More Info
+        /> More Info
       </div>
     </div>
   )

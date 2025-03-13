@@ -29,7 +29,7 @@ export default async function UserSettingsMenu() {
         <div className="w-56 text-start rounded-none mt-6 pt-5 space-y-2 bg-black/90">
 
           {/* User info */}
-          <div className="px-3 flex flex-row">
+          <div className="px-3 flex">
             <Image 
               src={userImg} 
               alt="user image" 

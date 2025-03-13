@@ -9,7 +9,7 @@ interface DropdownMenuProps {
 
 export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const navbarRef = useRef<HTMLInputElement>(null);
+  const navbarRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -22,10 +22,10 @@ export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
   };
 
   useEffect(() => {
-    document.addEventListener('mouseout', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('mouseout', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
@@ -52,7 +52,7 @@ export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
       
       <div>
         {isOpen && 
-          <div onClick={handleClick} className='absolute left-11 mt-10'>
+          <div onClick={()=>handleClick} className='absolute left-11 mt-10'>
             {children}
           </div>
         }

@@ -12,6 +12,8 @@ type VideoProps = {
   enableAutoPlay:boolean;
   enableLoop:boolean;
   isCurrentMovieVideo: boolean;
+  children?:React.ReactNode;
+  handleVideoClick?:() => void;
 };
 
 const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
@@ -25,13 +27,11 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
     enableAutoPlay = false,
     enableLoop,
     isCurrentMovieVideo=true,
+    children,
+    handleVideoClick
   }, ref) => {
     
-    const { 
-      isActive,
-      currentVideoRef,
-      currentVideoPause,
-      currentVideoPlay,
+    const {
       markAsWatched,
       handleVideoTimeUpdate,
       handleVideoEnded,
@@ -41,7 +41,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
 
     const videoModalRef =useRef<HTMLVideoElement | null>(null);
     useImperativeHandle(ref, () => videoModalRef.current as HTMLVideoElement);
-
+    
     // console.log("videoModalRef",videoModalRef.current)
     // console.log("currentVideoRef",currentVideoRef.current)
     //console.log("active",isActive)
@@ -66,61 +66,6 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
       }
     };
 
-    useEffect(() => {
-      const handlePause = () => {
-        if (videoModalRef?.current && currentVideoRef?.current  && !isActive) {
-          currentVideoRef.current?.pause();
-          currentVideoPause();
-        }
-        //console.log("paused video")
-      };
-
-      const playCurrentVideo = () => {
-        if (videoModalRef?.current && currentVideoRef?.current && isActive) {
-          currentVideoRef.current?.play();
-          currentVideoPlay();
-        }
-        //console.log("Play current video")
-      };
-  
-      handlePause();
-      playCurrentVideo();
-  
-      const videoElement = videoModalRef.current;
-      if (videoElement) {
-        videoElement.addEventListener('play', playCurrentVideo);
-        videoElement.addEventListener('pause', handlePause);
-        if(!isCurrentMovieVideo) {
-          videoElement.addEventListener('ended', handleEnded);
-          videoElement.addEventListener('timeupdate', handleTimeUpdate);
-        }
-      }
-
-      return () => {
-        if (videoElement) {
-          videoElement.removeEventListener('play', playCurrentVideo);
-          videoElement.removeEventListener('pause', handlePause);
-          if(!isCurrentMovieVideo) {
-            videoElement.removeEventListener('ended', handleEnded);
-            videoElement.removeEventListener('timeupdate', handleTimeUpdate);
-          }
-        }
-      };
-    }, [currentVideoPause, currentVideoPlay]);
-  
-    const handleVideoClick = () => {
-      const allVideos = document.querySelectorAll('.continueVideo') as NodeListOf<HTMLVideoElement>;
-      //console.log(allVideos);
-
-      allVideos.forEach((video: HTMLVideoElement) => {
-        if (video !== videoModalRef.current && !isDialogOpen) {
-          video.pause();
-          video.currentTime = video.currentTime; //forces ui update
-          //console.log("Paused other videos");
-        }
-      });
-    };
-
     return (
       <>
         <video
@@ -133,13 +78,18 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
           loop={enableLoop}
           autoPlay={enableAutoPlay}
           controls={enableControls}
-          onPlay={handleVideoClick}
+          onPlay={() => {
+            // console.log(`VideoModals-onPlay triggered for video: ${id}`);
+            handleVideoClick && handleVideoClick();
+          }}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
+          data-movie-id={String(id)}
         >
           <source src={source} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
+        {children}
       </>
    );
   })

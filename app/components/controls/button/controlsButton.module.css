@@ -1,4 +1,4 @@
-/*************** Auth Icon Button Style / Google-Github ***************/
+/****************************** Auth Icon Button Style / Google-Github ******************************/
 .iconBtn {
   background-color: transparent;
   border: 1px solid ;
@@ -10,7 +10,7 @@
   filter: brightness(1.1);
   border: 2px solid ;
 }
-/***************  direct button to  auth page ***************/
+/******************************  Direct button to  auth page ******************************/
 .signInButton {
   background-color: hsl(var(--main_red));
   padding-top: 0.375rem ;
@@ -28,7 +28,7 @@
   opacity: 0.9;
 }
 
-/*************** Animation Wrapper Style ***************/
+/****************************** Animation Wrapper Style ******************************/
 .animationWrapper {
   position: absolute;
   top: 50vh;
@@ -38,7 +38,7 @@
   height: 100%;
 }
 
-/*************** ActionWatchlist ***************/
+/***************************** ActionWatchlist ******************************/
 .watchlistBtn {
   display: flex;
   align-items: center;
@@ -56,7 +56,7 @@
   transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
 }
 
-/*************** Like Dislike Button ***************/
+/****************************** Like Dislike Button ******************************/
 
 .likeBtnDefaultStyle {
   display: flex;
@@ -77,7 +77,7 @@
   color: hsl(var(--main_white_100));
 }
 
-/*************** Dropdown Menu ***************/
+/****************************** Dropdown Menu ******************************/
 .dropdownSelectionBtnWrapperDefault {
   display: flex;
   justify-content: space-between;
@@ -107,6 +107,39 @@
   opacity: 0.8;
 }
 
+/***************************** Play Pause Button **************************************/
+.playButtonPosition {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translateX(-40%) translateY(-50%);
+  z-index: 50;
+}
+
+/***************************** Sound on/off Button **************************************/
+
+
+.dialog-circleButtonSize {
+  height: 7vw;
+  width: 7vw;
+  border-radius: 100%;
+}
+.dialog-muteButton {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all ease-in 150ms;
+  opacity: 0.9;
+  z-index: 50;
+}
+
+.dialog-muteButton:hover {
+  filter: brightness(1.5);
+}
+
 @media (min-width: 640px) {
   .dropdownSelectionBtnWrapperDefault {
     min-width: 14rem;
@@ -116,6 +149,36 @@
     min-width: 14rem;
     right: 0;
   }
+
+  .dialog-circleButtonSize {
+    height: 5vw;
+    width: 5vw;
+  }
+}
+
+@media (min-width:768px) {
+
+  .dialog-circleButtonSize {
+    height: 4vw;
+    width: 4vw;
+  }
+  
+}
+
+@media (min-width:1024px) {
+  .dialog-circleButtonSize {
+    height: 3vw;
+    width: 3vw;
+  }
+ 
+}
+
+@media (min-width: 1280px) {
+  .dialog-circleButtonSize {
+    height: 2.5vw;
+    width: 2.5vw;
+  }
+  
 }
 
 @media not all and (min-width: 640px) {

@@ -33,6 +33,69 @@
   transform: scale(1);
 }
 
+/**************************************** PreviewCard_Info Styles ****************************************/
+.infoWrapper {
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  padding-bottom: 0.5rem;
+  min-height: 5rem;
+  border-bottom-right-radius: calc(var(--radius));
+  border-bottom-left-radius: calc(var(--radius));
+  background-color: hsl(var(--main_dark));
+}
+
+/**************************************** Continue Watching Card Styles ****************************************/
+.continueVideoSyle {
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: calc(var(--radius));
+  border-top-right-radius: calc(var(--radius));
+  filter: brightness(0.5);
+  overflow: hidden;
+}
+
+.playButtonPosition {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translateX(-40%) translateY(-50%);
+  z-index: 50;
+  opacity: 0.7;
+  transition: all cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.playButtonPosition:hover {
+  opacity: 0.9;
+}
+
+
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  z-index: 50;
+  opacity: 0.7;
+  box-sizing: content-box;
+}
+.muteButtonStyle {
+  position: absolute;
+  top: 50%;
+  right: 40%;
+  transform: translateX(40%) translateY(-50%);
+  z-index: 50;
+  border: 1px solid;
+  padding: 0.15rem;
+  border-radius: 100%;
+  opacity: 0.7;
+  transition: all cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.muteButtonStyle:hover {
+  filter: brightness(1.5);
+  opacity: 0.9;
+}
+
 @media (min-width: 640px) {
   .cardSize {
     height: 20vw;
@@ -44,6 +107,10 @@
 
   .top10cardWrapper {
     height: 22vw;
+  }
+
+  .muteButtonStyle {
+    padding: 0.3rem;
   }
 }
 
@@ -87,18 +154,4 @@
   .top10cardWrapper {
     height: 10.5vw;
   }
-}
-
-/******************** PreviewCard_Info Styles ********************/
-.infoWrapper {
-  width: 100%;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  padding-bottom: 0.5rem;
-  min-height: 5rem;
-  border-bottom-right-radius: calc(var(--radius));
-  border-bottom-left-radius: calc(var(--radius));
-  background-color: hsl(var(--main_dark));
-
 }

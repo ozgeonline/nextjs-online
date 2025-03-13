@@ -1,8 +1,10 @@
 "use client"
 
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { addTowatchlist, deleteFromWatchlist } from "@/app/utils/action";
-import { Check, Plus } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useVideoContext } from "@/app/components/providers/VideoContext";
+import { Check, Plus, Loader  } from "lucide-react";
 import styles from "../controlsButton.module.css"
 
 interface actionProps {
@@ -19,8 +21,12 @@ export default function ActionWatchlist({
   actionStyle
 }:actionProps) {
   
+  const { isDialogOpen } = useVideoContext();
   const pathName = usePathname();
   //console.log("pathName: " + pathName);
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isWatchListed, setIsWatchListed] = useState<boolean>(watchList);
 
   const handleSubmit = async (action: 'add' | 'delete') => {
     try {
@@ -28,6 +34,9 @@ export default function ActionWatchlist({
         throw new Error('Pathname is missing.');
       }
 
+      setLoading(true);
+      setIsWatchListed(action === 'add'); 
+      
       const formData = new FormData();
       formData.append('pathname', pathName);
   
@@ -47,60 +56,51 @@ export default function ActionWatchlist({
         }
         formData.append('watchlistId', watchlistId);
         await deleteFromWatchlist(formData);
+        if(isDialogOpen) {
+          router.push(pathName)
+        }
         // const result = await deleteFromWatchlist(formData);
         // console.log('API Response for delete:', result);
       }
       //console.log('watchlistId', watchlistId)
   
-      // Debugging
+      //_debugging
       // for (const pair of formData.entries()) {
       //   console.log('FormData entries:',pair[0], pair[1]);
       // }
     } catch (error) {
       console.error('Error handling watchlist:', error);
+      setIsWatchListed(action === 'delete');
+    }  finally {
+      setLoading(false); 
     }
   };
 
   return (
     <>
-      { watchList ? (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit('delete');
-          }}
-          className="h-full"
-        >
-          <input type="hidden" name="watchlistId" value={watchlistId} />
-          <input type="hidden" name="pathname" value={pathName} />
-          <button 
-            className={`
-              ${actionStyle} 
-              ${styles.watchlistBtn}
-            `}
-          > 
-            <Check className="text-main-white_100"/>
-          </button>
-        </form>
-      ) : (
-        <form 
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit('add');
-          }}
-        >
-          <input type="hidden" name="movieId" value={movieId} />
-          <input type="hidden" name="pathname" value={pathName} />
-          <button
-            className={`
-              ${actionStyle}
-              ${styles.watchlistBtn}
-            `}
-          >
-            <Plus className="text-main-white_100"/>
-          </button>
-        </form>
-      )}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(isWatchListed ? 'delete' : 'add');
+        }}
+        className="h-full"
+      >
+        <input
+          type="hidden"
+          name={isWatchListed ? "watchlistId" : "movieId"}
+          value={isWatchListed ? watchlistId : movieId}
+        />
+        <input type="hidden" name="pathname" value={pathName} />
+        <button 
+          className={`${actionStyle} ${styles.watchlistBtn} *:text-main-white_100`}
+          disabled={loading}
+        > 
+          {loading 
+            ? <Loader className="animate-spin"/>
+            : isWatchListed ?  <Check/> : <Plus/>
+          }
+        </button>
+      </form>
     </>
   )
 }

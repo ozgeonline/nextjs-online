@@ -49,7 +49,10 @@ async function getData(userId:string) {
 export default async function HomePage() {
   const session = await getServerSession(authOptions);
   const initialData = await getData(session?.user?.email as string);
-  const movie = initialData[11];
+  
+  const myListVideos = initialData.filter(movie => movie.WatchLists.length > 0);
+  const movie = myListVideos[0];
+  //console.log(movie, "Watching");
 
   // if (!initialData || initialData.length === 0) {
   //   return <div>No data available</div>;
