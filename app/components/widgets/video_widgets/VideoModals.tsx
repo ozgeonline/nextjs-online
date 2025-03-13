@@ -65,7 +65,8 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
         handleVideoTimeUpdate(id, updateTime);
       }
     };
-
+ // console.log(`VideoModals-onPlay triggered for video: ${id}`);
+ 
     return (
       <React.Fragment>
         <video
@@ -79,8 +80,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
           autoPlay={enableAutoPlay}
           controls={enableControls}
           onPlay={() => {
-            // console.log(`VideoModals-onPlay triggered for video: ${id}`);
-            handleVideoClick && handleVideoClick();
+           handleVideoClick && handleVideoClick();
           }}
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded}
