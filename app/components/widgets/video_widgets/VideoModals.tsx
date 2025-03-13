@@ -65,8 +65,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
         handleVideoTimeUpdate(id, updateTime);
       }
     };
- // console.log(`VideoModals-onPlay triggered for video: ${id}`);
- 
+ // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     return (
       <React.Fragment>
         <video
