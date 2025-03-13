@@ -67,7 +67,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
     };
 
     return (
-      <>
+      <React.Fragment>
         <video
           ref={videoModalRef}
           poster={imageString}
@@ -90,7 +90,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
           Your browser does not support the video tag.
         </video>
         {children}
-      </>
+      </React.Fragment>
    );
   })
 
