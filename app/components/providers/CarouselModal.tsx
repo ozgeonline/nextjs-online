@@ -42,12 +42,12 @@ export default function CarouselModal ({
   const { hasSavedTime } = useVideoContext();
   const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
     
+  const totalSlides = slides.length;
   const handleClick = (direction: "prev" | "next") => {
     setClickCount((prev)=>prev+1)
     //console.log(clickCount)
     if (isTransitioning) return;
 
-    //const totalSlides = slides.length;
     //console.log(totalSlides)
     
     const slideItems = Array.from(sliderRef.current?.children || []);
@@ -96,19 +96,32 @@ export default function CarouselModal ({
     }
   }, [currentSlide, sliderWidth, slidesPerView, isTransitioning]);
 
-  const handleImageLoad = () => {
-    setIsContentLoaded(true);
-  };
+  useEffect(()=> {
+    console.log("isContentLoaded:",isContentLoaded)
+  },[isContentLoaded])
 
   const renderSlides = slides.map((child, index) => {
     if (!React.isValidElement(child)) return null;
+    // console.log(child)
 
     const shouldHideSlide = filterWatchedVideos && id?.[index] && !hasSavedTime(id[index]);
+
+    useEffect(() => {
+      if (totalSlides > 0) {
+        //console.log("Slides mounted:", totalSlides);
+        const timer = setTimeout(() => {
+          //console.log("Setting isContentLoaded to true");
+          setIsContentLoaded(true);
+        }, 100); //delay for DOM settling
+        return () => clearTimeout(timer);
+      }
+    }, [totalSlides]);
 
     return (
       <div
         key={index}
         aria-label={`${id?.[index] && id[index]} : carousel slide`}
+        onLoad={() => setIsContentLoaded(true)}
 
         // className={shouldHideSlide ? "w-0 overflow-hidden" : `w-[${sliderWidth / slidesPerView}px]`}
         style={{
@@ -120,7 +133,6 @@ export default function CarouselModal ({
             width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`,
           }}
           className= "px-[0.5vw]"
-          onLoad={handleImageLoad}
         >
           {child}
         </div>
@@ -130,11 +142,12 @@ export default function CarouselModal ({
   
   //console.log(`Slide ${id} -hasSavedTime(${id}): ${hasSavedTime(id)}`);
   //console.log(`Total slides to render: ${slides.length}`);
+  // console.log("isContentLoaded:",isContentLoaded)
 
   return (
     <div 
       className={`
-        animate-slide-X
+        animate-slide-X 
          ${isHover ? 'opacity-100 z-50' : 'opacity-95'}
       `}
       aria-label='Carousel wrapper'
@@ -152,7 +165,7 @@ export default function CarouselModal ({
       </div>
 
       <div className='relative w-full h-full z-50'>
-        {isContentLoaded && (
+        { (
           <div>
             <button 
               onClick={() => handleClick("prev")}

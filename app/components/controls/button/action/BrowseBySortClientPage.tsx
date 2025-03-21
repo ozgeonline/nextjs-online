@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import RedCircle_Animation from "@/app/components/animation/RedCircle_Animation";
 import { MovieProps } from "@/app/types/props";
 import styles from "../controlsButton.module.css";
+import { ChevronDown } from "lucide-react";
 
 interface CategoryPageClientProps extends MovieProps {
   initialData: MovieProps[];
@@ -97,7 +98,9 @@ const BrowseBySortClientPage = ({ initialData, initialSortOrder }: CategoryPageC
             `}
           >
             {sortOrder === "default" ? "Suggestions For You" : sortOrder === "asc" ? "A-Z" : "Z-A"}
-            <span className="text-xs">&#11206;</span>
+            <span className="text-xs">
+              <ChevronDown className="fill-white"/>
+            </span>
           </div>
         </div>
 

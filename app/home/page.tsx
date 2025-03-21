@@ -9,6 +9,7 @@ import { CardProvider } from "../components/providers/CardContext";
 import ContinueWatchingCardModal from "../components/widgets/card_widgets/ContinueWatchingCard";
 import PreviewCard from "../components/widgets/card_widgets/PreviewCard";
 import Top10TV from "../components/widgets/card_widgets/Top10TV";
+import Footer from "../components/ui/preAuthLanding/Footer";
 
 const MovieVideo = dynamic(() => import("../components/widgets/video_widgets/MovieVideo"));
 const CarouselModal = dynamic(() => import('../components/providers/CarouselModal'));
@@ -51,7 +52,7 @@ export default async function HomePage() {
   const initialData = await getData(session?.user?.email as string);
   
   const myListVideos = initialData.filter(movie => movie.WatchLists.length > 0);
-  const movie = myListVideos[0];
+  const movie = myListVideos[0] || initialData[0];
   //console.log(movie, "Watching");
 
   // if (!initialData || initialData.length === 0) {
@@ -60,7 +61,7 @@ export default async function HomePage() {
   //console.log(initialData)
   return (
     <>
-    <div className="overflow-hidden ">
+    <div className="">
       <VideoProvider>
         <MovieVideo
           key={movie?.id}
@@ -96,7 +97,7 @@ export default async function HomePage() {
               {initialData.map((data) => (
                 <div
                   key={data.id}
-                  className="w-auto h-full"
+                  className="w-auto h-full mb-5"
                   aria-label={`${data.id}. Home Page Movie`}
                 >
                   <ContinueWatchingCardModal
@@ -111,7 +112,7 @@ export default async function HomePage() {
             </CarouselModal>
 
             {/* //? --- Home Page Sections --- */}
-            <>
+            <div className="space-y-5 *:relative">
               <Section 
                 sectionTitle="New"
                 movies={initialData.filter(movie => movie.release === 2024)}
@@ -140,12 +141,14 @@ export default async function HomePage() {
                 sectionTitle="Get In On the Action"
                 movies={initialData.filter(movie => movie.genres.toLowerCase().includes("action"))}
               />
-            </>
+            </div>
           </div>
         </CardProvider> {/*//!-end */}
 
       </VideoProvider>
     </div>
+
+    <Footer />
     </>
   );
 }

@@ -19,8 +19,6 @@
 .dialog-wrapper {
   width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
   border-radius: calc(var(--radius) - 4px);
   background-color: hsl(var(--main_dark));
   padding-bottom: 1.25rem;
@@ -54,8 +52,8 @@
   padding-right: 1.25rem;
 }
 .dialog-circleButtonSize {
-  height: 7vw;
-  width: 7vw;
+  height: 8vw;
+  width: 8vw;
   border-radius: 100%;
 }
 
@@ -80,8 +78,8 @@
 
 .dialog-playButton {
   z-index: 50;
-  width: 15vw;
-  height: 7vw;
+  width: 20vw;
+  height: 8vw;
   font-weight: 800;
   background-color: white;
   filter: brightness(0.9);
@@ -276,7 +274,6 @@
 @media not all and (min-width: 1024px) {
   .dialog-wrapper {
     width: 80%;
-    margin: auto;
   }
   .leftGenreWrapper {
     flex-wrap: wrap;

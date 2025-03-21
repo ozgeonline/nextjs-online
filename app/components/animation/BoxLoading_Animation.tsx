@@ -9,14 +9,14 @@ export default function BoxLoading_Animation() {
 
   return (
     <div 
-      className='flex items-center justify-start top-40 relative w-full'
       ref={boxRef}
+      className='flex justify-start h-[100vh] w-full pt-[20vh]'
     >
       <div className="flex whitespace-nowrap relative h-auto w-auto">
         {[...Array(7)].map((_, index) => (
           <div 
             key={index} 
-            className='px-[0.5vw] *:rounded-sm'
+            className='px-[0.4vw] *:rounded-sm'
             style={{ 
               width: `${sliderWidth / slidesPerView}px`,
               animationDelay: `${index * 0.1}s`,
@@ -39,4 +39,4 @@ export default function BoxLoading_Animation() {
       </div>
     </div>
   )
-}
+};

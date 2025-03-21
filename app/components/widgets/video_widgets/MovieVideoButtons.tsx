@@ -13,7 +13,7 @@ export default function MovieButtons({ ...movieProps}: MovieProps) {
         buttonStyle={`
           ${styles.movieButtons}
           text-black bg-white me-3 hover:brightness-90
-          w-[15vw] sm:w-[12vw] md:w-[10vw] lg:w-[8vw]
+          w-[16vw] sm:w-[12vw] md:w-[10vw] lg:w-[8vw]
         `}
       >
         <Play 

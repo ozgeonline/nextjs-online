@@ -5,7 +5,7 @@ const Lang_Select = dynamic(() => import("@/app/components/ui/preAuthLanding/Lan
 
 export default function Footer() {
   return (
-    <div className="py-20 border-t-8 bg-black">
+    <div className="mt-[5vw] py-10 border-t-8 bg-black">
       <div className="max-w-[1170px] lg:ml-44 md:ml-16 ml-4">
         <div className="mb-2 underline text-main-white_100 cursor-pointer">
           Questions? Contact us.

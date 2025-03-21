@@ -40,11 +40,13 @@ export default function PreviewCard({
 
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
-  //console.log(isHover)
+  // useEffect(() => {
+  //   console.log("isHover in PreviewCard:", isHover);
+  // }, [isHover]);
 
   return (
     <div 
-      className="group/card"
+      className="group/card relative "
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave} 
       aria-label={`${movieProps.movieId}.poster`}

@@ -4,6 +4,7 @@ import { authOptions } from "@/app/utils/auth";
 import prisma from "@/app/utils/db";
 import { getServerSession } from "next-auth/next";
 import dynamic from 'next/dynamic';
+import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
@@ -41,13 +42,18 @@ export default async function Watchlist() {
   //console.log(data.length)
 
   return (
-    <div className="flex flex-col padding-layout relative">
-      <h1 className="sm:text-2xl mt-24 mb-5">
+    <div className={`
+    
+      flex flex-col  relative overflow-hidden 
+    `}>
+      <h1 className="sm:text-2xl mt-24 mb-5 padding-layout">
         My List
       </h1>
       { data.length > 0 ? (
         <VideoProvider>
         <CardProvider>
+          <div className="pb-[55vh] padding-layout"
+            >
           <CarouselModal 
             sliderButtonSection={true}
             sectionTitle=""
@@ -56,7 +62,7 @@ export default async function Watchlist() {
           >
             
             {data.map((movie) => (
-              <div key={movie.Movie?.id} className="relative w-full h-full ">
+              <div key={movie.Movie?.id} className="relative w-full h-full">
                 <PreviewCard
                   id={movie.Movie?.id as number}
                   imageString={movie.Movie?.imageString as string}
@@ -76,6 +82,8 @@ export default async function Watchlist() {
               </div>
             ))}
           </CarouselModal>
+          </div>
+          <Footer />
         </CardProvider>
         </VideoProvider>
       ) : (

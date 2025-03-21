@@ -22,7 +22,7 @@ const MovieVideo = forwardRef<HTMLVideoElement, MovieProps>(({
   //console.log("currentVideoRef",currentVideoRef)
 
   return (
-    <div className="flex justify-start items-center w-full h-auto">
+    <div className="flex justify-start items-center w-full h-auto relative">
       <div className="flex relative top-0 left-0 w-full h-[80vw] md:h-[75vh] lg:h-[110vh]">
         <VideoModal
           ref={currentVideoRef}

@@ -1,14 +1,17 @@
 "use client"
 
-import React,{ useState, ReactNode, useRef, useEffect } from 'react';
+import React,{ useRef, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useCardContext } from '@/app/components/providers/CardContext';
 
 interface DropdownMenuProps {
-  children: ReactNode;
+  children: React.ReactNode;
+  onClick?: () => void;
+  onAnimationStart?: () => void;
 }
 
 export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const {isOpen, setIsOpen} = useCardContext()
   const navbarRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {
@@ -30,12 +33,13 @@ export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
     };
   }, []);
 
-  const handleClick = () => setIsOpen(false);
+  // console.log(' isOpen:', isOpen)
+  //console.log(children)
   
   return (
     <div 
       ref={navbarRef} 
-      className="flex lg:hidden mx-5 transition-all ease-in"
+      className="flex lg:hidden mx-5 transition-all ease-in relative left-5"
     >
       <button
         type="button"
@@ -44,19 +48,19 @@ export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
         onClick={toggleDropdown}
       >
         Browse
-        <div>
-          <ChevronDown className='p-1 fill-white items-center cursor-pointer'/>
-          {isOpen && <ChevronUp  className='p-1 fill-white '/>}
-        </div>
       </button>
+      <div >
+        <ChevronDown className='p-1 fill-white items-center cursor-pointer'/>
+        {isOpen && <ChevronUp  className='p-1 fill-white '/>}
+      </div>
       
-      <div>
-        {isOpen && 
-          <div onClick={()=>handleClick} className='absolute left-11 mt-10'>
+      <>
+        {isOpen &&
+          <div className='absolute left-1/2 transform -translate-x-1/2 mt-10'>
             {children}
           </div>
         }
-      </div>
+      </>
     </div>
   );
 }

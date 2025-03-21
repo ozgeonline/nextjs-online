@@ -4,7 +4,7 @@
   justify-content: center;
   border-radius: calc(var(--radius) - 4px);
   transition: all ease-in 150ms;
-  height: 6vw;
+  height: 7vw;
 }
 
 .movieButtons:hover {

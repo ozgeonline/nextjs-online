@@ -97,13 +97,12 @@ html {
   overflow-x: hidden;
 }
 
-canvas {
-  width: 100%;
-}
-
 @layer base {
   * { @apply border-border;}
-  body {  @apply bg-background text-foreground;}
+  body {  
+    @apply bg-background text-foreground;
+
+  }
 
   .padding-layout {
     padding-left: 1.25rem;
@@ -120,6 +119,9 @@ canvas {
       padding-right: 3vw;
     }
   }
+
+  /* @media (min-width:768px) {
+  } */
 
   @media (min-width: 1024px) {
     .title{

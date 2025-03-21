@@ -61,7 +61,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ videoModalRef, progressStyle,
       onClick={handleProgress}
     >
       <div
-        className="h-full bg-neutral-700"
+        className="h-full bg-sky-500"
         style={{ width: `${progress}%` }}
       />
     </div>

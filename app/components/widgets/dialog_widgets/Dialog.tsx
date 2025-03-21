@@ -112,13 +112,13 @@ const Dialog =({ onClose, ...movieProps }:dialogProps) => {
     <dialog
       ref={dialogRef}
       className={
-       "z-50 backdrop:bg-black/60 " + 
+       "z-50 backdrop:bg-black/60 flex" + 
         styles['overflow-css'] + ' ' +
         styles['dialog-wrapper']
       }
       aria-label={`Open video dialog for ${movieProps.title}`}
     >
-      <div className="flex flex-col relative w-full h-full">
+      <div className="flex flex-col relative top-0 w-full h-full ">
         {/* ***** Dialog Close Button ***** */}
         <div className='absolute right-12'>
           <Link

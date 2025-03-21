@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { CardProvider } from "@/app/components/providers/CardContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
 import styles from "../home.module.css"
+import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
@@ -155,10 +156,10 @@ export default async function CategoryPage({
   return (
     <VideoProvider>
       <CardProvider>
-        <>
+        <div className="overflow-hidden mb-10 h-full">
         {genre === "audio" ? (
           <>
-          <div className="top-14 sm:top-24 relative padding-layout">
+          <div className="top-14 sm:top-24 pb-[55vh] relative padding-layout">
             <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
               <h1 className="text-2xl md:text-3xl">
                 Browse by sort
@@ -258,7 +259,12 @@ export default async function CategoryPage({
             </>
           )}
 
-          <div className={`${genre === "new" ? "top-28" : "top-10"}  relative padding-layout`} >
+          <div 
+            className={`
+              relative padding-layout 
+              ${genre === "new" ? styles.newSectionWrapper : styles.sectionsWrapper}
+            `}
+          >
             <CarouselModal 
               sliderButtonSection={true}
               sectionTitle={sectionTitle}
@@ -290,7 +296,11 @@ export default async function CategoryPage({
           </div>
           </>
         )}
-        </>
+        </div>
+
+        <div className=" -z-10">
+        <Footer />
+        </div>
       </CardProvider>
     </VideoProvider>
   )

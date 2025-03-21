@@ -6,17 +6,28 @@ const ScrollingElementSSR = ({children} : {children: ReactNode}) => {
   const [scrolling, setScrolling] = useState(false)
 
   useEffect(() => {
+    // if (typeof window === "undefined") {
+    //   console.log("Window is undefined");
+    //   return;
+    // }
+
     const handleScroll = () => {
+      // console.log("Scroll position:", window.scrollY);
       if (window.scrollY > 10 ) {
         setScrolling(true)
       } else {
         setScrolling(false)
       }
     }
+    // console.log("Adding scroll listener");
+    handleScroll()
+    // console.log("window height:", window.innerHeight);
+    // console.log("Doc height:", document.documentElement.scrollHeight);
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      // console.log("Removing scroll listener");
+      window.removeEventListener("scroll", handleScroll)
     }
   }, [])
 
