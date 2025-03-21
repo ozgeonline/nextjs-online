@@ -61,7 +61,7 @@ export default async function HomePage() {
   //console.log(initialData)
   return (
     <>
-    <div className="">
+    <div className="overflow-hidden">
       <VideoProvider>
         <MovieVideo
           key={movie?.id}
