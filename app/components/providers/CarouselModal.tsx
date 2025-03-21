@@ -106,17 +106,6 @@ export default function CarouselModal ({
 
     const shouldHideSlide = filterWatchedVideos && id?.[index] && !hasSavedTime(id[index]);
 
-    useEffect(() => {
-      if (totalSlides > 0) {
-        //console.log("Slides mounted:", totalSlides);
-        const timer = setTimeout(() => {
-          //console.log("Setting isContentLoaded to true");
-          setIsContentLoaded(true);
-        }, 100); //delay for DOM settling
-        return () => clearTimeout(timer);
-      }
-    }, [totalSlides]);
-
     return (
       <div
         key={index}
@@ -139,6 +128,16 @@ export default function CarouselModal ({
       </div>
     );
   });
+  useEffect(() => {
+    if (totalSlides > 0) {
+      //console.log("Slides mounted:", totalSlides);
+      const timer = setTimeout(() => {
+        //console.log("Setting isContentLoaded to true");
+        setIsContentLoaded(true);
+      }, 100); //delay for DOM settling
+      return () => clearTimeout(timer);
+    }
+  }, [totalSlides]);
   
   //console.log(`Slide ${id} -hasSavedTime(${id}): ${hasSavedTime(id)}`);
   //console.log(`Total slides to render: ${slides.length}`);
