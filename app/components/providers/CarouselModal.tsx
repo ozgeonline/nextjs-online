@@ -8,27 +8,25 @@ import { useVideoContext } from '../providers/VideoContext';
 import styles from "./providers.module.css"
 
 interface CarouselModalProps {
+  children: React.ReactNode[];
+  id?:number[];
   sliderButtonSection?: boolean;
   sliderButtonSectionTop10?: boolean;
-  // carouselWrapperOpacity?:string;
-  children: React.ReactNode[];
+  continueCard?:boolean;
   sectionTitle?:string
-  // source?:string
-  id?:number[];
+  sectionTitleStyle?: string
   filterWatchedVideos?: boolean;
-  // title?:string;
 }
 
 export default function CarouselModal ({
   children: slides,
+  id,
   sliderButtonSection,
   sliderButtonSectionTop10,
-  // carouselWrapperOpacity,
+  continueCard,
   sectionTitle,
-  // source,
-  id,
+  sectionTitleStyle,
   filterWatchedVideos=false,
-  // title
   
 }: CarouselModalProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
@@ -39,8 +37,11 @@ export default function CarouselModal ({
   const [isContentLoaded, setIsContentLoaded] = useState(false);
 
   const { isHover } = useCardContext();
-  const { hasSavedTime } = useVideoContext();
+  const { hasSavedTime, savedTime } = useVideoContext();
   const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
+
+  const savedTimeLength = Object.keys(savedTime).length;
+  //console.log("savedTimeLength:", savedTimeLength)
     
   const totalSlides = slides.length;
   const handleClick = (direction: "prev" | "next") => {
@@ -84,7 +85,6 @@ export default function CarouselModal ({
       setTimeout(() => setIsTransitioning(false), 500);
       //console.log("addEndSlide",addEndSlide)
     }
-
   };
 
   useEffect(() => {
@@ -96,14 +96,13 @@ export default function CarouselModal ({
     }
   }, [currentSlide, sliderWidth, slidesPerView, isTransitioning]);
 
-  useEffect(()=> {
-    console.log("isContentLoaded:",isContentLoaded)
-  },[isContentLoaded])
+  // useEffect(()=> {
+  //   console.log("isContentLoaded:",isContentLoaded)
+  // },[isContentLoaded])
 
   const renderSlides = slides.map((child, index) => {
     if (!React.isValidElement(child)) return null;
     // console.log(child)
-
     const shouldHideSlide = filterWatchedVideos && id?.[index] && !hasSavedTime(id[index]);
 
     return (
@@ -111,16 +110,10 @@ export default function CarouselModal ({
         key={index}
         aria-label={`${id?.[index] && id[index]} : carousel slide`}
         onLoad={() => setIsContentLoaded(true)}
-
-        // className={shouldHideSlide ? "w-0 overflow-hidden" : `w-[${sliderWidth / slidesPerView}px]`}
-        style={{
-          width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`,
-        }}
+        style={{width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
       >
         <div
-          style={{
-            width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`,
-          }}
+          style={{ width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
           className= "px-[0.5vw]"
         >
           {child}
@@ -128,9 +121,10 @@ export default function CarouselModal ({
       </div>
     );
   });
+  
   useEffect(() => {
     if (totalSlides > 0) {
-      //console.log("Slides mounted:", totalSlides);
+      //console.log("Slides:", totalSlides);
       const timer = setTimeout(() => {
         //console.log("Setting isContentLoaded to true");
         setIsContentLoaded(true);
@@ -138,10 +132,6 @@ export default function CarouselModal ({
       return () => clearTimeout(timer);
     }
   }, [totalSlides]);
-  
-  //console.log(`Slide ${id} -hasSavedTime(${id}): ${hasSavedTime(id)}`);
-  //console.log(`Total slides to render: ${slides.length}`);
-  // console.log("isContentLoaded:",isContentLoaded)
 
   return (
     <div 
@@ -152,7 +142,10 @@ export default function CarouselModal ({
       aria-label='Carousel wrapper'
     >
       {isContentLoaded && (
-        <h2 className="relative title sm:text-2xl px-2">
+        <h2 className={`
+          ${sectionTitleStyle} 
+          relative title sm:text-2xl px-2 
+        `}>
           {sectionTitle}
         </h2>
       )}
@@ -164,7 +157,7 @@ export default function CarouselModal ({
       </div>
 
       <div className='relative w-full h-full z-50'>
-        { (
+        { isContentLoaded &&(
           <div>
             <button 
               onClick={() => handleClick("prev")}
@@ -190,7 +183,11 @@ export default function CarouselModal ({
                 `${styles.nextButton} ${styles.carouselButtons} group/next ` +
                 `${sliderButtonSection && styles.sliderButtonSectionSize} `+
                 `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} `+
-                `${slides.length < slidesPerView ? "hidden" : "block"} `
+                `${
+                  slides.length-1 < slidesPerView ? "hidden" 
+                  : continueCard && savedTimeLength-1 < slidesPerView ? "hidden" 
+                  : "block"
+                }`
               } 
             >
               <ChevronRight

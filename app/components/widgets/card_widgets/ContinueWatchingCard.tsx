@@ -88,7 +88,7 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
   };
 
   return (
-    <div className="mt-12 z-50 relative">
+    <div className="z-50 relative">
       {savedTime[props.movieId as number] > 0 && (
         <VideoModals
           ref={localVideoRef  as React.RefObject<HTMLVideoElement>}
@@ -109,7 +109,7 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
           <PlayToggleButton 
             videoModalRef={localVideoRef as React.RefObject<HTMLVideoElement>}
             id={props.movieId as number}
-            playIconStyle='fill-white'
+            playIconStyle='fill-white '
             playButtonPosition={styles.playButtonPosition}
           />
           <MuteToggleButton 

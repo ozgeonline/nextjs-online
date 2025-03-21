@@ -42,49 +42,45 @@ export default async function Watchlist() {
   //console.log(data.length)
 
   return (
-    <div className={`
-    
-      flex flex-col  relative overflow-hidden 
-    `}>
-      <h1 className="sm:text-2xl mt-24 mb-5 padding-layout">
-        My List
-      </h1>
-      { data.length > 0 ? (
+    <div className="flex flex-col relative overflow-hidden">
+      {data.length > 0 ? (
         <VideoProvider>
-        <CardProvider>
-          <div className="pb-[55vh] padding-layout"
-            >
-          <CarouselModal 
-            sliderButtonSection={true}
-            sectionTitle=""
-            // id={data.map(movie => movie.Movie?.id).filter(Boolean) as number[]}
-            key={data.map(movie => movie.Movie?.id).join('-')}
-          >
-            
-            {data.map((movie) => (
-              <div key={movie.Movie?.id} className="relative w-full h-full">
-                <PreviewCard
-                  id={movie.Movie?.id as number}
-                  imageString={movie.Movie?.imageString as string}
-                  videoSource={movie.Movie?.videoSource as string}
-                  title={movie.Movie?.title as string}
-                  overview={movie.Movie?.overview as string}
-                  cast={movie.Movie?.cast as string}
-                  genres={movie.Movie?.genres as string}
-                  age={movie.Movie?.age as number}
-                  release={movie.Movie?.release as number}
-                  duration={movie.Movie?.duration as number}
-                  watchList={movie.Movie?.WatchLists?.length !== undefined && movie.Movie?.WatchLists?.length > 0 ? true : false}
-                  watchlistId={movie.Movie?.WatchLists[0]?.id as string}
-                  movieId={movie.Movie?.id as number}
-                  imageCardWrapper={true}
-                  imageStyle="rounded-sm"    />
-              </div>
-            ))}
-          </CarouselModal>
-          </div>
-          <Footer />
-        </CardProvider>
+          <CardProvider>
+            <div className="pb-[55vh] padding-layout">
+              <CarouselModal 
+                sliderButtonSection={true}
+                sectionTitle="My List"
+                sectionTitleStyle="mt-24 mb-5"
+                // id={data.map(movie => movie.Movie?.id).filter(Boolean) as number[]}
+                key={data.map(movie => movie.Movie?.id).join('-')}
+              >
+                {data.map((movie) => (
+                  <div key={movie.Movie?.id} className="relative w-full h-full">
+                    <PreviewCard
+                      id={movie.Movie?.id as number}
+                      imageString={movie.Movie?.imageString as string}
+                      videoSource={movie.Movie?.videoSource as string}
+                      title={movie.Movie?.title as string}
+                      overview={movie.Movie?.overview as string}
+                      cast={movie.Movie?.cast as string}
+                      genres={movie.Movie?.genres as string}
+                      age={movie.Movie?.age as number}
+                      release={movie.Movie?.release as number}
+                      duration={movie.Movie?.duration as number}
+                      watchList={movie.Movie?.WatchLists?.length !== undefined && movie.Movie?.WatchLists?.length > 0 ? true : false}
+                      watchlistId={movie.Movie?.WatchLists[0]?.id as string}
+                      movieId={movie.Movie?.id as number}
+                      imageCardWrapper={true}
+                      imageStyle="rounded-sm"    />
+                  </div>
+                ))}
+              </CarouselModal>
+            </div>
+
+            {/* Bottom Section */}
+            <Footer />
+
+          </CardProvider>
         </VideoProvider>
       ) : (
             <div 
@@ -92,8 +88,6 @@ export default async function Watchlist() {
             >
               You haven&acute;t added any titles to your list yet.
             </div>
-          )
-      }
+          )}
     </div>
-  );
-}
+  )};

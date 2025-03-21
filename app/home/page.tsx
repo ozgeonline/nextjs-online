@@ -84,20 +84,21 @@ export default async function HomePage() {
           <div 
             className={`
               ${styles.sectionsWrapper}
-              padding-layout mb-14 relative space-y-1 sm:space-y-4 lg:space-y-8 xl:space-y-12
+              padding-layout relative space-y-1 sm:space-y-4 lg:space-y-8 xl:space-y-12
             `}
           >
             <CarouselModal
               sliderButtonSection={true}
               id={initialData.map((movie) => movie.id)}
               key={initialData.map((movie) => movie.id).join("-")}
-              sectionTitle="Continue"
+              sectionTitle="Continue to Watching"
               filterWatchedVideos={true}
+              continueCard={true}
             >
               {initialData.map((data) => (
                 <div
                   key={data.id}
-                  className="w-auto h-full mb-5"
+                  className="w-auto h-full"
                   aria-label={`${data.id}. Home Page Movie`}
                 >
                   <ContinueWatchingCardModal
@@ -112,7 +113,7 @@ export default async function HomePage() {
             </CarouselModal>
 
             {/* //? --- Home Page Sections --- */}
-            <div className="space-y-5 *:relative">
+            <div className="space-y-10 *:relative">
               <Section 
                 sectionTitle="New"
                 movies={initialData.filter(movie => movie.release === 2024)}
