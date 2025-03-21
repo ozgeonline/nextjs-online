@@ -198,7 +198,7 @@ export default async function CategoryPage({
         </>
         
         ) : genre === "query" && data.length>0  ? (
-          <div className="flex flex-col top-14 sm:top-32 relative padding-layout">
+          <div className="flex flex-col top-14 sm:top-32 relative padding-layout pb-[55vh]">
             <div className={styles['genre-grid-layout']}>
               {data.map((movie) => (
                 <div key={movie.title} className="relative w-full">
