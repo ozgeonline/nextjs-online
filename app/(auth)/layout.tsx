@@ -1,12 +1,12 @@
 import { ReactNode } from "react"
 import dynamic from "next/dynamic"
 
-const Background_Img = dynamic(() => import("../components/ui/assets/Background_Img"));
-const Logo_Img = dynamic(() => import("../components/ui/assets/Logo_Img"));
-const Lang_Selection = dynamic(() => import("../components/ui/preAuthLanding/Lang_Selection"));
-const SignIn_Button = dynamic(() => import("../components/controls/button/auth/SignIn_Button"));
+const Background_Img = dynamic(() => import("@/app/components/ui/assets/Background_Img"));
+const Logo_Img = dynamic(() => import("@/app/components/ui/assets/Logo_Img"));
+const Lang_Selection = dynamic(() => import("@/app/components/ui/preAuthLanding/Lang_Selection"));
+const SignIn_Button = dynamic(() => import("@/app/components/controls/button/auth/SignIn_Button"));
 
-export default function AuthLayout({children}:{children: ReactNode}){
+export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="flex flex-col relative">
       <>

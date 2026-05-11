@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
-import { NextAuthProvider } from "./components/providers/NextAuthProvider";
+import { NextAuthProvider } from "@/app/components/providers/NextAuthProvider";
 
 const nextFont = Montserrat({
   style: ['normal', 'italic'],
   subsets: ['latin'],
   weight: ['400', '700'],
-  preload:false
+  preload: false
 })
 
 

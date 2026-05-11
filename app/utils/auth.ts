@@ -1,7 +1,6 @@
 import type { NextAuthOptions } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./db";
-
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
@@ -10,6 +9,7 @@ import { AdapterAccount, AdapterUser } from "next-auth/adapters";
 export const authOptions = {
   adapter: {
     ...PrismaAdapter(prisma),
+    // Ensure linked OAuth accounts always resolve to users with a usable email.
     async getUserByAccount(account: Pick<AdapterAccount, "providerAccountId" | "provider">): Promise<AdapterUser | null> {
       const result = await prisma.account.findUnique({
         where: {
@@ -18,7 +18,6 @@ export const authOptions = {
             providerAccountId: account.providerAccountId,
           },
         },
-
         select: {
           user: true,
         },
@@ -27,43 +26,21 @@ export const authOptions = {
       return result?.user?.email ? { ...result.user, email: result.user.email! } : null;
     }
   },
-  // pages: {
-  //   signIn: '/sign-up',
-  //   error: '',   // Error page
-  // },
   callbacks: {
     async signIn({ profile }) {
-    //async signIn({ account, profile }) {
-      if(!profile?.email) return false;
-      // console.log("Account:", account);
-      // console.log("Profile:", profile);
+      if (!profile?.email) return false;
       return true;
     },
     async session({ session }) {
-    //async session({ session, user }) {
-      // console.log("Session:", session);
-      // console.log("User:", user);
       return session;
     },
-    // async redirect({ url, baseUrl }) {
-    //   //console.log("baseUrl:", baseUrl, "url:", url);
-    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
-    //   if (new URL(url).origin === baseUrl) return url;
-    //   return baseUrl; //if conditions are not met fallback to baseUrl
-    // },
     async jwt({ token, account }) {
-      //console.log("Token:", token);
       if (account) {
         token.accessToken = account.access_token;
       }
       return token;
     },
   },
-  // session: {
-  //   strategy:"database",
-  //   maxAge: 30 * 24 * 60 * 60, 
-  //   updateAge: 24 * 60 * 60,
-  // },
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
@@ -81,7 +58,6 @@ export const authOptions = {
         }
       },
       profile(profile) {
-        //console.log("Google Profile:", profile);
         return {
           id: profile.sub,
           name: profile.name,
@@ -89,7 +65,6 @@ export const authOptions = {
           image: profile.picture,
         };
       },
-      accessTokenUrl: process.env.NEXTAUTH_URL,
       wellKnown: "https://accounts.google.com/.well-known/openid-configuration",
     }),
     EmailProvider({
@@ -105,10 +80,8 @@ export const authOptions = {
     }),
   ],
   session: {
-    updateAge :3500
+    updateAge: 3500
   },
   secret: process.env.AUTH_SECRET,
-
-  debug:true
-  //debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthOptions;

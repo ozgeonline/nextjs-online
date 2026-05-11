@@ -1,19 +1,17 @@
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/utils/auth";
 import { redirect } from "next/navigation";
-import dynamic from "next/dynamic";
-import LoginInput from "@/app/components/controls/signin/LoginInput";
-
-const CardAnimationWatch = dynamic(() => import("@/app/components/ui/preAuthLanding/CardAnimationWatch"));
-const FAQ = dynamic(() => import("@/app/components/ui/preAuthLanding/FAQ"));
-const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
+import { authOptions } from "@/app/utils/auth";
+import LoginInput from "@/app/components/controls/auth/LoginInput";
+import LandingFeatureSections from "@/app/components/ui/preAuthLanding/LandingFeatureSections";
+import FAQ from "@/app/components/ui/preAuthLanding/FAQ";
+import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 export default async function Tr() {
   const session = await getServerSession(authOptions);
   if (session?.user?.email) {
     return redirect("/home")
   }
-  
+
   return (
     <div className="flex flex-col">
 
@@ -32,11 +30,9 @@ export default async function Tr() {
         <LoginInput />
       </div>
 
-      <div>
-        <CardAnimationWatch />
-        <FAQ />
-        <Footer />
-      </div>
+      <LandingFeatureSections />
+      <FAQ />
+      <Footer />
     </div>
-  )  
+  )
 }

@@ -1,4 +1,4 @@
-import AuthLoginPage from "@/app/components/controls/signin/AuthLoginPage"
+import AuthLoginPage from "@/app/components/controls/auth/AuthLoginPage"
 import { authOptions } from "@/app/utils/auth";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
@@ -12,7 +12,7 @@ export default async function SignUp() {
   return (
     <AuthLoginPage
       title="Sign Up"
-      linkTitle="Alredy Have a account? "
+      linkTitle="Already have an account? "
       linkInfo="Log in now."
       linkRef="/login"
     />

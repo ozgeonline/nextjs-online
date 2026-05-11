@@ -7,7 +7,7 @@ import styles from "./controlsSignin.module.css"
 
 const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Github__SignIn_Button"));
 const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Google__SignIn_Button"));
-const LoginInputModal = dynamic(() => import("./LoginInputModal"));
+const AuthEmailInput = dynamic(() => import("./AuthEmailInput"));
 const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
 
 type formInfo = {
@@ -36,12 +36,12 @@ const UserAuthLoginPage = ({
             {title}
           </h1>
           <div className="space-y-7 mt-5">
-            <LoginInputModal
+            <AuthEmailInput
               inputWrapper="relative"
               inputStyle="bg-main-gray md:w-80 py-3 px-6"
-              errorMsgColor="text-main-login_input_info_color"
-              validValueColor="border-none"
-              invalidValueColor="border-b-2 border-main-login_input_info_color outline-none"
+              errorMessageClassName="text-main-login_input_info_color"
+              validInputClassName="border-none"
+              invalidInputClassName="border-b-2 border-main-login_input_info_color outline-none"
             >
               <input
                 type="password"
@@ -51,7 +51,7 @@ const UserAuthLoginPage = ({
                 disabled
                 className="bg-main-gray opacity-80 rounded-sm w-full md:w-80 py-3 px-6 cursor-not-allowed mt-8"
               />
-            </LoginInputModal>
+            </AuthEmailInput>
             <button
               type="submit"
               className="bg-main-red w-full md:w-80 py-3 rounded-sm"
