@@ -43,7 +43,7 @@
   min-height: 5rem;
   border-bottom-right-radius: calc(var(--radius));
   border-bottom-left-radius: calc(var(--radius));
-  background-color: hsl(var(--main_dark));
+  background-color: rgb(var(--main-dark) / 1);
 }
 
 /**************************************** Continue Watching Card Styles ****************************************/

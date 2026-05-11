@@ -65,7 +65,7 @@
   margin-inline-start: 0px;
   width: 1.25rem;
   height: 1.25rem;
-  color: hsl(var(--muted-foreground));
+  color: rgb(var(--muted-foreground) / 1);
 }
 
 @media (min-width: 640px) {

@@ -7,7 +7,7 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background-color: hsl(var(--main_red));
+  background-color: rgb(var(--main-red) / 1);
   border-radius: 100%;
   top: 2.6px;
   right: -1px;
@@ -32,7 +32,7 @@
 .boxSize {
   height: 25vw;
   width: 100%;
-  background-color: hsl(var(--muted-foreground) / 0.8);
+  background-color: rgb(var(--muted-foreground) / 0.8);
 }
 
 @media (min-width: 640px) {
