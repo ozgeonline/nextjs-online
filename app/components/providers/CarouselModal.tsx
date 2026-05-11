@@ -30,36 +30,46 @@ export default function CarouselModal ({
   
 }: CarouselModalProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-  const [clickCount, setClickCount] = useState(0)
-  // const [isLoading, setIsLoading] = useState(true);
-  const [isContentLoaded, setIsContentLoaded] = useState(false);
-
   const { isHover } = useCardContext();
   const { hasSavedTime, savedTime } = useVideoContext();
   const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
+  const [currentSlide, setCurrentSlide] = useState<number>(0);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [clickCount, setClickCount] = useState(0)
+  const [isContentLoaded, setIsContentLoaded] = useState(false);
+  // const [isLoading, setIsLoading] = useState(true);
 
+  const [lastChildCompare, setLastChildCompare] = useState<boolean | undefined>(undefined);
   const savedTimeLength = Object.keys(savedTime).length;
   //console.log("savedTimeLength:", savedTimeLength)
-    
-  const totalSlides = slides.length;
+  const slideItems = Array.from(sliderRef.current?.children || []);
+
+  useEffect(() => {
+    const lastSlideItem = slideItems[slideItems.length - 1];
+    const slideItemLabel = lastSlideItem?.getAttribute('aria-label');
+    const slideLabel = `${slides.length - 1}.slide`;
+    //console.log("slideItemLabel:",slideItemLabel, " slideLabel:",slideLabel)
+    console.log("currentSlide:", currentSlide)
+    //console.log("slides.length-1-slidesPerView === currentSlide",slides.length-1-slidesPerView === currentSlide)
+    //console.log("slideItems.length-1- slidesPerView:",slideItems.length -1- slidesPerView)
+
+    setLastChildCompare(slideItemLabel === slideLabel);
+  }, [slideItems, slides]);
+
+  //const isMultipleOfSlidesPerView = currentSlide % slidesPerView === 0;
+  //console.log("isMultipleOfSlidesPerView", isMultipleOfSlidesPerView)
+
   const handleClick = (direction: "prev" | "next") => {
-    setClickCount((prev)=>prev+1)
-    //console.log(clickCount)
+
     if (isTransitioning) return;
-
-    //console.log(totalSlides)
-    
-    const slideItems = Array.from(sliderRef.current?.children || []);
-    //console.log(slideItems)
-
     setIsTransitioning(true);
+    setClickCount((prev)=>prev+1)
 
     if (direction === "prev") {
       setIsTransitioning(true)
       //const maxIndex = slides.length -1- slidesPerView;
       setCurrentSlide((i) => Math.max(i + slidesPerView, 0));
+
       for (let i = 0; i < slidesPerView; i++) {
         const lastSlide = slideItems[slideItems.length -1- i];
         sliderRef.current?.insertAdjacentElement("afterbegin", lastSlide);
@@ -68,22 +78,85 @@ export default function CarouselModal ({
       setTimeout(() => { setCurrentSlide(1) }, 500);
       setTimeout(() => setIsTransitioning(false), 500);
 
-    } else if (direction === "next") {
+    } 
+    else if (direction === "next") {
+      console.log("isTransitioning:", isTransitioning)
       setIsTransitioning(true)
-      const maxIndex = slides.length -1- slidesPerView;
-      setCurrentSlide((i) => Math.min(i + slidesPerView, maxIndex));
-      
-      for (let i = 0; i < slidesPerView; i++) {
-        const addEndSlide = slideItems[i];
-        sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
-        //console.log("beforeend i+",i)
+      setClickCount((prev)=>prev+1)
+    
+        if(lastChildCompare ) {
+          console.log("if lastChildCompare is working..")
+          // for (let i = 0; i <= slidesPerView-(slideItems.length%slidesPerView); i++) {
+          //   console.log(" if i:",i)
+          //   const addEndSlide =  slideItems[i];
+          //   sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
+          // }
+          setCurrentSlide((prev) => Math.min(prev + slidesPerView, slides.length-1-slidesPerView));
+
+          if (slides.length-1-slidesPerView === currentSlide) {
+            console.log("slides.length-1-slidesPerView === currentSlide is working..")
+            for (let i = 0; i < slidesPerView; i++) {
+              console.log(" if i:",i)
+              const addEndSlide =  slideItems[i];
+              sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
+            }
+          setCurrentSlide((prev) => Math.min(prev + slidesPerView, slideItems.length-1-slidesPerView));
+
+          const slideWidth = sliderWidth / slidesPerView;
+          const newTransform = -currentSlide * slideWidth;
+  
+          if (sliderRef.current) {
+            sliderRef.current.style.transition = 'none';
+            sliderRef.current.style.transform = `translateX(0px)`;
+            
+            // Trigger transition for next set
+            setTimeout(() => {
+              sliderRef.current!.style.transition = 'transform 0.5s ease';
+              sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
+            }, 500);
+          }
+        }
+      } else {
+        for (let i = 0; i < slidesPerView; i++) {
+          console.log(" isn't lastChildCompare")
+          const addEndSlide =  slideItems[i];
+          sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
+        }
+        setCurrentSlide(slideItems.length-1-slidesPerView);
+        const slideWidth = sliderWidth / slidesPerView;
+        const newTransform = -currentSlide * slideWidth;
+
+        if (sliderRef.current) {
+          sliderRef.current.style.transition = 'none';
+          sliderRef.current.style.transform = `translateX(0px)`;
+          
+          // Trigger transition for next set
+          setTimeout(() => {
+            sliderRef.current!.style.transition = 'transform 0.5s ease';
+            sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
+          }, 500);
+        }
       }
 
-      setTimeout(() => {
-        setCurrentSlide(1);
-      }, 500);
+      const slideWidth = sliderWidth / slidesPerView;
+      const newTransform = -currentSlide * slideWidth;
+
+        if (sliderRef.current) {
+          sliderRef.current.style.transition = 'none';
+          sliderRef.current.style.transform = `translateX(0px)`;
+          
+          // Trigger transition for next set
+          setTimeout(() => {
+            sliderRef.current!.style.transition = 'transform 0.5s ease';
+            sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
+          }, 500);
+        }
+      // else {
+      //   setTimeout(() => {
+      //     setCurrentSlide((prev) => Math.min(prev + slidesPerView, slideItems.length - slidesPerView));
+      //   }, 10);
+      // }
       setTimeout(() => setIsTransitioning(false), 500);
-      //console.log("addEndSlide",addEndSlide)
     }
   };
 
@@ -96,10 +169,6 @@ export default function CarouselModal ({
     }
   }, [currentSlide, sliderWidth, slidesPerView, isTransitioning]);
 
-  // useEffect(()=> {
-  //   console.log("isContentLoaded:",isContentLoaded)
-  // },[isContentLoaded])
-
   const renderSlides = slides.map((child, index) => {
     if (!React.isValidElement(child)) return null;
     // console.log(child)
@@ -108,7 +177,7 @@ export default function CarouselModal ({
     return (
       <div
         key={index}
-        aria-label={`${id?.[index] && id[index]} : carousel slide`}
+        aria-label={`${index}.slide`}
         onLoad={() => setIsContentLoaded(true)}
         style={{width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
       >
@@ -116,6 +185,7 @@ export default function CarouselModal ({
           style={{ width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
           className= "px-[0.5vw]"
         >
+          {index}
           {child}
         </div>
       </div>
@@ -123,7 +193,7 @@ export default function CarouselModal ({
   });
   
   useEffect(() => {
-    if (totalSlides > 0) {
+    if (slideItems.length > 0) {
       //console.log("Slides:", totalSlides);
       const timer = setTimeout(() => {
         //console.log("Setting isContentLoaded to true");
@@ -131,7 +201,7 @@ export default function CarouselModal ({
       }, 100); //delay for DOM settling
       return () => clearTimeout(timer);
     }
-  }, [totalSlides]);
+  }, [slideItems.length]);
 
   return (
     <div 
@@ -157,7 +227,7 @@ export default function CarouselModal ({
       </div>
 
       <div className='relative w-full h-full z-50'>
-        { isContentLoaded &&(
+        {isContentLoaded && (
           <div>
             <button 
               onClick={() => handleClick("prev")}
@@ -201,5 +271,4 @@ export default function CarouselModal ({
         )}
       </div>
     </div>
-  )
-}
+  )}

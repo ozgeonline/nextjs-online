@@ -84,9 +84,9 @@
   right: 40%;
   transform: translateX(40%) translateY(-50%);
   z-index: 50;
-  border: 1px solid;
+  /* border: 1px solid; */
   padding: 0.1rem;
-  border-radius: 100%;
+  /* border-radius: 100%; */
   opacity: 0.7;
   transition: all cubic-bezier(0.075, 0.82, 0.165, 1);
 }

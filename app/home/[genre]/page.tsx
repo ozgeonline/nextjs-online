@@ -204,7 +204,7 @@ export default async function CategoryPage({
                 <div key={movie.title} className="relative w-full">
                   <PreviewCard
                     key={movie.id}
-                    id={movie.id}
+                    id={movie.id} 
                     imageString={movie.imageString}
                     videoSource={movie.videoSource}
                     title={movie.title}
