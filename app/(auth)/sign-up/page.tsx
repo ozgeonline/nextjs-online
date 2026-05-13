@@ -11,6 +11,7 @@ export default async function SignUp() {
 
   return (
     <AuthLoginPage
+      mode="signup"
       title="Sign Up"
       linkTitle="Already have an account? "
       linkInfo="Log in now."

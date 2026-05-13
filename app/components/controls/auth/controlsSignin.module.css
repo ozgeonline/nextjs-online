@@ -16,6 +16,7 @@
   transition: all .2s ease;
   color: #8c8c8c;
 }
+
 .input-field:focus {
   background-color: #444;
   opacity: .9;
@@ -69,5 +70,7 @@
     margin-right: auto;
     padding: 2rem;
     background-color: rgb(0 0 0 / 0.9);
+    height: max-content;
+    margin-top: 3rem;
   }
 }

@@ -49,7 +49,6 @@ export default function CarouselModal ({
     const slideItemLabel = lastSlideItem?.getAttribute('aria-label');
     const slideLabel = `${slides.length - 1}.slide`;
     //console.log("slideItemLabel:",slideItemLabel, " slideLabel:",slideLabel)
-    console.log("currentSlide:", currentSlide)
     //console.log("slides.length-1-slidesPerView === currentSlide",slides.length-1-slidesPerView === currentSlide)
     //console.log("slideItems.length-1- slidesPerView:",slideItems.length -1- slidesPerView)
 
@@ -80,12 +79,10 @@ export default function CarouselModal ({
 
     } 
     else if (direction === "next") {
-      console.log("isTransitioning:", isTransitioning)
       setIsTransitioning(true)
       setClickCount((prev)=>prev+1)
     
         if(lastChildCompare ) {
-          console.log("if lastChildCompare is working..")
           // for (let i = 0; i <= slidesPerView-(slideItems.length%slidesPerView); i++) {
           //   console.log(" if i:",i)
           //   const addEndSlide =  slideItems[i];
@@ -94,9 +91,7 @@ export default function CarouselModal ({
           setCurrentSlide((prev) => Math.min(prev + slidesPerView, slides.length-1-slidesPerView));
 
           if (slides.length-1-slidesPerView === currentSlide) {
-            console.log("slides.length-1-slidesPerView === currentSlide is working..")
             for (let i = 0; i < slidesPerView; i++) {
-              console.log(" if i:",i)
               const addEndSlide =  slideItems[i];
               sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
             }
@@ -118,7 +113,6 @@ export default function CarouselModal ({
         }
       } else {
         for (let i = 0; i < slidesPerView; i++) {
-          console.log(" isn't lastChildCompare")
           const addEndSlide =  slideItems[i];
           sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
         }

@@ -3,17 +3,18 @@
 // Database source configuration
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
+  passwordHash  String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -66,7 +67,7 @@ model VerificationToken {
 model Movie {
   id           Int            @id @unique @default(autoincrement())
   imageString  String
-  title        String
+  title        String         @unique
   age          Int
   duration     Float
   overview     String

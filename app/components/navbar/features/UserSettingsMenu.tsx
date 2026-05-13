@@ -15,7 +15,7 @@ export default async function UserSettingsMenu() {
     return undefined;
   }
 
-  const avatarSrc = session.user?.image || {userImg}
+  const avatarSrc = session.user?.image || userImg
   const userShortName = session.user?.name?.slice(0, 2) || "un"
   const userName = session.user?.name
   const userMail = session.user?.email
@@ -23,7 +23,7 @@ export default async function UserSettingsMenu() {
   return (
     <div className="relative">
       <UserSettingsToggleButton
-        userImg={avatarSrc as string}
+        userImg={avatarSrc}
         userShortName={userShortName}
       >
         <div className="w-56 text-start rounded-none mt-6 pt-5 space-y-2 bg-black/90">

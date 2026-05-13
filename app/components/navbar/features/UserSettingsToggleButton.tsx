@@ -2,11 +2,12 @@
 
 import { Button } from "@/components/ui/button"
 import debounce from "lodash.debounce"
+import type { StaticImageData } from "next/image"
 import Image from "next/image"
 import {Suspense, useEffect, useRef, useState } from "react"
 
 type UserSettingsToggleButtonProps = {
-  userImg: string 
+  userImg: StaticImageData | string | null | undefined
   userShortName:string
   children: React.ReactNode
 }
@@ -50,6 +51,8 @@ export default function UserSettingsToggleButton({
     debouncedHandleOpenMenu();
   };
 
+  const profileImageSrc = typeof userImg === "string" && userImg.trim().length === 0 ? null : userImg;
+
   //console.log(menuRef.current)
   return (
     <div>
@@ -60,15 +63,21 @@ export default function UserSettingsToggleButton({
         onClick={handleOpenMenu}
       >
         <Suspense fallback={userShortName}>
-          <Image 
-            src={userImg} 
-            alt="Profile picture" 
-            className="absolute rounded-sm"
-            fetchPriority="high" 
-            loading="eager"
-            sizes="100%"
-            fill
-          />
+          {profileImageSrc ? (
+            <Image
+              src={profileImageSrc}
+              alt="Profile picture"
+              className="absolute rounded-sm"
+              fetchPriority="high"
+              loading="eager"
+              sizes="100%"
+              fill
+            />
+          ) : (
+            <span className="text-xs font-semibold uppercase text-white">
+              {userShortName}
+            </span>
+          )}
         </Suspense>
       </Button>
       {openMenu && (

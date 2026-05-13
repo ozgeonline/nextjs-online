@@ -1,35 +1,85 @@
 "use client"
 
+import { FormEvent, useState, useTransition } from "react"
 import Link from "next/link"
-import dynamic from "next/dynamic"
-import { memo } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { signIn } from "next-auth/react"
+import { signUpWithCredentials } from "@/app/utils/auth-actions"
 import styles from "./controlsSignin.module.css"
 
-const GithubSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Github__SignIn_Button"));
-const GoogleSignInButton = dynamic(() => import("@/app/components/controls/button/auth/Google__SignIn_Button"));
-const AuthEmailInput = dynamic(() => import("./AuthEmailInput"));
-const Footer = dynamic(() => import("@/app/components/ui/preAuthLanding/Footer"));
+import GithubSignInButton from "@/app/components/controls/button/auth/Github__SignIn_Button";
+import GoogleSignInButton from "@/app/components/controls/button/auth/Google__SignIn_Button";
+import AuthEmailInput from "./AuthEmailInput";
+import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
-type formInfo = {
+type AuthLoginPageProps = {
+  mode: "login" | "signup"
   title: string
   linkTitle: string
   linkInfo: string
   linkRef: string
 }
 
-const UserAuthLoginPage = ({
+export default function AuthLoginPage({
+  mode,
   title,
   linkTitle,
   linkInfo,
   linkRef
-}: formInfo) => {
+}: AuthLoginPageProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const authError = searchParams.get("authError");
+  const provider = searchParams.get("provider");
+  const linkedAccountMessage = authError === "account-linked" && provider
+    ? `You already signed in with this email using ${provider}. Continue with ${provider}, or use a different email address.`
+    : "";
+  const [formError, setFormError] = useState(linkedAccountMessage);
+  const [isPending, startTransition] = useTransition();
+  const submitButtonText = isPending ? "Please wait..." : title;
+  const passwordHelpText = mode === "signup" ? "Use at least 8 characters." : undefined;
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError("");
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email")?.toString() ?? "";
+    const password = formData.get("password")?.toString() ?? "";
+    const remember = formData.get("remember") === "on";
+
+    startTransition(async () => {
+      if (mode === "signup") {
+        const result = await signUpWithCredentials(formData);
+
+        if (result.error) {
+          setFormError(result.error);
+          return;
+        }
+      }
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        remember: String(remember),
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setFormError("Invalid email or password.");
+        return;
+      }
+
+      router.push("/home");
+      router.refresh();
+    });
+  };
+
   return (
-    <div className="mt-0 md:mt-28 z-10">
-      <div className={`${styles['form-wrapper-style']} `}>
-        <form 
-          method="post"
-          action="/api/auth/signin"
-          encType="multipart/form-data"
+    <div className=" z-10">
+      <div className={styles["form-wrapper-style"]}>
+        <form
+          onSubmit={handleSubmit}
           className="w-full md:w-80"
         >
           <h1 className="text-3xl font-semibold text-white pt-2">
@@ -47,36 +97,47 @@ const UserAuthLoginPage = ({
                 type="password"
                 name="password"
                 placeholder="Password"
-                autoComplete="off"
-                disabled
-                className="bg-main-gray opacity-80 rounded-sm w-full md:w-80 py-3 px-6 cursor-not-allowed mt-8"
+                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                minLength={8}
+                maxLength={128}
+                required
+                className="bg-main-gray opacity-80 rounded-sm w-full md:w-80 py-3 px-6 mt-8"
               />
             </AuthEmailInput>
+            {passwordHelpText && (
+              <p className="text-xs text-muted-foreground -mt-4">
+                {passwordHelpText}
+              </p>
+            )}
+            {formError && (
+              <p className="text-xs text-inputInfo-err_color" role="alert">
+                {formError}
+              </p>
+            )}
             <button
               type="submit"
+              disabled={isPending}
               className="bg-main-red w-full md:w-80 py-3 rounded-sm"
             >
-              {title}
+              {submitButtonText}
             </button>
             <div className="flex justify-between">
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
-                  id="checkbox"
-                  name="checkbox"
-                  aria-label="checkbox"
-                  className="cursor-not-allowed size-4 opacity-50"
-                  checked
-                  disabled
+                  id="remember"
+                  name="remember"
+                  className="size-4"
+                  defaultChecked={mode === "login"}
                 />
                 <label
-                  htmlFor="checkbox"
-                  className="text-xs font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="remember"
+                  className="text-xs font-medium leading-none"
                 >
                   Remember me
                 </label>
               </div>
-              <div className="text-xs cursor-pointer text-muted-foreground hover:underline">
+              <div className="text-xs text-muted-foreground">
                 Need help?
               </div>
             </div>
@@ -85,7 +146,7 @@ const UserAuthLoginPage = ({
 
         <div className="text-muted-foreground text-xs min-[280px]:text-sm mt-2">
           {linkTitle}
-          <Link 
+          <Link
             className="text-white hover:underline"
             href={linkRef}
             prefetch={true}
@@ -100,18 +161,16 @@ const UserAuthLoginPage = ({
         </div>
 
         <div className="text-muted-foreground text-xs mt-5 w-full md:w-80">
-          This page is protected by Google reCAPTCHA to ensure you are not a bot. 
-          <span className="text-blue-600 hover:underline hover:cursor-pointer">
+          This page is protected by Google reCAPTCHA to ensure you are not a bot.
+          <Link href="#" className="text-blue-600">
             Learn more.
-          </span>
+          </Link>
         </div>
       </div>
-      
+
       <div className="md:mt-14">
         <Footer />
       </div>
     </div>
   )
 }
-
-export default memo(UserAuthLoginPage);

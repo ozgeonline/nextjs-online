@@ -4,13 +4,11 @@ import { revalidatePath } from "next/cache";
 import prisma from "./db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "./auth";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 
 export async function addTowatchlist(formData: FormData) {
   "use server";
   try {
-    console.log("Incoming FormData:", Array.from(formData.entries()));
-
     const movieId = formData.get("movieId");
     const pathname = formData.get("pathname")?.toString();
     const session = await getServerSession(authOptions);
@@ -43,7 +41,7 @@ export async function addTowatchlist(formData: FormData) {
     revalidatePath(pathname);
     return { message: "Added to watchlist" };
   } catch (error) {
-    if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return { message: "Movie already in watchlist" };
     }
     //console.error("Error adding to watchlist:", error);
@@ -73,4 +71,3 @@ export async function deleteFromWatchlist(formData: FormData) {
 
   revalidatePath(pathname);
 }
-
