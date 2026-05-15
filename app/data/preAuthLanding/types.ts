@@ -43,6 +43,33 @@ export type LandingContent = {
     errorMessage: string
     submitLabel: string
   }
+  auth: {
+    common: {
+      passwordPlaceholder: string
+      rememberMe: string
+      needHelp: string
+      pleaseWait: string
+      recaptchaText: string
+      learnMore: string
+      passwordHelpText: string
+    }
+    login: {
+      title: string
+      linkTitle: string
+      linkInfo: string
+    }
+    signup: {
+      title: string
+      linkTitle: string
+      linkInfo: string
+    }
+    errors: {
+      linkedAccount: string
+      invalidCredentials: string
+      invalidSignupDetails: string
+      duplicateEmail: string
+    }
+  }
   features: LandingFeature[]
   faq: {
     title: string

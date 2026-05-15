@@ -5,7 +5,7 @@ import { hashPassword } from "./password";
 import { getPassword, isValidEmail, isValidPassword, normalizeEmail } from "./auth-validation";
 
 type SignUpState = {
-  error?: string
+  error?: "INVALID_DETAILS" | "DUPLICATE_EMAIL"
   success?: boolean
 }
 
@@ -14,7 +14,7 @@ export async function signUpWithCredentials(formData: FormData): Promise<SignUpS
   const password = getPassword(formData.get("password"));
 
   if (!isValidEmail(email) || !isValidPassword(password)) {
-    return { error: "Enter a valid email and a password with at least 8 characters." };
+    return { error: "INVALID_DETAILS" };
   }
 
   const existingUser = await prisma.user.findUnique({
@@ -23,7 +23,7 @@ export async function signUpWithCredentials(formData: FormData): Promise<SignUpS
   });
 
   if (existingUser) {
-    return { error: "Unable to create an account with these details. This email address is already registered." };
+    return { error: "DUPLICATE_EMAIL" };
   }
 
   const passwordHash = await hashPassword(password);

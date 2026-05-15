@@ -1,3 +1,4 @@
+import { authFormCopy } from "./authForm";
 import { emailInputCopy } from "./emailInput";
 import { faqCopy } from "./faq";
 import { featureCopy } from "./features";
@@ -23,6 +24,33 @@ export function getPreAuthLandingContent(locale: Locale): LandingContent {
       placeholder: getLocalizedText(emailInputCopy.placeholder, locale),
       errorMessage: getLocalizedText(emailInputCopy.errorMessage, locale),
       submitLabel: getLocalizedText(emailInputCopy.submitLabel, locale),
+    },
+    auth: {
+      common: {
+        passwordPlaceholder: getLocalizedText(authFormCopy.common.passwordPlaceholder, locale),
+        rememberMe: getLocalizedText(authFormCopy.common.rememberMe, locale),
+        needHelp: getLocalizedText(authFormCopy.common.needHelp, locale),
+        pleaseWait: getLocalizedText(authFormCopy.common.pleaseWait, locale),
+        recaptchaText: getLocalizedText(authFormCopy.common.recaptchaText, locale),
+        learnMore: getLocalizedText(authFormCopy.common.learnMore, locale),
+        passwordHelpText: getLocalizedText(authFormCopy.common.passwordHelpText, locale),
+      },
+      login: {
+        title: getLocalizedText(authFormCopy.login.title, locale),
+        linkTitle: getLocalizedText(authFormCopy.login.linkTitle, locale),
+        linkInfo: getLocalizedText(authFormCopy.login.linkInfo, locale),
+      },
+      signup: {
+        title: getLocalizedText(authFormCopy.signup.title, locale),
+        linkTitle: getLocalizedText(authFormCopy.signup.linkTitle, locale),
+        linkInfo: getLocalizedText(authFormCopy.signup.linkInfo, locale),
+      },
+      errors: {
+        linkedAccount: getLocalizedText(authFormCopy.errors.linkedAccount, locale),
+        invalidCredentials: getLocalizedText(authFormCopy.errors.invalidCredentials, locale),
+        invalidSignupDetails: getLocalizedText(authFormCopy.errors.invalidSignupDetails, locale),
+        duplicateEmail: getLocalizedText(authFormCopy.errors.duplicateEmail, locale),
+      },
     },
     features: featureCopy.map((feature) => ({
       id: feature.id,

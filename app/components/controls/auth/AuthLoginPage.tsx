@@ -4,6 +4,7 @@ import { FormEvent, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { LandingContent, Locale } from "@/app/data/preAuthLandingContent"
 import { signUpWithCredentials } from "@/app/utils/auth-actions"
 import styles from "./controlsSignin.module.css"
 
@@ -14,30 +15,33 @@ import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 type AuthLoginPageProps = {
   mode: "login" | "signup"
-  title: string
-  linkTitle: string
-  linkInfo: string
-  linkRef: string
+  locale: Locale
+  authContent: LandingContent["auth"]
+  emailInputContent: LandingContent["emailInput"]
+  footerContent: LandingContent["footer"]
 }
 
 export default function AuthLoginPage({
   mode,
-  title,
-  linkTitle,
-  linkInfo,
-  linkRef
+  locale,
+  authContent,
+  emailInputContent,
+  footerContent,
 }: AuthLoginPageProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const authError = searchParams.get("authError");
   const provider = searchParams.get("provider");
+  const modeContent = authContent[mode];
+  const linkRef = mode === "login" ? "/sign-up" : "/login";
+  const localizedLinkRef = locale === "tr" ? `${linkRef}?lang=tr` : linkRef;
   const linkedAccountMessage = authError === "account-linked" && provider
-    ? `You already signed in with this email using ${provider}. Continue with ${provider}, or use a different email address.`
+    ? authContent.errors.linkedAccount.replaceAll("{provider}", provider)
     : "";
   const [formError, setFormError] = useState(linkedAccountMessage);
   const [isPending, startTransition] = useTransition();
-  const submitButtonText = isPending ? "Please wait..." : title;
-  const passwordHelpText = mode === "signup" ? "Use at least 8 characters." : undefined;
+  const submitButtonText = isPending ? authContent.common.pleaseWait : modeContent.title;
+  const passwordHelpText = mode === "signup" ? authContent.common.passwordHelpText : undefined;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -53,7 +57,10 @@ export default function AuthLoginPage({
         const result = await signUpWithCredentials(formData);
 
         if (result.error) {
-          setFormError(result.error);
+          setFormError(result.error === "DUPLICATE_EMAIL"
+            ? authContent.errors.duplicateEmail
+            : authContent.errors.invalidSignupDetails
+          );
           return;
         }
       }
@@ -66,7 +73,7 @@ export default function AuthLoginPage({
       });
 
       if (result?.error) {
-        setFormError("Invalid email or password.");
+        setFormError(authContent.errors.invalidCredentials);
         return;
       }
 
@@ -83,10 +90,12 @@ export default function AuthLoginPage({
           className="w-full md:w-80"
         >
           <h1 className="text-3xl font-semibold text-white pt-2">
-            {title}
+            {modeContent.title}
           </h1>
           <div className="space-y-7 mt-5">
             <AuthEmailInput
+              placeholder={emailInputContent.placeholder}
+              errorMessage={emailInputContent.errorMessage}
               inputWrapper="relative"
               inputStyle="bg-main-gray md:w-80 py-3 px-6"
               errorMessageClassName="text-main-login_input_info_color"
@@ -96,7 +105,7 @@ export default function AuthLoginPage({
               <input
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder={authContent.common.passwordPlaceholder}
                 autoComplete={mode === "signup" ? "new-password" : "current-password"}
                 minLength={8}
                 maxLength={128}
@@ -134,24 +143,24 @@ export default function AuthLoginPage({
                   htmlFor="remember"
                   className="text-xs font-medium leading-none"
                 >
-                  Remember me
+                  {authContent.common.rememberMe}
                 </label>
               </div>
               <div className="text-xs text-muted-foreground">
-                Need help?
+                {authContent.common.needHelp}
               </div>
             </div>
           </div>
         </form>
 
         <div className="text-muted-foreground text-xs min-[280px]:text-sm mt-2">
-          {linkTitle}
+          {modeContent.linkTitle}
           <Link
             className="text-white hover:underline"
-            href={linkRef}
+            href={localizedLinkRef}
             prefetch={true}
           >
-            {linkInfo}
+            {modeContent.linkInfo}
           </Link>
         </div>
 
@@ -161,15 +170,19 @@ export default function AuthLoginPage({
         </div>
 
         <div className="text-muted-foreground text-xs mt-5 w-full md:w-80">
-          This page is protected by Google reCAPTCHA to ensure you are not a bot.
+          {authContent.common.recaptchaText}
           <Link href="#" className="text-blue-600">
-            Learn more.
+            {authContent.common.learnMore}
           </Link>
         </div>
       </div>
 
       <div className="md:mt-14">
-        <Footer />
+        <Footer
+          contactText={footerContent.contactText}
+          brand={footerContent.brand}
+          links={footerContent.links}
+        />
       </div>
     </div>
   )
