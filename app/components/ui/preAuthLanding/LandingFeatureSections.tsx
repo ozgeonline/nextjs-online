@@ -1,10 +1,20 @@
 import Image from "next/image"
-import cardData from "@/app/data/card"
 
-export default function LandingFeatureSections() {
+type LandingFeature = {
+  id: number
+  title: string
+  description: string
+  imageSrc: string
+}
+
+type LandingFeatureSectionsProps = {
+  features: LandingFeature[]
+}
+
+export default function LandingFeatureSections({ features }: LandingFeatureSectionsProps) {
   return (
     <div className="bg-black">
-      {cardData.map((card) => {
+      {features.map((card) => {
         const isReversed = card.id % 2 !== 0;
 
         return (

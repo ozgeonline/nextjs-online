@@ -12,7 +12,7 @@ export default function Background_Img() {
   return (
     <>
       {loading && (
-        <div 
+        <div
           className="absolute top-0 left-0 w-screen h-[80vh] sm:h-[95vh] bg-main-dark"
           aria-label="Background Image"
         ></div>
@@ -21,10 +21,10 @@ export default function Background_Img() {
         <Image
           onLoad={handleImageLoad}
           style={loading ? { visibility: 'hidden' } : {}}
-          src="https://utfs.io/f/MzCIEEnlPGFDwrIAQaYqlTOprZ9Ac2Vvs1uHfUgS0GEoeBYX"
+          src="https://9gdj1dewg7.ufs.sh/f/MzCIEEnlPGFDISaPU9OdiMVXeQ2BY1cawgflLUqy5TK6m93D"
           alt="Background Image"
           placeholder="blur"
-          blurDataURL="https://utfs.io/f/MzCIEEnlPGFDwrIAQaYqlTOprZ9Ac2Vvs1uHfUgS0GEoeBYX"
+          blurDataURL="https://9gdj1dewg7.ufs.sh/f/MzCIEEnlPGFDISaPU9OdiMVXeQ2BY1cawgflLUqy5TK6m93D"
           aria-label="Background Image"
           className="-z-10 brightness-75 object-cover"
           sizes="(min-height:640px) 95vh, 80vh, width:100vw"

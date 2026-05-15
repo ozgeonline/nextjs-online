@@ -2,10 +2,31 @@
 
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import FAQData from '@/app/data/FAQ'
 import LoginInput from "../../controls/auth/LoginInput"
 
-export default function FAQ() {
+type FAQItem = {
+  id: number
+  title: string
+  content: string
+}
+
+type FAQProps = {
+  title: string
+  readyText: string
+  items: FAQItem[]
+  emailInput: {
+    placeholder: string
+    errorMessage: string
+    submitLabel: string
+  }
+}
+
+export default function FAQ({
+  title,
+  readyText,
+  items,
+  emailInput,
+}: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleAccordion = (index: number) => {
@@ -15,9 +36,9 @@ export default function FAQ() {
   return (
     <div className='flex flex-col justify-center items-center py-20 px-8 border-t-8 bg-black'>
       <h1 className='text-lg sm:text-2xl lg:text-5xl font-extrabold mb-7'>
-        Frequently Asked Questions
+        {title}
       </h1>
-      {FAQData.map((data, index) => (
+      {items.map((data, index) => (
         <div
           key={data.id}
           className='flex flex-col justify-center items-center w-full'
@@ -54,9 +75,13 @@ export default function FAQ() {
 
       <div className='flex flex-col justify-center mt-12'>
         <div className='lg:text-xl text-center mx-6 mb-2'>
-          Ready to watch? Enter your email to create or restart your membership.
+          {readyText}
         </div>
-        <LoginInput />
+        <LoginInput
+          placeholder={emailInput.placeholder}
+          errorMessage={emailInput.errorMessage}
+          submitLabel={emailInput.submitLabel}
+        />
       </div>
     </div>
   )

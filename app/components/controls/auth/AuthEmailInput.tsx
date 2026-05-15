@@ -7,6 +7,8 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type AuthEmailInputProps = {
   children?: ReactNode
+  placeholder?: string
+  errorMessage?: string
   inputStyle?: string
   inputWrapper?: string
   errorMessageClassName?: string
@@ -16,6 +18,8 @@ type AuthEmailInputProps = {
 
 export default function AuthEmailInput({
   children,
+  placeholder = "Email address",
+  errorMessage = "Please enter a valid email address.",
   inputStyle,
   inputWrapper,
   errorMessageClassName,
@@ -52,7 +56,7 @@ export default function AuthEmailInput({
         id={inputId}
         type="email"
         name="email"
-        placeholder="Email address"
+        placeholder={placeholder}
         value={inputValue}
         onBlur={() => setIsTouched(true)}
         onChange={handleInputChange}
@@ -71,7 +75,7 @@ export default function AuthEmailInput({
             absolute top-14 left-0 w-full max-w-96 text-[10px] sm:text-sm text-start
           `}
         >
-          Please enter a valid email address.
+          {errorMessage}
         </p>
       )}
 

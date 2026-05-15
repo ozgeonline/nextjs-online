@@ -5,12 +5,23 @@ import LoginInput from "@/app/components/controls/auth/LoginInput";
 import LandingFeatureSections from "@/app/components/ui/preAuthLanding/LandingFeatureSections";
 import FAQ from "@/app/components/ui/preAuthLanding/FAQ";
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
+import { normalizeLocale, preAuthLandingContent } from "@/app/data/preAuthLandingContent";
 
-export default async function Tr() {
+type TrPageProps = {
+  searchParams?: Promise<{
+    lang?: string | string[]
+  }>
+}
+
+export default async function Tr({ searchParams }: TrPageProps) {
   const session = await getServerSession(authOptions);
   if (session?.user?.email) {
     return redirect("/home")
   }
+
+  const resolvedSearchParams = await searchParams;
+  const locale = normalizeLocale(resolvedSearchParams?.lang);
+  const content = preAuthLandingContent[locale];
 
   return (
     <div className="flex flex-col">
@@ -18,21 +29,34 @@ export default async function Tr() {
       <div className="flex flex-col text-center items-center justify-center h-[80vh] sm:h-[95vh] px-8 space-y-8 sm:space-y-4">
         <div className="space-y-2">
           <h1 className="max-[350px]:text-lg text-3xl md:text-5xl font-black">
-            Unlimited movies, TV shows, and more
+            {content.hero.title}
           </h1>
           <h2 className="md:text-4xl">
-            Watch anywhere. Cancel anytime.
+            {content.hero.subtitle}
           </h2>
           <h3 className="md:text-xl">
-            Ready to watch? Enter your email to create or restart your membership.
+            {content.hero.description}
           </h3>
         </div>
-        <LoginInput />
+        <LoginInput
+          placeholder={content.emailInput.placeholder}
+          errorMessage={content.emailInput.errorMessage}
+          submitLabel={content.emailInput.submitLabel}
+        />
       </div>
 
-      <LandingFeatureSections />
-      <FAQ />
-      <Footer />
+      <LandingFeatureSections features={content.features} />
+      <FAQ
+        title={content.faq.title}
+        readyText={content.faq.readyText}
+        items={content.faq.items}
+        emailInput={content.emailInput}
+      />
+      <Footer
+        contactText={content.footer.contactText}
+        brand={content.footer.brand}
+        links={content.footer.links}
+      />
     </div>
   )
 }

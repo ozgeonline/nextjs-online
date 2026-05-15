@@ -23,7 +23,7 @@ export async function signUpWithCredentials(formData: FormData): Promise<SignUpS
   });
 
   if (existingUser) {
-    return { error: "Unable to create an account with these details." };
+    return { error: "Unable to create an account with these details. This email address is already registered." };
   }
 
   const passwordHash = await hashPassword(password);

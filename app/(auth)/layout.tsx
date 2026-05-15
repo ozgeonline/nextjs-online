@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { ReactNode, Suspense } from "react"
 import dynamic from "next/dynamic"
 
 const Background_Img = dynamic(() => import("@/app/components/ui/assets/Background_Img"));
@@ -22,8 +22,10 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div
           className="z-50 flex items-center absolute top-10 sm:top-0 sm:right-0 space-x-2 h-6 md:h-8 my-5 mx-[15vw] md:me-44"
         >
-          <Lang_Selection />
-          <SignIn_Button />
+          <Suspense fallback={null}>
+            <Lang_Selection />
+            <SignIn_Button />
+          </Suspense>
         </div>
       </div>
       {children}
