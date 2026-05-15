@@ -1,5 +1,5 @@
 "use client"
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useVideoContext } from '@/app/components/providers/VideoContext';
 import VideoModals from '@/app/components/widgets/video_widgets/VideoModals';
@@ -30,62 +30,33 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
     setIsPlaying
   } = useVideoContext();
 
-  useImperativeHandle(ref, () => continueWatchingVideoElement.current || ({} as HTMLVideoElement));
-
   const localVideoRef = useRef<HTMLVideoElement>(null);
-  useImperativeHandle(ref, () => localVideoRef.current || ({} as HTMLVideoElement));
-
-  // useEffect(() => {
-  //   console.log(`
-  //     id: ${props.movieId}
-  //     localVideoRef.current: ${localVideoRef.current ? 'yes' : 'no'}
-  //     src: ${localVideoRef.current?.src as string}
-  //   `);
-  // }, [props.movieId]);
+  useImperativeHandle(ref, () => localVideoRef.current as HTMLVideoElement);
 
   useEffect(() => {
     if (isDialogOpen && localVideoRef.current && !localVideoRef.current.paused) {
       localVideoRef.current.pause();
       setIsPlaying(false);
     }
-  }, [isDialogOpen, localVideoRef, setIsPlaying]);
+  }, [isDialogOpen, setIsPlaying]);
 
   useEffect(() => {
     if (localVideoRef.current && continueWatchingVideoElement.current !== localVideoRef.current) {
       setContinueWatchingVideoElement(localVideoRef.current);
     }
-  }, [localVideoRef, continueWatchingVideoElement]);
+  }, [continueWatchingVideoElement, setContinueWatchingVideoElement]);
 
-  const handleVideoClick = () => {
-    // console.log(`handleVideoClick triggered for movieId: ${props.movieId}`);
-    // console.log(`isDialogOpen: ${isDialogOpen}`);
+  const handleVideoClick = useCallback(() => {
     const allVideos = document.querySelectorAll('video.continueVideo') as NodeListOf<HTMLVideoElement>;
-    //console.log(`Found ${allVideos.length} videos with class .continueVideo`);
+
     allVideos.forEach((video) => {
       video.dataset.movieId = video.dataset.movieId || String(props.movieId);
-      // console.log(`
-      //   src: ${video.src},
-      //   movieId: ${video.dataset.movieId},
-      //   current movieId: ${props.movieId}
-      // `);
       
       if (video instanceof HTMLVideoElement && video.dataset.movieId !== String(props.movieId) && !isDialogOpen) {
-        // console.log(`
-        //   Pausing video with src: ${video.src},
-        //   movieId: ${video.dataset.movieId},
-        //   isPaused: ${video.paused}
-        // `);
         video.pause();
-        video.currentTime = video.currentTime; //forces UI update
-      } else {
-        // console.log(`
-        //   Skipping video with src: ${video.src},
-        //   movieId: ${video.dataset.movieId} 
-        //   (reason: ${video.dataset.movieId === String(props.movieId) ? 'current video' : 'dialog open'})
-        // `);
       }
     });
-  };
+  }, [isDialogOpen, props.movieId]);
 
   return (
     <div className="z-50 relative">
@@ -123,10 +94,6 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
           />
         </VideoModals>
       )}
-      {/* for update check */}
-      {/* <div>
-        {savedTime[props.movieId as number] > 0 && <p>{savedTime[props.movieId as number]}</p>}
-      </div> */}
     </div>
   );
 });

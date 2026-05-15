@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useRef, useEffect} from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { usePathname, useRouter, useSearchParams} from 'next/navigation'
-import {Subtitles, X } from 'lucide-react'
+import { Subtitles, X } from 'lucide-react'
 import { useVideoContext } from '@/app/components/providers/VideoContext'
 import VideoModals from '@/app/components/widgets/video_widgets/VideoModals'
 import Image from 'next/image'
@@ -31,6 +31,7 @@ const Dialog =({ onClose, ...movieProps }:dialogProps) => {
 
   const {
     continueWatchingVideoElement,
+    currentVideoPause,
     setIsPlaying,
     setDialogOpen
   } = useVideoContext();
@@ -40,57 +41,44 @@ const Dialog =({ onClose, ...movieProps }:dialogProps) => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const showDialog = searchParams.get('showDialog');
-  //console.log("pathName Dialog: " + pathName)
+
+  const closeDialog = useCallback(() => {
+    if (dialogRef.current?.open) {
+      dialogRef.current.close();
+    }
+
+    setIsPlaying(false);
+    onClose();
+  }, [onClose, setIsPlaying]);
+
+  const openDialog = useCallback(() => {
+    if (!dialogRef.current?.open) {
+      dialogRef.current?.showModal();
+    }
+  }, []);
 
   useEffect(() => {
     const handleDialogOpen = () => {
       if (showDialog === movieProps.title) {
-        // console.log("Setting dialog as open");
-        dialogRef.current?.showModal();
         openDialog();
         setDialogOpen(true);
-
-        if (continueWatchingVideoElement.current) {
-          const video = continueWatchingVideoElement.current;
-          //check if the video is playing or if there is a pending playback req
-          setTimeout(() => {
-            if (!video.paused) {
-              video.pause();
-            }
-            setIsPlaying(false);
-          }, 100); //delay to avoid interrupting play()
-        }
+        currentVideoPause();
       } else {
-        // console.log("Setting dialog as closed"); 
-        dialogRef.current?.close();
-        closeDialog()
+        if (dialogRef.current?.open) {
+          dialogRef.current.close();
+        }
         setDialogOpen(false);
       }
     };
+
     handleDialogOpen();
 
     return () => {
-      if (dialogRef.current) {
-        dialogRef?.current?.close();
-      };
+      if (dialogRef.current?.open) {
+        dialogRef.current.close();
+      }
     };
-  }, [showDialog, movieProps.title,continueWatchingVideoElement, setIsPlaying,setDialogOpen]);
-
-  const closeDialog = () => {
-    //console.log("closeDialog")
-    dialogRef.current?.close()
-    setIsPlaying(false)
-
-    if(dialogRef.current?.close) {
-      //console.log("Close Dialog")
-      onClose()
-    }
-  };
-
-  const openDialog = () => {
-    // console.log("openDialog")
-    dialogRef.current?.showModal();
-  };
+  }, [showDialog, movieProps.title, currentVideoPause, openDialog, setDialogOpen]);
  
   // const dialogPositionX = dialogRef.current?.getBoundingClientRect().width;
   // const dialogPositionY = dialogRef.current?.getBoundingClientRect().height;
@@ -106,7 +94,7 @@ const Dialog =({ onClose, ...movieProps }:dialogProps) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dialogRef]);
+  }, [closeDialog, pathName, router]);
 
   const dialog: JSX.Element | null = showDialog === movieProps.title ? (
     <dialog

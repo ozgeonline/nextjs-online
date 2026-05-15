@@ -5,14 +5,14 @@ import dynamic from 'next/dynamic';
 import React  from 'react';
 import styles from "./home.module.css"
 import { VideoProvider } from "../components/providers/VideoContext";
-import { CardProvider } from "../components/providers/CardContext";
+import { UIProvider } from "../components/providers/UIContext";
 import ContinueWatchingCardModal from "../components/widgets/card_widgets/ContinueWatchingCard";
 import PreviewCard from "../components/widgets/card_widgets/PreviewCard";
 import Top10TV from "../components/widgets/card_widgets/Top10TV";
 import Footer from "../components/ui/preAuthLanding/Footer";
 
 const MovieVideo = dynamic(() => import("../components/widgets/video_widgets/MovieVideo"));
-const CarouselModal = dynamic(() => import('../components/providers/CarouselModal'));
+const InfiniteCarousel = dynamic(() => import('../components/widgets/carousel/InfiniteCarousel'));
 
 async function getData(userId:string) {
   const data = await prisma.movie.findMany({
@@ -80,14 +80,14 @@ export default async function HomePage() {
           movieId={movie?.id} 
         />
 
-        <CardProvider> {/* //! */}
+        <UIProvider> {/* //! */}
           <div 
             className={`
               ${styles.sectionsWrapper}
               padding-layout relative space-y-1 sm:space-y-4 lg:space-y-8 xl:space-y-12
             `}
           >
-            <CarouselModal
+            <InfiniteCarousel
               sliderButtonSection={true}
               id={initialData.map((movie) => movie.id)}
               key={initialData.map((movie) => movie.id).join("-")}
@@ -110,7 +110,7 @@ export default async function HomePage() {
                   />
                 </div>
               ))}
-            </CarouselModal>
+            </InfiniteCarousel>
 
             {/* //? --- Home Page Sections --- */}
             <div className="space-y-10 *:relative">
@@ -144,7 +144,7 @@ export default async function HomePage() {
               />
             </div>
           </div>
-        </CardProvider> {/*//!-end */}
+        </UIProvider> {/*//!-end */}
 
       </VideoProvider>
     </div>
@@ -161,8 +161,8 @@ interface SectionProps {
 
 const Section: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
   
-  <CardProvider>
-    <CarouselModal
+  <UIProvider>
+    <InfiniteCarousel
       sliderButtonSection={true}
       sectionTitle={sectionTitle}
       id={movies.map(movie => movie.id)}
@@ -194,13 +194,13 @@ const Section: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
           />
         </div>
       ))}
-    </CarouselModal>
-  </CardProvider>
+    </InfiniteCarousel>
+  </UIProvider>
 );
 
 const SectionTop10: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
-  <CardProvider>
-    <CarouselModal
+  <UIProvider>
+    <InfiniteCarousel
       sliderButtonSectionTop10={true}
       sectionTitle={sectionTitle}
       id={movies.map(movie => movie.id)}
@@ -225,6 +225,6 @@ const SectionTop10: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
           movieId={movie.id}
         />
       ))}
-    </CarouselModal>
-  </CardProvider>
+    </InfiniteCarousel>
+  </UIProvider>
 );

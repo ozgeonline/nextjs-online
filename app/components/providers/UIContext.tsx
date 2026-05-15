@@ -3,7 +3,7 @@ import React, {createContext, useContext, useState} from 'react';
 import { createPortal } from 'react-dom';
 import RedCircle_Animation from '../animation/RedCircle_Animation';
 
-interface CardContextType {
+interface UIContextType {
   isHover: boolean;
   setIsHover: (hover: boolean) => void;
   isOpen: boolean;
@@ -13,9 +13,9 @@ interface CardContextType {
   triggerNavigation: (callback: () => void) => void; 
 }
 
-const CardContext = createContext<CardContextType | undefined>(undefined);
+const UIContext = createContext<UIContextType | undefined>(undefined);
 
-export const CardProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isHover, setIsHover] = useState(false);
   const [ isOpen, setIsOpen ] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +39,7 @@ export const CardProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 
   return (
-    <CardContext.Provider 
+    <UIContext.Provider 
       value={{ 
         isHover, 
         setIsHover, 
@@ -52,14 +52,14 @@ export const CardProvider: React.FC<{ children: React.ReactNode }> = ({ children
     >
       {children}
       {animationPortal}
-    </CardContext.Provider>
+    </UIContext.Provider>
   );
 };
 
-export const useCardContext = () => {
-  const context = useContext(CardContext);
+export const useUIContext = () => {
+  const context = useContext(UIContext);
   if (!context) {
-    throw new Error("useCardContext must be used within a CardProvider");
+    throw new Error("useUIContext must be used within a UIProvider");
   }
   return context;
 };

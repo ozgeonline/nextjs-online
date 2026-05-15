@@ -3,12 +3,12 @@ import prisma from "@/app/utils/db";
 import { getServerSession } from "next-auth/next";
 import MovieVideo from "@/app/components/widgets/video_widgets/MovieVideo";
 import dynamic from 'next/dynamic';
-import { CardProvider } from "@/app/components/providers/CardContext";
+import { UIProvider } from "@/app/components/providers/UIContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
 import styles from "../home.module.css"
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
-const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
+const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
 const BrowseBySortClientPage = dynamic(() => import('@/app/components/controls/button/action/BrowseBySortClientPage'));
 
@@ -155,7 +155,7 @@ export default async function CategoryPage({
 
   return (
     <VideoProvider>
-      <CardProvider>
+      <UIProvider>
         <div className="overflow-hidden mb-10 h-full">
         {genre === "audio" ? (
           <>
@@ -265,7 +265,7 @@ export default async function CategoryPage({
               ${genre === "new" ? styles.newSectionWrapper : styles.sectionsWrapper}
             `}
           >
-            <CarouselModal 
+            <InfiniteCarousel 
               sliderButtonSection={true}
               sectionTitle={sectionTitle}
               id={data.map(movie => movie.id)}
@@ -292,7 +292,7 @@ export default async function CategoryPage({
                     imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
                 </div>
               ))}
-            </CarouselModal>
+            </InfiniteCarousel>
           </div>
           </>
         )}
@@ -301,7 +301,7 @@ export default async function CategoryPage({
         <div className=" -z-10">
         <Footer />
         </div>
-      </CardProvider>
+      </UIProvider>
     </VideoProvider>
   )
 }

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
-import { useCardContext } from "../../providers/CardContext";
+import { useUIContext } from "../../providers/UIContext";
 
 interface Props {
   path: string;
@@ -13,7 +13,7 @@ export default function NavbarLink({ path, label }: Props) {
   const pathName = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { setIsOpen,isOpen, triggerNavigation, setIsLoading } = useCardContext();
+  const { setIsOpen,isOpen, triggerNavigation, setIsLoading } = useUIContext();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     //console.log(`handleClick, `,isOpen)

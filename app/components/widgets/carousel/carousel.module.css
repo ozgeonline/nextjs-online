@@ -40,6 +40,11 @@
 }
 
 /*wrapper*/
+.emptyContinueSection {
+  width: 100%;
+  min-height: calc(25vw + 2.25rem);
+  pointer-events: none;
+}
 
 /* .carouselWrapper:not(:hover) {
   opacity: 0.99;
@@ -64,6 +69,10 @@
 
 
 @media (min-width: 640px) {
+  .emptyContinueSection {
+    min-height: calc(20vw + 2.25rem);
+  }
+
   .prevButton {
     left: -3vw;
     width: 2.5vw;
@@ -96,6 +105,9 @@
 }
 
 @media (min-width: 768px) {
+  .emptyContinueSection {
+    min-height: calc(13vw + 2.25rem);
+  }
 
   .sliderButtonSectionSize {
     height: 13vw;
@@ -107,6 +119,9 @@
 }
 
 @media (min-width: 1024px) {
+  .emptyContinueSection {
+    min-height: calc(10vw + 2.25rem);
+  }
 
   .buttonIcon {
     width: 2.5em;
@@ -123,6 +138,9 @@
 }
 
 @media (min-width: 1280px) {
+  .emptyContinueSection {
+    min-height: calc(8.3vw + 2.25rem);
+  }
 
   .nextButton .buttonIcon {
     padding-right: 0;

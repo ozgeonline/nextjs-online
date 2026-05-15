@@ -6,7 +6,7 @@ import Logo_Img from "../ui/assets/Logo_Img"
 import Link from "next/link"
 import dynamic from 'next/dynamic';
 import styles from "./navbar.module.css"
-import { CardProvider } from "../providers/CardContext"
+import { UIProvider } from "../providers/UIContext"
 const DropdownNavbarMenu = dynamic(() => import('./navigation/DropdownNavbarMenu'));
 const SearchMovieInput = dynamic(() => import('./features/SearchMovieInput'));
 const ScrollingElementSSR = dynamic(() => import('./features/ScrollingElementSSR'));
@@ -16,7 +16,7 @@ export default function Navbar() {
   
   return (
     <ScrollingElementSSR>
-      <CardProvider>
+      <UIProvider>
         <div className="flex w-full justify-between items-start p-2 md:p-5">
           <div className="flex mx-5">
             <Logo_Img
@@ -60,7 +60,7 @@ export default function Navbar() {
             <UserSettingsMenu />
           </div>
         </div>
-      </CardProvider>
+      </UIProvider>
     </ScrollingElementSSR>
   )
 }

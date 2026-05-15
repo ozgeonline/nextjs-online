@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 import { MovieProps } from "@/app/types/props";
 import Dialog from "@/app/components/widgets/dialog_widgets/Dialog";
@@ -20,40 +20,19 @@ export default function ShowDialogButton({
 
   const [open, setOpen] = useState<boolean>(false);
   const pathName = usePathname();
-  const { setDialogOpen, currentVideoPause, currentVideoPlay,isDialogOpen } = useVideoContext();
+  const { setDialogOpen, currentVideoPause, currentVideoPlay } = useVideoContext();
 
   const clickOpenDialog = () => {
-    // console.log("show dialog open")
-    setOpen(true)
-    setDialogOpen(true)
-    currentVideoPause()
+    setOpen(true);
+    setDialogOpen(true);
+    currentVideoPause();
   }
 
   const clickCloseDialog = () => {
-    // console.log("show dialog closed")
-    setOpen(false)
-    setDialogOpen(false)
-    currentVideoPlay()
+    setOpen(false);
+    setDialogOpen(false);
+    currentVideoPlay();
   }
-
-  useEffect(() => {
-    setDialogOpen(open);
-    if (open == true) {
-      currentVideoPause();
-    } else {
-      currentVideoPlay();
-    }
-  }, [open]);
-
-
-  useEffect(() => {
-    if (isDialogOpen) {
-      currentVideoPause();
-    } else {
-      currentVideoPlay();
-    }
-  }, [isDialogOpen, ]);
-  //console.log("isDialogOpen",isDialogOpen)
   
 
   return (
@@ -70,7 +49,7 @@ export default function ShowDialogButton({
         {children}
       </Link>
 
-      {open == true && 
+      {open && 
         <Dialog
           onClose={() => clickCloseDialog()}
           {...movieProps}

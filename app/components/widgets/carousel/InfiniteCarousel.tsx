@@ -2,12 +2,12 @@
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { useCarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
-import { useCardContext } from '../providers/CardContext';
-import { useVideoContext } from '../providers/VideoContext';
-import styles from "./providers.module.css"
+import { useUIContext } from '@/app/components/providers/UIContext';
+import { useVideoContext } from '@/app/components/providers/VideoContext';
+import { useCarouselBreakpointSettings } from './useCarouselBreakpointSettings';
+import styles from "./carousel.module.css"
 
-interface CarouselModalProps {
+interface InfiniteCarouselProps {
   children: React.ReactNode;
   id?: number[];
   sliderButtonSection?: boolean;
@@ -18,7 +18,7 @@ interface CarouselModalProps {
   filterWatchedVideos?: boolean;
 }
 
-export default function CarouselModal({
+export default function InfiniteCarousel({
   children: slides,
   id,
   sliderButtonSection,
@@ -28,9 +28,9 @@ export default function CarouselModal({
   sectionTitleStyle,
   filterWatchedVideos = false,
 
-}: CarouselModalProps) {
+}: InfiniteCarouselProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
-  const { isHover } = useCardContext();
+  const { isHover } = useUIContext();
   const { hasSavedTime, savedTime } = useVideoContext();
   const { sliderWidth, slidesPerView } = useCarouselBreakpointSettings(sliderRef);
 
@@ -45,10 +45,13 @@ export default function CarouselModal({
   // Tracks whether the user has moved forward at least once,
   // so the previous-side clone and prev button can appear after the first next action.
   const [hasMoved, setHasMoved] = useState(false);
+
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const transitionTimerRef = useRef<number | null>(null);
+
   const slideWidth = sliderWidth > 0 ? sliderWidth / slidesPerView : 0;
   const slidesArray = useMemo(() => React.Children.toArray(slides), [slides]);
+
   const visibleSlides = useMemo(() => {
     if (!filterWatchedVideos) return slidesArray;
 
@@ -91,6 +94,17 @@ export default function CarouselModal({
       }
     };
   }, []);
+
+  if (visibleSlides.length === 0) {
+    return continueCard
+      ? (
+        <div
+          className={styles.emptyContinueSection}
+          aria-hidden="true"
+        />
+      )
+      : null;
+  }
 
   const renderedSlides = canLoop
     ? [

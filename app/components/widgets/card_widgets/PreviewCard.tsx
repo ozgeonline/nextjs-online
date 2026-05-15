@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { MovieProps } from "@/app/types/props";
 import dynamic from 'next/dynamic';
-import { useCardContext } from '@/app/components/providers/CardContext';
+import { useUIContext } from '@/app/components/providers/UIContext';
 import styles from "./card.module.css";
 
 const ImageModal = dynamic(() => import('@/app/components/ui/assets/ImageModal'));
@@ -23,7 +23,7 @@ export default function PreviewCard({
   imageStyle,
   ...movieProps
 }: PreviewModalProps) {
-  const {setIsHover, isHover } = useCardContext();
+  const {setIsHover, isHover } = useUIContext();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 

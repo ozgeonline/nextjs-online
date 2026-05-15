@@ -1,5 +1,5 @@
 "use client"
-import { useCarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
+import { useCarouselBreakpointSettings } from '../widgets/carousel/useCarouselBreakpointSettings';
 import {  useRef } from "react";
 import styles from "./animation.module.css"
 

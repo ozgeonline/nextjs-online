@@ -2,7 +2,7 @@
 
 import React,{ useRef, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { useCardContext } from '@/app/components/providers/CardContext';
+import { useUIContext } from '@/app/components/providers/UIContext';
 
 interface DropdownMenuProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface DropdownMenuProps {
 }
 
 export default function DropdownNavbarMenu({ children }: DropdownMenuProps) {
-  const {isOpen, setIsOpen} = useCardContext()
+  const {isOpen, setIsOpen} = useUIContext()
   const navbarRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = () => {

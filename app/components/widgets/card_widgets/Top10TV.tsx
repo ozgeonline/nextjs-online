@@ -3,7 +3,7 @@
 import { MovieProps } from "@/app/types/props";
 import styles from "./card.module.css";
 import PreviewCard from './PreviewCard';
-import { useCardContext } from '@/app/components/providers/CardContext';
+import { useUIContext } from '@/app/components/providers/UIContext';
 import svgDataList from "@/app/data/SvgData";
 
 interface top10Props extends MovieProps {
@@ -14,7 +14,7 @@ export default function Top10TVShows({
   index,
   ...movieProps
 }: top10Props) {
-  const { setIsHover } = useCardContext();
+  const { setIsHover } = useUIContext();
   const svgData = svgDataList[index];
 
   const handleMouseEnter = () => setIsHover(true);

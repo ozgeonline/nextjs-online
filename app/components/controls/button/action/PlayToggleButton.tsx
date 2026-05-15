@@ -12,6 +12,10 @@ type PlayButtonProps = {
   playButtonPosition:string
 };
 
+function isAbortPlaybackError(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
 const PlayToggleButton: React.FC<PlayButtonProps> = (props) => {
 
   const {setIsPlaying} = useVideoContext();
@@ -47,8 +51,8 @@ const PlayToggleButton: React.FC<PlayButtonProps> = (props) => {
           setIsPlaying(true);
         })
         .catch((error) => {
-          if (error.name !== "AbortError") {
-            console.error("Error playing video:", error); //non-abort errors
+          if (!isAbortPlaybackError(error)) {
+            console.error("Error playing video:", error);
           }
         });
     } else {

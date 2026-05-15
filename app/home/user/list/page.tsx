@@ -1,4 +1,4 @@
-import { CardProvider } from "@/app/components/providers/CardContext";
+import { UIProvider } from "@/app/components/providers/UIContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
 import { authOptions } from "@/app/utils/auth";
 import prisma from "@/app/utils/db";
@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth/next";
 import dynamic from 'next/dynamic';
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
-const CarouselModal = dynamic(() => import('@/app/components/providers/CarouselModal'));
+const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
 
 async function getData(userId: string) {
@@ -45,9 +45,9 @@ export default async function Watchlist() {
     <div className="flex flex-col relative overflow-hidden">
       {data.length > 0 ? (
         <VideoProvider>
-          <CardProvider>
+          <UIProvider>
             <div className="pb-[55vh] padding-layout">
-              <CarouselModal 
+              <InfiniteCarousel 
                 sliderButtonSection={true}
                 sectionTitle="My List"
                 sectionTitleStyle="mt-24 mb-5"
@@ -74,13 +74,13 @@ export default async function Watchlist() {
                       imageStyle="rounded-sm"    />
                   </div>
                 ))}
-              </CarouselModal>
+              </InfiniteCarousel>
             </div>
 
             {/* Bottom Section */}
             <Footer />
 
-          </CardProvider>
+          </UIProvider>
         </VideoProvider>
       ) : (
             <div 
