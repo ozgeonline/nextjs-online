@@ -3,9 +3,9 @@
 .carouselButtons {
   position: absolute;
   bottom: 0px;
+  width: 1.25rem;
   transition: all ease-in;
   background-color: rgb(0 0 0 / 0.6);
-  padding: auto 0;
   transition: all ease-in 100ms;
 }
 
@@ -26,8 +26,8 @@
 }
 
 .buttonIcon {
-  width: 0.5em;
-  height: 1em;
+  width: 1.25rem;
+  height: 1.25rem;
   color: transparent;
 }
 

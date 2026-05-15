@@ -1,8 +1,16 @@
 "use client"
-import { useState, useEffect } from 'react';
 
-// Define the breakpoints
-type Breakpoint = 'sm' | 'md' | 'lg' | 'xl';
+import { RefObject, useEffect, useMemo, useState } from "react";
+
+type Breakpoint = "sm" | "md" | "lg" | "xl";
+
+type BreakpointState = Record<`is${Capitalize<Breakpoint>}`, boolean>;
+
+type CarouselSettings = {
+  sliderWidth: number
+  slidesPerView: number
+  breakpoint: BreakpointState
+}
 
 const breakpointConditions: Record<Breakpoint, (width: number) => boolean> = {
   sm: (width) => width >= 640 && width < 768,
@@ -11,54 +19,67 @@ const breakpointConditions: Record<Breakpoint, (width: number) => boolean> = {
   xl: (width) => width >= 1280,
 };
 
-// Hook to calculate slider width and number of slides
-export const CarouselBreakpointSettings = (sliderRef: React.RefObject<HTMLDivElement>) => {
-  const [sliderWidth, setSliderWidth] = useState<number>(0);
-  const [slidesPerView, setSlidesPerView] = useState<number>(2); // Default to 2 slides
+function getSlidesPerView(width: number) {
+  if (breakpointConditions.xl(width)) return 6;
+  if (breakpointConditions.lg(width)) return 5;
+  if (breakpointConditions.md(width)) return 4;
+  if (breakpointConditions.sm(width)) return 3;
+  return 2;
+}
 
-  const isClient = typeof window !== "undefined";
-
-  // Utility to determine the current screen breakpoint
-  const getBreakpointState = (breakpoint: Breakpoint): boolean => {
-    if (!isClient) return false;
-    const condition = breakpointConditions[breakpoint];
-    return condition ? condition(window.innerWidth) : false;
+function getBreakpointState(width: number): BreakpointState {
+  return {
+    isSm: breakpointConditions.sm(width),
+    isMd: breakpointConditions.md(width),
+    isLg: breakpointConditions.lg(width),
+    isXl: breakpointConditions.xl(width),
   };
+}
 
-  const [isSm, setIsSm] = useState(getBreakpointState('sm'));
-  const [isMd, setIsMd] = useState(getBreakpointState('md'));
-  const [isLg, setIsLg] = useState(getBreakpointState('lg'));
-  const [isXl, setIsXl] = useState(getBreakpointState('xl'));
+export function useCarouselBreakpointSettings(
+  sliderRef: RefObject<HTMLDivElement>,
+): CarouselSettings {
+  const [sliderWidth, setSliderWidth] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   useEffect(() => {
-    if (!isClient) return;
-    const handleResize = () => {
-      setIsSm(getBreakpointState('sm'));
-      setIsMd(getBreakpointState('md'));
-      setIsLg(getBreakpointState('lg'));
-      setIsXl(getBreakpointState('xl'));
-
-      if (sliderRef.current) {
-        setSliderWidth(sliderRef.current.clientWidth);
-      }
+    const updateViewportWidth = () => {
+      setViewportWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial calculation on mount
+    updateViewportWidth();
+    window.addEventListener("resize", updateViewportWidth);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", updateViewportWidth);
     };
-  }, [sliderRef, isClient]);
+  }, []);
 
   useEffect(() => {
-    const slides =
-      isXl ? 6 :
-      isLg ? 5 :
-      isMd ? 4 :
-      isSm ? 3 : 2;
-    setSlidesPerView(slides);
-  }, [isSm, isMd, isLg, isXl]);
+    const sliderElement = sliderRef.current;
 
-  return { sliderWidth, slidesPerView };
-};
+    if (!sliderElement) return;
+
+    const updateSliderWidth = () => {
+      setSliderWidth(sliderElement.clientWidth);
+    };
+
+    updateSliderWidth();
+
+    const resizeObserver = new ResizeObserver(updateSliderWidth);
+    resizeObserver.observe(sliderElement);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [sliderRef]);
+
+  const breakpoint = useMemo(() => getBreakpointState(viewportWidth), [viewportWidth]);
+  const slidesPerView = useMemo(() => getSlidesPerView(viewportWidth), [viewportWidth]);
+
+  return {
+    sliderWidth,
+    slidesPerView,
+    breakpoint,
+  };
+}

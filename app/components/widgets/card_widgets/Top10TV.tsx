@@ -1,11 +1,10 @@
 "use client"
 
 import { MovieProps } from "@/app/types/props";
-import { useEffect, useState } from "react";
 import styles from "./card.module.css";
 import PreviewCard from './PreviewCard';
 import { useCardContext } from '@/app/components/providers/CardContext';
-import { SvgData } from "@/app/data/SvgData";
+import svgDataList from "@/app/data/SvgData";
 
 interface top10Props extends MovieProps {
   index:number
@@ -15,39 +14,13 @@ export default function Top10TVShows({
   index,
   ...movieProps
 }: top10Props) {
-
-  const [svgDataArray, setSvgDataArray] = useState<SvgData[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { setIsHover } = useCardContext();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        const svgDataModule = await import("@/app/data/SvgData");
-        setSvgDataArray(svgDataModule.default);
-      } catch (error) {
-        console.error("Error loading SVG data:", error);
-        setSvgDataArray([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (isLoading || !svgDataArray || !svgDataArray[index]) {
-    return ;
-  }
-
-  const svgData = svgDataArray[index]; 
-
-  // if (isLoading) return null;
+  const svgData = svgDataList[index];
 
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
+
+  if (!svgData) return null;
 
   return (
     <div 

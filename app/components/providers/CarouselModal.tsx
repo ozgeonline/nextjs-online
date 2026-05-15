@@ -1,24 +1,24 @@
 "use client"
 
 import { ChevronRight, ChevronLeft } from 'lucide-react';
-import React, {  useEffect, useRef, useState } from 'react'
-import { CarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useCarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
 import { useCardContext } from '../providers/CardContext';
 import { useVideoContext } from '../providers/VideoContext';
 import styles from "./providers.module.css"
 
 interface CarouselModalProps {
-  children: React.ReactNode[];
-  id?:number[];
+  children: React.ReactNode;
+  id?: number[];
   sliderButtonSection?: boolean;
   sliderButtonSectionTop10?: boolean;
-  continueCard?:boolean;
-  sectionTitle?:string
+  continueCard?: boolean;
+  sectionTitle?: string
   sectionTitleStyle?: string
   filterWatchedVideos?: boolean;
 }
 
-export default function CarouselModal ({
+export default function CarouselModal({
   children: slides,
   id,
   sliderButtonSection,
@@ -26,179 +26,141 @@ export default function CarouselModal ({
   continueCard,
   sectionTitle,
   sectionTitleStyle,
-  filterWatchedVideos=false,
-  
+  filterWatchedVideos = false,
+
 }: CarouselModalProps) {
   const sliderRef = useRef<HTMLDivElement>(null);
   const { isHover } = useCardContext();
   const { hasSavedTime, savedTime } = useVideoContext();
-  const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(sliderRef);
-  const [currentSlide, setCurrentSlide] = useState<number>(0);
-  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
-  const [clickCount, setClickCount] = useState(0)
-  const [isContentLoaded, setIsContentLoaded] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true);
+  const { sliderWidth, slidesPerView } = useCarouselBreakpointSettings(sliderRef);
 
-  const [lastChildCompare, setLastChildCompare] = useState<boolean | undefined>(undefined);
+  // Keeps the current visual order of slides 
+  // so infinite looping can reorder React nodes without direct DOM mutation.
+  const [orderedSlides, setOrderedSlides] = useState<React.ReactNode[]>([]);
+
+  // Moves the carousel track by pixel value;
+  // this is reset after each loop reorder to avoid visible jumps.
+  const [trackTranslate, setTrackTranslate] = useState(0);
+
+  // Tracks whether the user has moved forward at least once,
+  // so the previous-side clone and prev button can appear after the first next action.
+  const [hasMoved, setHasMoved] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const transitionTimerRef = useRef<number | null>(null);
+  const slideWidth = sliderWidth > 0 ? sliderWidth / slidesPerView : 0;
+  const slidesArray = useMemo(() => React.Children.toArray(slides), [slides]);
+  const visibleSlides = useMemo(() => {
+    if (!filterWatchedVideos) return slidesArray;
+
+    return slidesArray.filter((_, index) => {
+      const movieId = id?.[index];
+      return movieId ? hasSavedTime(movieId) : true;
+    });
+  }, [filterWatchedVideos, hasSavedTime, id, slidesArray]);
+
+  // Infinite controls are only useful 
+  // when there are more slides than the visible viewport can show.
+  const canLoop = orderedSlides.length > slidesPerView;
+
+  // Prevents controls/title from rendering before the carousel has a measurable width.
+  const isContentLoaded = sliderWidth > 0;
   const savedTimeLength = Object.keys(savedTime).length;
-  //console.log("savedTimeLength:", savedTimeLength)
-  const slideItems = Array.from(sliderRef.current?.children || []);
+
+  // One navigation step equals the number of slides currently visible in the viewport.
+  const stepSize = Math.min(slidesPerView, orderedSlides.length);
+  const stepWidth = stepSize * slideWidth;
+  const baseTranslate = canLoop && hasMoved ? -stepWidth : 0;
 
   useEffect(() => {
-    const lastSlideItem = slideItems[slideItems.length - 1];
-    const slideItemLabel = lastSlideItem?.getAttribute('aria-label');
-    const slideLabel = `${slides.length - 1}.slide`;
-    //console.log("slideItemLabel:",slideItemLabel, " slideLabel:",slideLabel)
-    //console.log("slides.length-1-slidesPerView === currentSlide",slides.length-1-slidesPerView === currentSlide)
-    //console.log("slideItems.length-1- slidesPerView:",slideItems.length -1- slidesPerView)
+    setOrderedSlides(visibleSlides);
+    setTrackTranslate(0);
+    setHasMoved(false);
+    setIsTransitioning(false);
+  }, [visibleSlides]);
 
-    setLastChildCompare(slideItemLabel === slideLabel);
-  }, [slideItems, slides]);
+  useEffect(() => {
+    if (!isTransitioning) {
+      setTrackTranslate(baseTranslate);
+    }
+  }, [baseTranslate, isTransitioning]);
 
-  //const isMultipleOfSlidesPerView = currentSlide % slidesPerView === 0;
-  //console.log("isMultipleOfSlidesPerView", isMultipleOfSlidesPerView)
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current) {
+        window.clearTimeout(transitionTimerRef.current);
+      }
+    };
+  }, []);
+
+  const renderedSlides = canLoop
+    ? [
+      ...(hasMoved
+        ? orderedSlides.slice(-stepSize).map((child) => ({ child, keyPrefix: "before" }))
+        : []),
+      ...orderedSlides.map((child) => ({ child, keyPrefix: "main" })),
+      ...orderedSlides.slice(0, stepSize).map((child) => ({ child, keyPrefix: "after" })),
+    ]
+    : orderedSlides.map((child) => ({ child, keyPrefix: "main" }));
 
   const handleClick = (direction: "prev" | "next") => {
+    if (isTransitioning || !canLoop) return;
 
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setClickCount((prev)=>prev+1)
-
-    if (direction === "prev") {
-      setIsTransitioning(true)
-      //const maxIndex = slides.length -1- slidesPerView;
-      setCurrentSlide((i) => Math.max(i + slidesPerView, 0));
-
-      for (let i = 0; i < slidesPerView; i++) {
-        const lastSlide = slideItems[slideItems.length -1- i];
-        sliderRef.current?.insertAdjacentElement("afterbegin", lastSlide);
-      }
-      
-      setTimeout(() => { setCurrentSlide(1) }, 500);
-      setTimeout(() => setIsTransitioning(false), 500);
-
-    } 
-    else if (direction === "next") {
-      setIsTransitioning(true)
-      setClickCount((prev)=>prev+1)
-    
-        if(lastChildCompare ) {
-          // for (let i = 0; i <= slidesPerView-(slideItems.length%slidesPerView); i++) {
-          //   console.log(" if i:",i)
-          //   const addEndSlide =  slideItems[i];
-          //   sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
-          // }
-          setCurrentSlide((prev) => Math.min(prev + slidesPerView, slides.length-1-slidesPerView));
-
-          if (slides.length-1-slidesPerView === currentSlide) {
-            for (let i = 0; i < slidesPerView; i++) {
-              const addEndSlide =  slideItems[i];
-              sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
-            }
-          setCurrentSlide((prev) => Math.min(prev + slidesPerView, slideItems.length-1-slidesPerView));
-
-          const slideWidth = sliderWidth / slidesPerView;
-          const newTransform = -currentSlide * slideWidth;
-  
-          if (sliderRef.current) {
-            sliderRef.current.style.transition = 'none';
-            sliderRef.current.style.transform = `translateX(0px)`;
-            
-            // Trigger transition for next set
-            setTimeout(() => {
-              sliderRef.current!.style.transition = 'transform 0.5s ease';
-              sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
-            }, 500);
-          }
-        }
-      } else {
-        for (let i = 0; i < slidesPerView; i++) {
-          const addEndSlide =  slideItems[i];
-          sliderRef.current?.insertAdjacentElement("beforeend", addEndSlide);
-        }
-        setCurrentSlide(slideItems.length-1-slidesPerView);
-        const slideWidth = sliderWidth / slidesPerView;
-        const newTransform = -currentSlide * slideWidth;
-
-        if (sliderRef.current) {
-          sliderRef.current.style.transition = 'none';
-          sliderRef.current.style.transform = `translateX(0px)`;
-          
-          // Trigger transition for next set
-          setTimeout(() => {
-            sliderRef.current!.style.transition = 'transform 0.5s ease';
-            sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
-          }, 500);
-        }
-      }
-
-      const slideWidth = sliderWidth / slidesPerView;
-      const newTransform = -currentSlide * slideWidth;
-
-        if (sliderRef.current) {
-          sliderRef.current.style.transition = 'none';
-          sliderRef.current.style.transform = `translateX(0px)`;
-          
-          // Trigger transition for next set
-          setTimeout(() => {
-            sliderRef.current!.style.transition = 'transform 0.5s ease';
-            sliderRef.current!.style.transform = `translateX(${newTransform}px)`;
-          }, 500);
-        }
-      // else {
-      //   setTimeout(() => {
-      //     setCurrentSlide((prev) => Math.min(prev + slidesPerView, slideItems.length - slidesPerView));
-      //   }, 10);
-      // }
-      setTimeout(() => setIsTransitioning(false), 500);
+    if (transitionTimerRef.current) {
+      window.clearTimeout(transitionTimerRef.current);
     }
+
+    if (direction === "next") {
+      setIsTransitioning(true);
+      setTrackTranslate(baseTranslate - stepWidth);
+
+      transitionTimerRef.current = window.setTimeout(() => {
+        setOrderedSlides((currentSlides) => [
+          ...currentSlides.slice(stepSize),
+          ...currentSlides.slice(0, stepSize),
+        ]);
+        setHasMoved(true);
+        setIsTransitioning(false);
+        setTrackTranslate(-stepWidth);
+      }, 500);
+
+      return;
+    }
+
+    setIsTransitioning(true);
+    setTrackTranslate(0);
+
+    transitionTimerRef.current = window.setTimeout(() => {
+      setOrderedSlides((currentSlides) => [
+        ...currentSlides.slice(-stepSize),
+        ...currentSlides.slice(0, -stepSize),
+      ]);
+      setHasMoved(true);
+      setIsTransitioning(false);
+      setTrackTranslate(-stepWidth);
+    }, 500);
   };
 
-  useEffect(() => {
-    if (sliderRef.current) {
-      const slideWidth = sliderWidth / slidesPerView;
-      const newTransform = -currentSlide * slideWidth;
-      sliderRef.current.style.transition = isTransitioning ? 'transform  0.5s ease' : 'none';
-      sliderRef.current.style.transform = `translateX(${newTransform}px)`;
-    }
-  }, [currentSlide, sliderWidth, slidesPerView, isTransitioning]);
-
-  const renderSlides = slides.map((child, index) => {
+  const renderSlides = renderedSlides.map(({ child, keyPrefix }, index) => {
     if (!React.isValidElement(child)) return null;
-    // console.log(child)
-    const shouldHideSlide = filterWatchedVideos && id?.[index] && !hasSavedTime(id[index]);
 
     return (
       <div
-        key={index}
+        key={`${keyPrefix}-${child.key ?? index}`}
         aria-label={`${index}.slide`}
-        onLoad={() => setIsContentLoaded(true)}
-        style={{width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
+        style={{ width: `${slideWidth}px` }}
       >
         <div
-          style={{ width: shouldHideSlide ? "0px" : `${sliderWidth / slidesPerView}px`}}
-          className= "px-[0.5vw]"
+          style={{ width: `${slideWidth}px` }}
+          className="px-[0.5vw]"
         >
-          {index}
           {child}
         </div>
       </div>
     );
   });
-  
-  useEffect(() => {
-    if (slideItems.length > 0) {
-      //console.log("Slides:", totalSlides);
-      const timer = setTimeout(() => {
-        //console.log("Setting isContentLoaded to true");
-        setIsContentLoaded(true);
-      }, 100); //delay for DOM settling
-      return () => clearTimeout(timer);
-    }
-  }, [slideItems.length]);
 
   return (
-    <div 
+    <div
       className={`
         animate-slide-X 
          ${isHover ? 'opacity-100 z-50' : 'opacity-95'}
@@ -216,6 +178,10 @@ export default function CarouselModal ({
       <div
         ref={sliderRef}
         className="flex"
+        style={{
+          transform: `translateX(${trackTranslate}px)`,
+          transition: isTransitioning ? "transform 0.5s ease" : "none",
+        }}
       >
         {renderSlides}
       </div>
@@ -223,14 +189,14 @@ export default function CarouselModal ({
       <div className='relative w-full h-full z-50'>
         {isContentLoaded && (
           <div>
-            <button 
+            <button
               onClick={() => handleClick("prev")}
               aria-label='Previous Button'
               className={
                 `${styles.prevButton} ${styles.carouselButtons} group/prev ` +
-                `${sliderButtonSection && styles.sliderButtonSectionSize} `+
-                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} `+
-                `${clickCount<=0 ? "hidden" : "block"}`
+                `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
+                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
+                `${canLoop && hasMoved ? "block" : "hidden"}`
               }
             >
               <ChevronLeft
@@ -245,14 +211,13 @@ export default function CarouselModal ({
               aria-label='Next Button'
               className={
                 `${styles.nextButton} ${styles.carouselButtons} group/next ` +
-                `${sliderButtonSection && styles.sliderButtonSectionSize} `+
-                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} `+
-                `${
-                  slides.length-1 < slidesPerView ? "hidden" 
-                  : continueCard && savedTimeLength-1 < slidesPerView ? "hidden" 
-                  : "block"
+                `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
+                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
+                `${canLoop && (!continueCard || savedTimeLength > slidesPerView)
+                  ? "block"
+                  : "hidden"
                 }`
-              } 
+              }
             >
               <ChevronRight
                 className={`
@@ -265,4 +230,5 @@ export default function CarouselModal ({
         )}
       </div>
     </div>
-  )}
+  )
+}

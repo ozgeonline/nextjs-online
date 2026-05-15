@@ -1,11 +1,11 @@
 "use client"
-import { CarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
+import { useCarouselBreakpointSettings } from '../widgets/useCarouselBreakpointSettings';
 import {  useRef } from "react";
 import styles from "./animation.module.css"
 
 export default function BoxLoading_Animation() {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { sliderWidth, slidesPerView } = CarouselBreakpointSettings(boxRef);
+  const { sliderWidth, slidesPerView } = useCarouselBreakpointSettings(boxRef);
 
   return (
     <div 
