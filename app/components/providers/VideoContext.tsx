@@ -27,21 +27,26 @@ function readNumberArrayFromStorage(key: string) {
   }
 }
 
+/** Reads and validates video playback times from localStorage.
+ *  Returns a sanitized Record<number, number> mapping movie IDs to saved seconds. */
 function readVideoTimesFromStorage(key: string) {
   try {
     const value = localStorage.getItem(key);
     if (!value) return {};
 
     const parsedValue = JSON.parse(value);
+
+    // Reject anything that isn't a plain object (arrays, primitives, null).
     if (!parsedValue || typeof parsedValue !== "object" || Array.isArray(parsedValue)) {
       return {};
     }
 
+    // Sanitize entries: keep only numeric values with valid finite numeric keys.
     return Object.fromEntries(
       Object.entries(parsedValue)
-        .filter(([, value]) => typeof value === "number")
-        .map(([id, value]) => [Number(id), value])
-        .filter(([id]) => Number.isFinite(id)),
+        .filter(([, value]) => typeof value === "number")   // Drop non-number values
+        .map(([id, value]) => [Number(id), value])          // Cast string keys to numbers
+        .filter(([id]) => Number.isFinite(id)),             // Drop NaN / Infinity keys
     ) as Record<number, number>;
   } catch {
     return {};

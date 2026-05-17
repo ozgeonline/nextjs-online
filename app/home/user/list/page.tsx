@@ -15,6 +15,7 @@ async function getData(userId: string) {
       userId: userId,
     },
     select: {
+      id: true,
       Movie: {
         select: {
           title: true,
@@ -24,7 +25,6 @@ async function getData(userId: string) {
           overview: true,
           release: true,
           id: true,
-          WatchLists: true,
           videoSource: true,
           cast: true,
           genres: true,
@@ -67,8 +67,8 @@ export default async function Watchlist() {
                       age={movie.Movie?.age as number}
                       release={movie.Movie?.release as number}
                       duration={movie.Movie?.duration as number}
-                      watchList={movie.Movie?.WatchLists?.length !== undefined && movie.Movie?.WatchLists?.length > 0 ? true : false}
-                      watchlistId={movie.Movie?.WatchLists[0]?.id as string}
+                      watchList={true}
+                      watchlistId={movie.id}
                       movieId={movie.Movie?.id as number}
                       imageCardWrapper={true}
                       imageStyle="rounded-sm"    />
