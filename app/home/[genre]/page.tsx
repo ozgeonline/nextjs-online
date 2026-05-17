@@ -10,12 +10,22 @@ import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
 const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
-const BrowseBySortClientPage = dynamic(() => import('@/app/components/controls/button/action/BrowseBySortClientPage'));
+const BrowseSortSelect = dynamic(() => import('@/app/components/controls/sort/BrowseSortSelect'));
+
+type SortOrder = "default" | "asc" | "desc";
+
+const SORT_ORDERS: SortOrder[] = ["default", "asc", "desc"];
+
+function parseSortOrder(sortOrder?: string): SortOrder {
+  return SORT_ORDERS.includes(sortOrder as SortOrder)
+    ? sortOrder as SortOrder
+    : "default";
+}
 
 async function getData(
   category: string, 
   userId: string, 
-  sortOrder: 'default' | 'asc' | 'desc', 
+  sortOrder: SortOrder, 
   query: string 
 ) {
   const selectFields = {
@@ -112,7 +122,7 @@ interface CategoryPageProps {
     genre: string;
   }>;
   searchParams: Promise<{
-    sortOrder?: 'default' | 'asc' | 'desc';
+    sortOrder?: string;
     query?: string;
   }>
 }
@@ -126,7 +136,7 @@ export default async function CategoryPage({
     const resolvedParams = await params;
     const genre = resolvedParams.genre ?? '';
     const session = await getServerSession(authOptions);
-    const sortOrder = (resolvedSearchParams.sortOrder as 'default' | 'asc' | 'desc') || 'default';
+    const sortOrder = parseSortOrder(resolvedSearchParams.sortOrder);
     const query = resolvedSearchParams.query || '';
     const data = await getData(
       genre, 
@@ -164,8 +174,7 @@ export default async function CategoryPage({
               <h1 className="text-2xl md:text-3xl">
                 Browse by sort
               </h1>
-              <BrowseBySortClientPage 
-                initialData={data}
+              <BrowseSortSelect
                 initialSortOrder={sortOrder}
               />
             </div>
