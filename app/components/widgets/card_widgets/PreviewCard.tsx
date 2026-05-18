@@ -10,7 +10,7 @@ import { useUIContext } from '@/app/components/providers/UIContext';
 import styles from "./card.module.css";
 
 const ImageModal = dynamic(() => import('@/app/components/ui/assets/ImageModal'));
-const ShowDialogButton = dynamic(() => import('@/app/components/controls/button/action/ShowDialogButton'));
+const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
 
 interface PreviewModalProps extends MovieProps {
   imageCardWrapper?: boolean
@@ -23,7 +23,7 @@ export default function PreviewCard({
   imageStyle,
   ...movieProps
 }: PreviewModalProps) {
-  const {setIsHover, isHover } = useUIContext();
+  const { setIsHover, isHover } = useUIContext();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -45,10 +45,10 @@ export default function PreviewCard({
   // }, [isHover]);
 
   return (
-    <div 
+    <div
       className="group/card relative "
       onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave} 
+      onMouseLeave={handleMouseLeave}
       aria-label={`${movieProps.movieId}.poster`}
     >
       <div
@@ -61,15 +61,15 @@ export default function PreviewCard({
           imageString={movieProps.imageString ?? ''}
           imageText={`preview card open ${movieProps.title}-movie poster`}
           imageStyle={`${imageStyle} max-lg:brightness-75 h-full w-full `}
-          onLoad={() => setImageLoaded(true)} 
+          onLoad={() => setImageLoaded(true)}
         />
         {imageLoaded && (
-          <ShowDialogButton
+          <DialogTriggerButton
             {...movieProps}
             buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
           >
             <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
-          </ShowDialogButton>
+          </DialogTriggerButton>
         )}
 
       </div>
@@ -77,9 +77,9 @@ export default function PreviewCard({
       <div
         className={`
           ${styles.previewCardDefault}
-          ${!openDialog 
-              ? ` xl:group-hover/card:visible xl:group-hover/card:scale-150 xl:group-hover/card:z-50 `
-              : "group-hover/card:invisible "
+          ${!openDialog
+            ? ` xl:group-hover/card:visible xl:group-hover/card:scale-150 xl:group-hover/card:z-50 `
+            : "group-hover/card:invisible "
           }
         `}
       >

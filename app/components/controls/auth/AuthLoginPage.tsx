@@ -6,10 +6,10 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { LandingContent, Locale } from "@/app/data/preAuthLandingContent"
 import { signUpWithCredentials } from "@/app/utils/auth-actions"
-import styles from "./controlsSignin.module.css"
+import styles from "./auth.module.css"
 
-import GithubSignInButton from "@/app/components/controls/button/auth/Github__SignIn_Button";
-import GoogleSignInButton from "@/app/components/controls/button/auth/Google__SignIn_Button";
+import GithubSignInButton from "@/app/components/controls/auth/GithubSignInButton";
+import GoogleSignInButton from "@/app/components/controls/auth/GoogleSignInButton";
 import AuthEmailInput from "./AuthEmailInput";
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 

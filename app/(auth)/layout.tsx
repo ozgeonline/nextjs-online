@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 const Background_Img = dynamic(() => import("@/app/components/ui/assets/Background_Img"));
 const Logo_Img = dynamic(() => import("@/app/components/ui/assets/Logo_Img"));
 const Lang_Selection = dynamic(() => import("@/app/components/ui/preAuthLanding/Lang_Selection"));
-const SignIn_Button = dynamic(() => import("@/app/components/controls/button/auth/SignIn_Button"));
+const SignInLink = dynamic(() => import("@/app/components/controls/auth/SignInLink"));
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
@@ -24,7 +24,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         >
           <Suspense fallback={null}>
             <Lang_Selection />
-            <SignIn_Button />
+            <SignInLink />
           </Suspense>
         </div>
       </div>

@@ -1,0 +1,16 @@
+.watchlistBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-radius: 100%;
+  border-color: rgb(var(--main-white-100) / 1);
+  background-color: rgb(var(--main-dark) / 1);
+  filter: brightness(0.9);
+
+}
+
+.watchlistBtn:hover {
+  filter: brightness(1.5);
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}

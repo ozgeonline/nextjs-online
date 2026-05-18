@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import RedCircle_Animation from "@/app/components/animation/RedCircle_Animation";
-import styles from "@/app/components/controls/button/controlsButton.module.css";
+import styles from "./select.module.css";
 
 export type SortOrder = "default" | "asc" | "desc";
 

@@ -1,14 +1,14 @@
 "use client"
 
 import { InfoIcon, Play } from "lucide-react"
-import ShowDialogButton from "../../controls/button/action/ShowDialogButton"
+import DialogTriggerButton from "@/app/components/controls/dialog/DialogTriggerButton"
 import { MovieProps } from "@/app/types/props"
 import styles from "./video.module.css"
 
-export default function MovieButtons({ ...movieProps}: MovieProps) {
+export default function MovieButtons({ ...movieProps }: MovieProps) {
   return (
     <div className="flex text-[3vw] sm:text-lg font-semibold">
-      <ShowDialogButton
+      <DialogTriggerButton
         {...movieProps}
         buttonStyle={`
           ${styles.movieButtons}
@@ -16,11 +16,11 @@ export default function MovieButtons({ ...movieProps}: MovieProps) {
           w-[16vw] sm:w-[12vw] md:w-[10vw] lg:w-[8vw]
         `}
       >
-        <Play 
-          className="size-[3vw] sm:size-[2vw] me-[0.75vw] rounded-full fill-inherit" 
-          aria-label="more info button"
+        <Play
+          className="size-[3vw] sm:size-[2vw] me-[0.75vw] rounded-full fill-inherit"
+          aria-hidden="true"
         /> Play
-      </ShowDialogButton>
+      </DialogTriggerButton>
 
       <div
         className={`

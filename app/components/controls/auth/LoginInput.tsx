@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import AuthEmailInput from "./AuthEmailInput";
-import styles from "./controlsSignin.module.css";
+import styles from "./auth.module.css";
 
 type LoginInputProps = {
   placeholder?: string
@@ -14,9 +14,9 @@ export default function LoginInput({
   submitLabel = "Get Started",
 }: LoginInputProps) {
   return (
-    <form 
-      method="post" 
-      action="/api/auth/signin" 
+    <form
+      method="post"
+      action="/api/auth/signin"
       className="flex flex-col sm:flex-row w-full items-center justify-center sm:space-x-2 max-sm:space-y-10"
     >
       <AuthEmailInput
@@ -28,7 +28,7 @@ export default function LoginInput({
         validInputClassName="border-2 border-inputInfo-succ_color"
         invalidInputClassName="border-2 border-inputInfo-err_color"
       />
-      <button 
+      <button
         type="submit"
         className={styles.getStartedBtn}
       >

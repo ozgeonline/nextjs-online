@@ -3,14 +3,17 @@
   width: 0;
   background: transparent;
 }
+
 /* Track */
 .overflow-css::-webkit-scrollbar-track {
   background: transparent;
 }
+
 /* Handle */
 .overflow-css::-webkit-scrollbar-thumb {
   background: transparent;
 }
+
 /* Handle on hover */
 .overflow-css::-webkit-scrollbar-thumb:hover {
   background: transparent;
@@ -25,6 +28,7 @@
   cursor: context-menu;
   font-weight: 500;
 }
+
 /*************************************** Video ***************************************/
 .videoStyle {
   z-index: -20;
@@ -51,6 +55,7 @@
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 }
+
 .dialog-circleButtonSize {
   height: 8vw;
   width: 8vw;
@@ -59,8 +64,8 @@
 
 .close-btn-style {
   position: fixed;
-  margin-top: 1.25rem ;
-  margin-bottom: 0.5rem ;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
   padding: 0.25rem;
   color: white;
   cursor: pointer;
@@ -127,10 +132,10 @@
   height: 1.25rem;
 }
 
-.subtitles ~ p {
+.subtitles~p {
   display: none;
   position: absolute;
-  padding: 0.25em 0.70em ;
+  padding: 0.25em 0.70em;
   top: -2.5rem;
   left: -15rem;
   width: auto;
@@ -144,7 +149,7 @@
   transition: all ease-in 150ms;
 }
 
-.subtitles ~ p > span {
+.subtitles~p>span {
   position: absolute;
   top: 75%;
   right: 7rem;
@@ -236,6 +241,7 @@
   .buttonControlsWrapper {
     margin-top: 25vw;
   }
+
   .dialog-playButton {
     width: 12vw;
     height: 4vw;
@@ -275,6 +281,7 @@
   .dialog-wrapper {
     width: 80%;
   }
+
   .leftGenreWrapper {
     flex-wrap: wrap;
   }
@@ -290,8 +297,8 @@
     width: 2.5vw;
   }
 
-  .subtitles:hover ~ p {
+  .subtitles:hover~p {
     display: block;
   }
-  
+
 }

@@ -81,7 +81,19 @@ export async function addToWatchlist(
     return { ok: true, watchlistId: watchlistEntry.id };
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return { ok: true };
+      const existingEntry = await prisma.watchList.findUnique({
+        where: {
+          userId_movieId: {
+            userId: await getCurrentUserId(),
+            movieId: parseMovieId(movieId),
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      return { ok: true, watchlistId: existingEntry?.id };
     }
 
     return { ok: false, error: "Unable to update watchlist." };

@@ -3,9 +3,9 @@
 import { normalizeLocale, preAuthLandingContent } from "@/app/data/preAuthLandingContent";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import styles from "../controlsButton.module.css"
+import styles from "./auth.module.css"
 
-export default function SignIn_Button() {
+export default function SignInLink() {
   const searchParams = useSearchParams();
   const locale = normalizeLocale(searchParams.get("lang"));
   const content = preAuthLandingContent[locale];
@@ -14,9 +14,8 @@ export default function SignIn_Button() {
   return (
     <Link
       href={href}
-      type="submit"
       className={styles.signInButton}
-      aria-label="Sign In Button"
+      aria-label={content.signIn}
     >
       {content.signIn}
     </Link>

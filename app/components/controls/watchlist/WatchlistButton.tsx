@@ -5,21 +5,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { addToWatchlist, deleteFromWatchlist } from "@/app/utils/watchlist-actions";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 import { Check, Loader, Plus } from "lucide-react";
-import styles from "../controlsButton.module.css"
+import styles from "./watchlistButton.module.css"
 
-interface ActionWatchlistProps {
+interface WatchlistButtonProps {
   watchList: boolean;
   watchlistId: string;
   movieId: number;
   actionStyle: string;
 }
 
-export default function ActionWatchlist({
+export default function WatchlistButton({
   watchList,
   watchlistId,
   movieId,
   actionStyle
-}: ActionWatchlistProps) {
+}: WatchlistButtonProps) {
   const { isDialogOpen } = useVideoContext();
   const pathName = usePathname();
   const router = useRouter();

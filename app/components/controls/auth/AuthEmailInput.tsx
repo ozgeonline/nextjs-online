@@ -1,7 +1,7 @@
 "use client"
 
 import { ChangeEvent, ReactNode, useId, useState } from "react";
-import styles from "./controlsSignin.module.css";
+import styles from "./auth.module.css";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

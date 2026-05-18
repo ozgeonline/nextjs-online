@@ -1,0 +1,59 @@
+.animationWrapper {
+  position: absolute;
+  top: 50vh;
+  left: 50%;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+}
+
+.dropdownSelectionBtnWrapperDefault {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 10rem;
+  border: 1px solid white;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-weight: 600;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.dropdownSelectionBtnWrapperDefault:hover {
+  background-color: rgb(var(--main-gray) / 1);
+}
+
+@media (min-width: 640px) {
+  .dropdownSelectionBtnWrapperDefault {
+    min-width: 14rem;
+  }
+}
+
+@media not all and (min-width: 640px) {
+  .dropdownSelectionBtnWrapperDefault {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+
+.openedDropdownMenu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  min-width: 100%;
+  z-index: 10;
+  background-color: black;
+  border: 1px solid;
+  opacity: 0.8;
+}
+
+@media (min-width: 640px) {
+
+  .openedDropdownMenu {
+    min-width: 14rem;
+    right: 0;
+  }
+
+}

@@ -5,19 +5,19 @@ import dynamic from 'next/dynamic';
 import { MovieProps } from "@/app/types/props";
 import styles from "./card.module.css";
 
-const ShowDialogButton = dynamic(() => import('@/app/components/controls/button/action/ShowDialogButton'));
-const ActionWatchlist = dynamic(() => import('@/app/components/controls/button/action/ActionWatchlist'));
+const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
+const ActionWatchlist = dynamic(() => import('@/app/components/controls/watchlist/WatchlistButton'));
 const MovieInfo = dynamic(() => import('../info/MovieInfo'));
 const GenreList = dynamic(() => import('../info/GenreList'));
 
 interface PreviewModalProps extends MovieProps {
-  infohover:string
+  infohover: string
 }
 
-export function PreviewCard_Info({...movieProps}: PreviewModalProps) {
+export function PreviewCard_Info({ ...movieProps }: PreviewModalProps) {
   return (
     <>
-      <div 
+      <div
         aria-label="preview card info"
         className={`
           ${movieProps.infohover} 
@@ -33,17 +33,17 @@ export function PreviewCard_Info({...movieProps}: PreviewModalProps) {
 
         {/* button-controls */}
         <div className="flex items-center p-1 sm:p-3">
-          <ShowDialogButton
+          <DialogTriggerButton
             buttonStyle="size-6 me-2"
             {...movieProps}
           >
-            <Play 
+            <Play
               className="p-1 text-black bg-white rounded-full fill-inherit hover:brightness-75 hover:ease-in"
             />
-          </ShowDialogButton>
+          </DialogTriggerButton>
 
           <div className="size-6 me-2">
-            <ActionWatchlist 
+            <ActionWatchlist
               watchList={movieProps.watchList ?? false}
               watchlistId={movieProps.watchlistId ?? ''}
               movieId={movieProps.movieId ?? 0}
@@ -51,29 +51,29 @@ export function PreviewCard_Info({...movieProps}: PreviewModalProps) {
             />
           </div>
 
-          <ShowDialogButton
+          <DialogTriggerButton
             buttonStyle="size-6 ml-auto"
-            {...movieProps} 
+            {...movieProps}
           >
-            <ChevronDown 
+            <ChevronDown
               className="p-[2px] border border-main-white_100 bg-[#202020] rounded-full hover:brightness-125 hover:ease-in"
             />
-          </ShowDialogButton>
+          </DialogTriggerButton>
         </div>
 
         {/* info-controls */}
         <div className="flex gap-x-2 items-center mx-2 mt-2 text-[10px]">
-          <MovieInfo 
+          <MovieInfo
             age={movieProps.age}
             fontHD="text-[8px]"
-          /> 
+          />
         </div>
         <div className='flex flex-wrap items-center space-x-1 pt-3 px-2'>
-          <GenreList 
-            genres={movieProps.genres} 
+          <GenreList
+            genres={movieProps.genres}
             genreInfoStyle={true}
           >
-            <Circle className="fill-gray-500 text-gray-500 size-[3px] ms-1"/>
+            <Circle className="fill-gray-500 text-gray-500 size-[3px] ms-1" />
           </GenreList>
         </div>
       </div>
