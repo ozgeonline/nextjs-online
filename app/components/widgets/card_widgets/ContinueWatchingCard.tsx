@@ -4,13 +4,10 @@ import dynamic from 'next/dynamic';
 import { useVideoContext } from '@/app/components/providers/VideoContext';
 import VideoModals from '@/app/components/widgets/video_widgets/VideoModals';
 import styles from "./card.module.css";
-//import MuteToggleButton from '@/app/components/controls/button/action/MuteToggleButton';
-//import PlayToggleButton from '@/app/components/controls/button/action/PlayToggleButton';
-//import ProgressBar from '@/app/components/controls/button/action/ProgressBar';
 
-const MuteToggleButton = dynamic(() => import('@/app/components/controls/button/action/MuteToggleButton'));
-const PlayToggleButton = dynamic(() => import('@/app/components/controls/button/action/PlayToggleButton'));
-const ProgressBar = dynamic(() => import('@/app/components/controls/button/action/ProgressBar'));
+const MuteToggleButton = dynamic(() => import('@/app/components/controls/video/MuteToggleButton'));
+const PlayToggleButton = dynamic(() => import('@/app/components/controls/video/PlayToggleButton'));
+const ProgressBar = dynamic(() => import('@/app/components/controls/video/ProgressBar'));
 
 interface VideoPlayerProps {
   movieId:number;

@@ -1,35 +1,39 @@
-"use client"
+"use client";
 
 import { PauseCircle, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 
-type PlayButtonProps = {
+type PlayToggleButtonProps = {
   videoModalRef: React.RefObject<HTMLVideoElement>;
-  id?:number
-  buttonStyle?:string
-  playIconStyle?:string
-  playButtonPosition:string
+  id?: number;
+  buttonStyle?: string;
+  playIconStyle?: string;
+  playButtonPosition: string;
 };
 
 function isAbortPlaybackError(error: unknown) {
   return error instanceof DOMException && error.name === "AbortError";
 }
 
-const PlayToggleButton: React.FC<PlayButtonProps> = (props) => {
-
-  const {setIsPlaying} = useVideoContext();
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false); //for specific video
+export default function PlayToggleButton({
+  videoModalRef,
+  id,
+  buttonStyle,
+  playIconStyle,
+  playButtonPosition,
+}: PlayToggleButtonProps) {
+  const { setIsPlaying } = useVideoContext();
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
-    const video = props.videoModalRef.current;
+    const video = videoModalRef.current;
     if (!video) return;
 
     const handlePlay = () => setIsVideoPlaying(true);
     const handlePause = () => setIsVideoPlaying(false);
 
-    setIsVideoPlaying(!video.paused); //initial state
-
+    setIsVideoPlaying(!video.paused);
     video.addEventListener("play", handlePlay);
     video.addEventListener("pause", handlePause);
 
@@ -37,12 +41,14 @@ const PlayToggleButton: React.FC<PlayButtonProps> = (props) => {
       video.removeEventListener("play", handlePlay);
       video.removeEventListener("pause", handlePause);
     };
-  }, [props.videoModalRef]);
+  }, [videoModalRef]);
 
-  const handlePlayToggle = () => {
-    const video = props.videoModalRef.current;
+  const handlePlayToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+
+    const video = videoModalRef.current;
     if (!video) return;
-  
+
     if (video.paused) {
       video
         .play()
@@ -55,26 +61,27 @@ const PlayToggleButton: React.FC<PlayButtonProps> = (props) => {
             console.error("Error playing video:", error);
           }
         });
-    } else {
-      video.pause();
-      setIsPlaying(false);
-      setIsVideoPlaying(false);
+      return;
     }
+
+    video.pause();
+    setIsPlaying(false);
+    setIsVideoPlaying(false);
   };
 
   return (
     <button
+      type="button"
+      aria-label={isVideoPlaying ? "Pause video" : "Play video"}
+      aria-pressed={isVideoPlaying}
       onClick={handlePlayToggle}
-      className={props.buttonStyle + ' ' + props.playButtonPosition}
-      key={props.id}
+      className={`${buttonStyle ?? ""} ${playButtonPosition}`}
+      data-video-id={id}
     >
-      {isVideoPlaying 
-        ? <PauseCircle /> 
-        : <Play className={props.playIconStyle} />
+      {isVideoPlaying
+        ? <PauseCircle />
+        : <Play className={playIconStyle} />
       }
     </button>
-  )
+  );
 }
-
-PlayToggleButton.displayName = 'PlayToggleButton';
-export default PlayToggleButton;

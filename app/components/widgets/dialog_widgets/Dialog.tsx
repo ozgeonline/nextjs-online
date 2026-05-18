@@ -9,9 +9,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import { MovieProps } from '@/app/types/props'
-//import PlayToggleButton from '@/app/components/controls/button/action/PlayToggleButton'
-//import MuteToggleButton from '@/app/components/controls/button/action/MuteToggleButton'
-//import ProgressBar from '@/app/components/controls/button/action/ProgressBar'
 import styles from "./dialog.module.css"
 
 const MovieInfo = dynamic(() => import("@/app/components/widgets/info/MovieInfo"));
@@ -19,9 +16,9 @@ const GenreList = dynamic(() => import("@/app/components/widgets/info/GenreList"
 const CastList = dynamic(() => import("@/app/components/widgets/info/CastList"));
 const ActionWatchlist = dynamic(() => import("@/app/components/controls/button/action/ActionWatchlist"));
 const LikeDislikeButton = dynamic(() => import("@/app/components/controls/button/ui/LikeDislikeButton"));
-const PlayToggleButton = dynamic(() => import("@/app/components/controls/button/action/PlayToggleButton"));
-const MuteToggleButton = dynamic(() => import("@/app/components/controls/button/action/MuteToggleButton"));
-const ProgressBar = dynamic(() => import("@/app/components/controls/button/action/ProgressBar"));
+const PlayToggleButton = dynamic(() => import("@/app/components/controls/video/PlayToggleButton"));
+const MuteToggleButton = dynamic(() => import("@/app/components/controls/video/MuteToggleButton"));
+const ProgressBar = dynamic(() => import("@/app/components/controls/video/ProgressBar"));
 
 interface dialogProps extends MovieProps {
   onClose: () => void,
