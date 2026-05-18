@@ -1,5 +1,13 @@
 "use client"
-import React, {createContext, useContext, useState} from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { createPortal } from 'react-dom';
 import RedCircle_Animation from '../animation/RedCircle_Animation';
 
@@ -17,18 +25,43 @@ const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isHover, setIsHover] = useState(false);
-  const [ isOpen, setIsOpen ] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigationTimerRef = useRef<number | null>(null);
 
-  const triggerNavigation = (callback: () => void) => {
-      setIsOpen(false); //close dropdown
-      setTimeout(() => {
-        setIsLoading(true); //show animation after dropdown closes
-        callback(); //trigger navigation
-      }, 100); //dropdown animation duration
-  };
+  useEffect(() => {
+    return () => {
+      if (navigationTimerRef.current) {
+        window.clearTimeout(navigationTimerRef.current);
+      }
+    };
+  }, []);
 
-   const animationPortal =
+  const triggerNavigation = useCallback((callback: () => void) => {
+    setIsOpen(false);
+
+    if (navigationTimerRef.current) {
+      window.clearTimeout(navigationTimerRef.current);
+    }
+
+    navigationTimerRef.current = window.setTimeout(() => {
+      setIsLoading(true);
+      callback();
+      navigationTimerRef.current = null;
+    }, 100);
+  }, []);
+
+  const value = useMemo<UIContextType>(() => ({
+    isHover,
+    setIsHover,
+    isOpen,
+    setIsOpen,
+    isLoading,
+    setIsLoading,
+    triggerNavigation
+  }), [isHover, isOpen, isLoading, triggerNavigation]);
+
+  const animationPortal =
     isLoading && (
       createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]">
@@ -39,17 +72,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     );
 
   return (
-    <UIContext.Provider 
-      value={{ 
-        isHover, 
-        setIsHover, 
-        isOpen, 
-        setIsOpen,
-        isLoading,
-        setIsLoading,
-        triggerNavigation
-      }}
-    >
+    <UIContext.Provider value={value}>
       {children}
       {animationPortal}
     </UIContext.Provider>
