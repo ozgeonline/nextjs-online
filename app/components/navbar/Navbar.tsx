@@ -2,7 +2,7 @@
 import { Bell } from "lucide-react"
 import { links } from "@/app/data/Navlinks.constant"
 import NavbarLink from "@/app/components/navbar/navigation/NavbarLinks"
-import Logo_Img from "@/app/components/ui/assets/Logo_Img"
+import LogoImage from "@/app/components/ui/assets/LogoImage"
 import Link from "next/link"
 import dynamic from 'next/dynamic';
 import styles from "@/app/components/navbar/navbar.module.css"
@@ -19,7 +19,7 @@ export default function Navbar() {
       <UIProvider>
         <div className="flex w-full justify-between items-start p-2 md:p-5">
           <div className="flex mx-5">
-            <Logo_Img
+            <LogoImage
               logoStyle="relative flex items-center w-24 h-10 md:w-[15vw] md:h-[3vw] lg:w-[8vw] lg:h-[2vw]"
             />
             <ul className="hidden lg:flex lg:px-4 lg:gap-x-5">

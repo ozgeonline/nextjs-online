@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 import { useUIContext } from '@/app/components/providers/UIContext';
 import styles from "./card.module.css";
 
-const ImageModal = dynamic(() => import('@/app/components/ui/assets/ImageModal'));
+const PosterImage = dynamic(() => import('@/app/components/ui/assets/PosterImage'));
 const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
 
 interface PreviewModalProps extends MovieProps {
@@ -57,7 +57,7 @@ export default function PreviewCard({
           ${imageCardWrapper ? styles.cardSize : top10Wrapper ? styles.top10cardSize : undefined}
         `}
       >
-        <ImageModal
+        <PosterImage
           imageString={movieProps.imageString ?? ''}
           imageText={`preview card open ${movieProps.title}-movie poster`}
           imageStyle={`${imageStyle} max-lg:brightness-75 h-full w-full `}
@@ -83,7 +83,7 @@ export default function PreviewCard({
           }
         `}
       >
-        <ImageModal
+        <PosterImage
           imageString={movieProps.imageString || ''}
           imageText={`${movieProps.title}-movie big poster`}
           imageStyle="rounded-t-sm w-full h-full "

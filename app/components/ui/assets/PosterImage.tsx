@@ -2,20 +2,20 @@
 import Image from "next/image";
 import { useState, useCallback, memo } from "react";
 
-interface ImageCard {
+interface PosterImageProps {
   imageString: string;
   imageText: string;
   imageStyle: string;
   onLoad?: () => void;
 }
 
-const ImageModal = memo(
+const PosterImage = memo(
   ({
     imageString,
     imageText,
     imageStyle,
     onLoad,
-  }: ImageCard) => {
+  }: PosterImageProps) => {
     const [loading, setLoading] = useState(true);
 
     const handleImageLoad = useCallback(() => {
@@ -28,7 +28,7 @@ const ImageModal = memo(
         {loading && (
           <div
             className={`${imageStyle} bg-primary-foreground`}
-            aria-label={`${imageText} poster`}
+            aria-hidden="true"
           />
         )}
         <Image
@@ -47,14 +47,14 @@ const ImageModal = memo(
     );
   },
   (prevProps, nextProps) => {
-    //re-render if props change
     return (
       prevProps.imageString === nextProps.imageString &&
       prevProps.imageText === nextProps.imageText &&
-      prevProps.imageStyle === nextProps.imageStyle
+      prevProps.imageStyle === nextProps.imageStyle &&
+      prevProps.onLoad === nextProps.onLoad
     );
   }
 );
 
-ImageModal.displayName = "ImageModal";
-export default ImageModal;
+PosterImage.displayName = "PosterImage";
+export default PosterImage;

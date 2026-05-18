@@ -1,8 +1,8 @@
 import { ReactNode, Suspense } from "react"
 import dynamic from "next/dynamic"
 
-const Background_Img = dynamic(() => import("@/app/components/ui/assets/Background_Img"));
-const Logo_Img = dynamic(() => import("@/app/components/ui/assets/Logo_Img"));
+const AuthBackgroundImage = dynamic(() => import("@/app/components/ui/assets/AuthBackgroundImage"));
+const LogoImage = dynamic(() => import("@/app/components/ui/assets/LogoImage"));
 const Lang_Selection = dynamic(() => import("@/app/components/ui/preAuthLanding/Lang_Selection"));
 const SignInLink = dynamic(() => import("@/app/components/controls/auth/SignInLink"));
 
@@ -10,13 +10,13 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <main className="flex flex-col relative">
       <>
-        <Background_Img />
+        <AuthBackgroundImage />
         <div
           className="absolute top-0 left-0 h-[10vw] w-screen bg-gradient-to-t from-transparent via-black/80 to-black/80"
         ></div>
       </>
       <div className="absolute w-screen h-[80vh] sm:h-[95vh]">
-        <Logo_Img
+        <LogoImage
           logoStyle="absolute top-0 left-0 my-5 h-6 md:h-10 w-24 md:w-36 mx-[15vw] md:mx-[10vw]"
         />
         <div

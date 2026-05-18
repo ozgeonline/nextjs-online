@@ -3,11 +3,11 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react";
 
-interface logoProps {
+interface LogoImageProps {
   logoStyle: string
 }
 
-export default function Logo_Img({logoStyle}:logoProps) {
+export default function LogoImage({ logoStyle }: LogoImageProps) {
   const [loading, setLoading] = useState(true);
   const [imageSrc, setImageSrc] = useState(
     "https://utfs.io/f/MzCIEEnlPGFD0FJReyaQFyYUIlefwhZsOdp3tLqKazo6cmbV"
@@ -26,7 +26,7 @@ export default function Logo_Img({logoStyle}:logoProps) {
       {loading && (
         <div 
           className="absolute top-0 left-0 size-4 mx-[15vw] md:mx-[10vw] my-5 border border-main-red border-y-2"
-          aria-label="logo"
+          aria-hidden="true"
         ></div>
       )}
       <Link href="/home" className={logoStyle} prefetch={false}>
@@ -35,10 +35,9 @@ export default function Logo_Img({logoStyle}:logoProps) {
           onError={handleImageError}
           src={imageSrc}
           style={loading ? { visibility: 'hidden' } : {}}
-          alt="Logo"
+          alt="Online logo"
           sizes="100%"
           fill
-          aria-label="Logo"
           className="z-50"
           priority
         />

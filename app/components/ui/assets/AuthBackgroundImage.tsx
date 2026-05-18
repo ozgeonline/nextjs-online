@@ -2,7 +2,7 @@
 import Image from "next/image"
 import { useState } from "react";
 
-export default function Background_Img() {
+export default function AuthBackgroundImage() {
   const [loading, setLoading] = useState(true);
 
   const handleImageLoad = () => {
@@ -14,7 +14,7 @@ export default function Background_Img() {
       {loading && (
         <div
           className="absolute top-0 left-0 w-screen h-[80vh] sm:h-[95vh] bg-main-dark"
-          aria-label="Background Image"
+          aria-hidden="true"
         ></div>
       )}
       <div className="absolute top-0 left-0 w-screen h-[80vh] sm:h-[95vh]">
