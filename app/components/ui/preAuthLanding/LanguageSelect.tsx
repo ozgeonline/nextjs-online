@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
-import { Locale, normalizeLocale } from "@/app/data/preAuthLandingContent";
+import type { Locale } from "@/app/data/preAuthLandingContent";
+import { normalizeLocale } from "@/app/data/preAuthLandingContent";
 import { Languages } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent } from "react";
@@ -21,8 +22,8 @@ export default function LanguageSelect() {
 
   return (
     <div className="flex items-center relative space-x-3 bg-main-dark/80 border border-muted-foreground rounded-sm">
-      <Languages className="absolute size-4 ml-2" />
-      <label htmlFor="language" className="hidden">
+      <Languages className="absolute size-4 ml-2" aria-hidden="true" />
+      <label htmlFor="language" className="sr-only">
         Select language
       </label>
       <select
@@ -34,7 +35,7 @@ export default function LanguageSelect() {
         className="py-1 px-3 outline-none bg-main-dark/10 rounded-sm text-[0.85rem] size-8 sm:w-24 *:bg-main-white_100 *:text-black"
       >
         <option value="en">English</option>
-        <option value="tr">Türkçe</option>
+        <option value="tr">Turkish</option>
       </select>
     </div>
   );

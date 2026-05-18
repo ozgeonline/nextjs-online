@@ -1,4 +1,4 @@
-import LanguageSelect from "@/app/components/ui/preAuthLanding/Lang_Selection"
+import LanguageSelect from "@/app/components/ui/preAuthLanding/LanguageSelect"
 import { preAuthLandingContent } from "@/app/data/preAuthLandingContent"
 
 type FooterProps = {
@@ -13,7 +13,7 @@ export default function Footer({
   links = preAuthLandingContent.en.footer.links,
 }: FooterProps) {
   return (
-    <div className="py-10 border-t-8 bg-black">
+    <footer className="py-10 border-t-8 bg-black">
       <div className="mx-auto max-w-[1170px] px-4 md:px-8">
         <div className="mb-2 underline text-main-white_100">
           {contactText}
@@ -32,6 +32,6 @@ export default function Footer({
           {brand}
         </p>
       </div>
-    </div>
+    </footer>
   )
 }

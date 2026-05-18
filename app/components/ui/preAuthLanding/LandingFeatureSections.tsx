@@ -1,14 +1,8 @@
 import Image from "next/image"
-
-type LandingFeature = {
-  id: number
-  title: string
-  description: string
-  imageSrc: string
-}
+import type { LandingContent } from "@/app/data/preAuthLandingContent"
 
 type LandingFeatureSectionsProps = {
-  features: LandingFeature[]
+  features: LandingContent["features"]
 }
 
 export default function LandingFeatureSections({ features }: LandingFeatureSectionsProps) {
@@ -18,7 +12,7 @@ export default function LandingFeatureSections({ features }: LandingFeatureSecti
         const isReversed = card.id % 2 !== 0;
 
         return (
-          <div
+          <section
             key={card.id}
             className={`
               flex flex-col items-center justify-center border-t-8 py-16 md:py-20 lg:flex-row lg:px-5 xl:px-36
@@ -26,9 +20,9 @@ export default function LandingFeatureSections({ features }: LandingFeatureSecti
             `}
           >
             <div className="mx-10 lg:w-[450px] 2xl:w-[585px]">
-              <h1 className="text-3xl lg:text-5xl text-center lg:text-start font-extrabold">
+              <h2 className="text-3xl lg:text-5xl text-center lg:text-start font-extrabold">
                 {card.title}
-              </h1>
+              </h2>
               <div className="text-center lg:text-start sm:text-sm md:text-lg lg:text-2xl mt-4">
                 {card.description}
               </div>
@@ -45,7 +39,7 @@ export default function LandingFeatureSections({ features }: LandingFeatureSecti
                 loading="lazy"
               />
             </div>
-          </div>
+          </section>
         )
       })}
     </div>

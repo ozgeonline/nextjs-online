@@ -2,23 +2,14 @@
 
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import LoginInput from "../../controls/auth/LoginInput"
-
-type FAQItem = {
-  id: number
-  title: string
-  content: string
-}
+import LoginInput from "@/app/components/controls/auth/LoginInput"
+import type { LandingContent } from '@/app/data/preAuthLandingContent'
 
 type FAQProps = {
   title: string
   readyText: string
-  items: FAQItem[]
-  emailInput: {
-    placeholder: string
-    errorMessage: string
-    submitLabel: string
-  }
+  items: LandingContent["faq"]["items"]
+  emailInput: LandingContent["emailInput"]
 }
 
 export default function FAQ({
@@ -34,10 +25,10 @@ export default function FAQ({
   }
 
   return (
-    <div className='flex flex-col justify-center items-center py-20 px-8 border-t-8 bg-black'>
-      <h1 className='text-lg sm:text-2xl lg:text-5xl font-extrabold mb-7'>
+    <section className='flex flex-col justify-center items-center py-20 px-8 border-t-8 bg-black'>
+      <h2 className='text-lg sm:text-2xl lg:text-5xl font-extrabold mb-7'>
         {title}
-      </h1>
+      </h2>
       {items.map((data, index) => (
         <div
           key={data.id}
@@ -45,6 +36,7 @@ export default function FAQ({
         >
           <button
             type="button"
+            id={`faq-trigger-${data.id}`}
             onClick={() => toggleAccordion(index)}
             aria-expanded={openIndex === index}
             aria-controls={`faq-content-${data.id}`}
@@ -55,7 +47,7 @@ export default function FAQ({
             <div className="text-lg lg:text-2xl font-thin">
               {data.title}
             </div>
-            <div>
+            <div aria-hidden="true">
               {openIndex === index
                 ? <Plus className='rotate-45 lg:text-5xl text-base font-extralight transition-all ease-linear' />
                 : <Plus className='lg:text-5xl text-xl transition-all ease-linear' />
@@ -65,6 +57,8 @@ export default function FAQ({
           {openIndex === index && (
             <div
               id={`faq-content-${data.id}`}
+              role="region"
+              aria-labelledby={`faq-trigger-${data.id}`}
               className="bg-main-gray text-white text-lg lg:text-2xl mb-2 p-6 w-full max-w-[1170px] transition-all transition-effect"
             >
               {data.content}
@@ -83,6 +77,6 @@ export default function FAQ({
           submitLabel={emailInput.submitLabel}
         />
       </div>
-    </div>
+    </section>
   )
 }

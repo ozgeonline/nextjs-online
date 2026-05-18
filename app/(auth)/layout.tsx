@@ -3,7 +3,7 @@ import dynamic from "next/dynamic"
 
 const AuthBackgroundImage = dynamic(() => import("@/app/components/ui/assets/AuthBackgroundImage"));
 const LogoImage = dynamic(() => import("@/app/components/ui/assets/LogoImage"));
-const Lang_Selection = dynamic(() => import("@/app/components/ui/preAuthLanding/Lang_Selection"));
+const LanguageSelect = dynamic(() => import("@/app/components/ui/preAuthLanding/LanguageSelect"));
 const SignInLink = dynamic(() => import("@/app/components/controls/auth/SignInLink"));
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           className="z-50 flex items-center absolute top-10 sm:top-0 sm:right-0 space-x-2 h-6 md:h-8 my-5 mx-[15vw] md:me-44"
         >
           <Suspense fallback={null}>
-            <Lang_Selection />
+            <LanguageSelect />
             <SignInLink />
           </Suspense>
         </div>
