@@ -13,12 +13,12 @@ export default function NavbarLink({ path, label }: Props) {
   const pathName = usePathname();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { setIsOpen,isOpen, triggerNavigation, setIsLoading } = useUIContext();
+  const { setIsOpen, isOpen, triggerNavigation, setIsLoading } = useUIContext();
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-    //console.log(`handleClick, `,isOpen)
     e.preventDefault();
     if (pathName === path) return;
+
     setIsOpen(false);
 
     triggerNavigation(() => {
@@ -30,14 +30,11 @@ export default function NavbarLink({ path, label }: Props) {
   };
 
   useEffect(() => {
-    if (!isPending  && !isOpen) {
+    if (!isPending && !isOpen) {
       setIsLoading(false);
     }
   }, [isPending, isOpen, setIsLoading]);
 
-  // useEffect(() => {
-  //   console.log("isPending:", isPending, "isLoading:", isLoading);
-  // }, [isPending, isLoading]);
   return (
     <>
       {pathName === path ? (
@@ -50,7 +47,7 @@ export default function NavbarLink({ path, label }: Props) {
             {label}
           </Link>
         </li>
-        ) : (
+      ) : (
         <li>
           <Link
             href={path}
@@ -63,4 +60,5 @@ export default function NavbarLink({ path, label }: Props) {
         </li>
       )}
     </>
-  )};
+  )
+};

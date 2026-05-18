@@ -5,29 +5,21 @@ import { Search } from 'lucide-react';
 import styles from "../navbar.module.css";
 
 const SearchMovieInput: React.FC = () => {
-  
   const [openSearch, setOpenSearch] = useState(false)
   const [query, setQuery] = useState<string>("");
-  const [previousPath, setPreviousPath] = useState<string | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const previousPathRef = useRef<string | null>(null);
   const router = useRouter();
   const pathname = usePathname();
-  //console.log("pathname", pathname)
-  
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setQuery(value);
-    
-    if (value) {
-      if (!previousPath) {
-        setPreviousPath(pathname); //saving the path before the query
-      }
+
+    if (value && !previousPathRef.current) {
+      previousPathRef.current = pathname;
       setOpenSearch(true);
-      router.push(`/home/query?query=${value}`); //path to search page
-    } else if (previousPath) {
-      router.push(previousPath); //back to the previous path
-      setPreviousPath(null);
     }
   };
 
@@ -35,8 +27,6 @@ const SearchMovieInput: React.FC = () => {
     setOpenSearch(prevState => !prevState);
   }
 
-  //console.log(inputRef.current?.value)
-  
   const handleClickOutside = (event: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(event.target as Node) ) {
       setOpenSearch(false);
@@ -44,18 +34,35 @@ const SearchMovieInput: React.FC = () => {
   };
   
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('pointerdown', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('pointerdown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const trimmedQuery = query.trim();
+    const timerId = window.setTimeout(() => {
+      if (trimmedQuery) {
+        const params = new URLSearchParams({ query: trimmedQuery });
+        router.push(`/home/query?${params.toString()}`);
+        return;
+      }
+
+      if (previousPathRef.current) {
+        router.push(previousPathRef.current);
+        previousPathRef.current = null;
+      }
+    }, 300);
+
+    return () => window.clearTimeout(timerId);
+  }, [query, router]);
 
   useEffect(() => {
     if (openSearch && inputRef.current) {
       inputRef.current.focus();
     }
   }, [openSearch]);
-  //console.log(openSearch)
 
   return (
     <div className='hidden sm:flex relative items-center'>
@@ -66,12 +73,17 @@ const SearchMovieInput: React.FC = () => {
           flex justify-evenly relative size-7 sm:size-8
         `}
       >
-        <Search
+        <button
+          type="button"
+          aria-label={openSearch ? "Close search" : "Open search"}
           onClick={() => handleOpenSearch()}
-          className='flex size-6 sm:size-8 p-1 cursor-pointer'
-        />
+          className="flex items-center justify-center"
+        >
+          <Search className='flex size-6 sm:size-8 p-1 cursor-pointer' />
+        </button>
         <input
           type='search'
+          aria-label="Search titles and genres"
           ref={inputRef}
           value={query}
           onChange={handleInputChange}

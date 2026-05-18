@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import debounce from "lodash.debounce"
 import type { StaticImageData } from "next/image"
 import Image from "next/image"
-import {Suspense, useEffect, useRef, useState } from "react"
+import { Suspense, useEffect, useMemo, useRef, useState } from "react"
 
 type UserSettingsToggleButtonProps = {
   userImg: StaticImageData | string | null | undefined
@@ -16,36 +16,40 @@ export default function UserSettingsToggleButton({
   userImg,
   userShortName,
   children
-}:UserSettingsToggleButtonProps) {
+}: UserSettingsToggleButtonProps) {
 
   const [openMenu, setOpenMenu] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleOpenMenu = () => {
-    setOpenMenu(!openMenu)
+    setOpenMenu((isOpen) => !isOpen)
   }
-  // console.log(openMenu)
+
   const handleClick = () => setOpenMenu(false);
   const handleLeave = () => setOpenMenu(false);
 
-  const handleClickOutside = (event: MouseEvent) => {
+  const handleClickOutside = (event: PointerEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
       setOpenMenu(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('mouseleave', handleClickOutside);
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('pointerdown', handleClickOutside);
     return () => {
-      document.removeEventListener('mouseleave', handleClickOutside);
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('pointerdown', handleClickOutside);
     };
-  }, [openMenu]);
+  }, []);
 
-  const debouncedHandleOpenMenu = debounce(() => {
+  const debouncedHandleOpenMenu = useMemo(() => debounce(() => {
     setOpenMenu(true);
-  }, 200);
+  }, 200), []);
+
+  useEffect(() => {
+    return () => {
+      debouncedHandleOpenMenu.cancel();
+    };
+  }, [debouncedHandleOpenMenu]);
   
   const handleMouseOver = () => {
     debouncedHandleOpenMenu();
@@ -53,13 +57,16 @@ export default function UserSettingsToggleButton({
 
   const profileImageSrc = typeof userImg === "string" && userImg.trim().length === 0 ? null : userImg;
 
-  //console.log(menuRef.current)
   return (
-    <div>
+    <div ref={menuRef}>
       <Button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={openMenu}
+        aria-label="Open user menu"
         variant="ghost"
         className="relative size-7 sm:size-8 rounded-sm"
-        onMouseOver={handleMouseOver}
+        onMouseEnter={handleMouseOver}
         onClick={handleOpenMenu}
       >
         <Suspense fallback={userShortName}>
@@ -81,15 +88,15 @@ export default function UserSettingsToggleButton({
         </Suspense>
       </Button>
       {openMenu && (
-          <div 
-            ref={menuRef}
-            onMouseLeave={handleLeave} 
-            onClick={handleClick} 
-            className="absolute top-5 right-0"
-          >
-            {children}
-          </div>
-        )}
+        <div
+          role="menu"
+          onMouseLeave={handleLeave}
+          onClick={handleClick}
+          className="absolute top-5 right-0"
+        >
+          {children}
+        </div>
+      )}
     </div>
   )
 }
