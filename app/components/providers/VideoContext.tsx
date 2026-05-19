@@ -64,8 +64,6 @@ function isAbortPlaybackError(error: unknown) {
 
 interface VideoContextType {
   currentVideoRef: React.MutableRefObject<HTMLVideoElement | null>;
-  continueWatchingVideoElement: React.RefObject<HTMLVideoElement | null>;
-  setContinueWatchingVideoElement: (element: HTMLVideoElement | null) => void;
 
   isActive: boolean;
 
@@ -103,17 +101,12 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const continueVideoElement = useRef<HTMLVideoElement | null>(null);
   const [isActive, setIsActive] = useState<boolean>(true);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isPlaying, setIsPlayToggle] = useState<boolean>(false);
 
   const [watchedVideos, setWatchedVideos] = useState<number[]>([]);
   const [savedTime, setSavedTime] = useState<{ [id: number]: number }>({});
-
-  const setContinueWatchingVideoElement = useCallback((element: HTMLVideoElement | null) => {
-    continueVideoElement.current = element;
-  }, []);
 
   useEffect(() => {
     setWatchedVideos(readNumberArrayFromStorage(WATCHED_VIDEOS_STORAGE_KEY));
@@ -191,8 +184,6 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const value = useMemo<VideoContextType>(() => ({
     currentVideoRef: videoRef,
-    continueWatchingVideoElement: continueVideoElement,
-    setContinueWatchingVideoElement,
     isActive,
     currentVideoPlay,
     currentVideoPause,
@@ -219,7 +210,6 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     markAsWatched,
     resetSavedTime,
     savedTime,
-    setContinueWatchingVideoElement,
     watchedVideos,
   ]);
 

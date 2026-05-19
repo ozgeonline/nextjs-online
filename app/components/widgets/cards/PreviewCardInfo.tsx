@@ -1,25 +1,31 @@
 "use client"
 
 import { ChevronDown, Circle, Play } from "lucide-react"
-import dynamic from 'next/dynamic';
+import { memo } from "react";
 import { MovieProps } from "@/app/types/props";
+import DialogTriggerButton from "@/app/components/controls/dialog/DialogTriggerButton";
+import WatchlistButton from "@/app/components/controls/watchlist/WatchlistButton";
+import MovieInfo from "@/app/components/widgets/info/MovieInfo";
+import GenreList from "@/app/components/widgets/info/GenreList";
 import styles from "./cards.module.css";
 
-const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
-const ActionWatchlist = dynamic(() => import('@/app/components/controls/watchlist/WatchlistButton'));
-const MovieInfo = dynamic(() => import('@/app/components/widgets/info/MovieInfo'));
-const GenreList = dynamic(() => import('@/app/components/widgets/info/GenreList'));
-
 interface PreviewCardInfoProps extends MovieProps {
-  infohover: string
+  infoHoverClassName: string
 }
 
-export function PreviewCardInfo({ ...movieProps }: PreviewCardInfoProps) {
+function PreviewCardInfo({
+  infoHoverClassName,
+  ...movieProps
+}: PreviewCardInfoProps) {
+  const movieTitle = movieProps.title ?? "Movie";
+  const movieId = movieProps.movieId;
+  const canToggleWatchlist = typeof movieId === "number";
+
   return (
     <div
-      aria-label={`${movieProps.title ?? "Movie"} preview information`}
+      aria-label={`${movieTitle} preview information`}
       className={`
-        ${movieProps.infohover} 
+        ${infoHoverClassName} 
         ${styles.infoWrapper} 
         shadow-md shadow-black/90
       `}
@@ -27,7 +33,7 @@ export function PreviewCardInfo({ ...movieProps }: PreviewCardInfoProps) {
       <h3
         className="absolute font-bold text-[1em] line-clamp-1 left-3 -top-[1.5em] [text-shadow:_2px_2px_7px_rgb(0_0_0_/_30%)]"
       >
-        {movieProps.title}
+        {movieTitle}
       </h3>
 
       <div className="flex items-center p-1 sm:p-3">
@@ -41,14 +47,16 @@ export function PreviewCardInfo({ ...movieProps }: PreviewCardInfoProps) {
           />
         </DialogTriggerButton>
 
-        <div className="size-6 me-2">
-          <ActionWatchlist
-            watchList={movieProps.watchList ?? false}
-            watchlistId={movieProps.watchlistId ?? ''}
-            movieId={movieProps.movieId ?? 0}
-            actionStyle="p-1 h-6 w-6"
-          />
-        </div>
+        {canToggleWatchlist && (
+          <div className="size-6 me-2">
+            <WatchlistButton
+              watchList={movieProps.watchList ?? false}
+              watchlistId={movieProps.watchlistId ?? ''}
+              movieId={movieId}
+              actionStyle="p-1 h-6 w-6"
+            />
+          </div>
+        )}
 
         <DialogTriggerButton
           buttonStyle="size-6 ml-auto"
@@ -78,3 +86,5 @@ export function PreviewCardInfo({ ...movieProps }: PreviewCardInfoProps) {
     </div>
   )
 }
+
+export default memo(PreviewCardInfo);

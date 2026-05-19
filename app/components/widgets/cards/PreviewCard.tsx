@@ -1,16 +1,14 @@
 "use client"
 
 import { PlayCircle } from 'lucide-react'
-import { PreviewCardInfo } from "./PreviewCardInfo"
+import PreviewCardInfo from "./PreviewCardInfo"
 import { useEffect, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { MovieProps } from "@/app/types/props";
-import dynamic from 'next/dynamic';
 import { useUIContext } from '@/app/components/providers/UIContext';
+import PosterImage from '@/app/components/ui/assets/PosterImage';
+import DialogTriggerButton from '@/app/components/controls/dialog/DialogTriggerButton';
 import styles from "./cards.module.css";
-
-const PosterImage = dynamic(() => import('@/app/components/ui/assets/PosterImage'));
-const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
 
 interface PreviewModalProps extends MovieProps {
   imageCardWrapper?: boolean
@@ -47,7 +45,7 @@ export default function PreviewCard({
       <div
         className={`
           relative cursor-pointer slide
-          ${imageCardWrapper ? styles.cardSize : top10Wrapper ? styles.top10cardSize : undefined}
+          ${imageCardWrapper ? styles.cardSize : top10Wrapper ? styles.top10cardSize : ""}
         `}
       >
         <PosterImage
@@ -87,7 +85,7 @@ export default function PreviewCard({
         />
         <PreviewCardInfo
           {...movieProps}
-          infohover={`
+          infoHoverClassName={`
             ${isHover ? 'opacity-100 z-50' : 'opacity-45 -z-50'}
           `}
         />

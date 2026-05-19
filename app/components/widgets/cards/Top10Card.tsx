@@ -1,32 +1,26 @@
 "use client"
 
+import { memo } from "react";
 import { MovieProps } from "@/app/types/props";
 import styles from "./cards.module.css";
 import PreviewCard from './PreviewCard';
-import { useUIContext } from '@/app/components/providers/UIContext';
 import svgDataList from "@/app/data/SvgData";
 
 interface Top10CardProps extends MovieProps {
   index: number
 }
 
-export default function Top10Card({
+function Top10Card({
   index,
   ...movieProps
 }: Top10CardProps) {
-  const { setIsHover } = useUIContext();
   const svgData = svgDataList[index];
-
-  const handleMouseEnter = () => setIsHover(true);
-  const handleMouseLeave = () => setIsHover(false);
 
   if (!svgData) return null;
 
   return (
     <div 
       className={`${styles.top10cardWrapper} relative flex`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave} 
       aria-label={`${movieProps.title ?? "Movie"} top 10 poster card`}
     >
       <svg
@@ -39,7 +33,7 @@ export default function Top10Card({
       >
         <path
           stroke={svgData.stroke}
-          strokeLinejoin={svgData.strokeLinejoin as "miter" | "round" | "bevel" | "inherit"}
+          strokeLinejoin={svgData.strokeLinejoin}
           strokeWidth={svgData.strokeWidth}
           d={svgData.pathData}
         />
@@ -53,3 +47,5 @@ export default function Top10Card({
     </div>
   )
 }
+
+export default memo(Top10Card);
