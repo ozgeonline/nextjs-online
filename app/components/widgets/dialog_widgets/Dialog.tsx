@@ -1,24 +1,20 @@
 "use client"
 
 import React, { useCallback, useEffect, useRef } from 'react'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Subtitles, X } from 'lucide-react'
 import { useVideoContext } from '@/app/components/providers/VideoContext'
 import VideoModals from '@/app/components/widgets/video_widgets/VideoModals'
 import Image from 'next/image'
-import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { MovieProps } from '@/app/types/props'
+import MovieInfo from "@/app/components/widgets/info/MovieInfo";
+import GenreList from "@/app/components/widgets/info/GenreList";
+import CastList from "@/app/components/widgets/info/CastList";
+import ActionWatchlist from "@/app/components/controls/watchlist/WatchlistButton";
+import LikeDislikeButton from "@/app/components/controls/rating/LikeDislikeButton";
+import PlayToggleButton from "@/app/components/controls/video/PlayToggleButton";
+import MuteToggleButton from "@/app/components/controls/video/MuteToggleButton";
+import ProgressBar from "@/app/components/controls/video/ProgressBar";
 import styles from "./dialog.module.css"
-
-const MovieInfo = dynamic(() => import("@/app/components/widgets/info/MovieInfo"));
-const GenreList = dynamic(() => import("@/app/components/widgets/info/GenreList"));
-const CastList = dynamic(() => import("@/app/components/widgets/info/CastList"));
-const ActionWatchlist = dynamic(() => import("@/app/components/controls/watchlist/WatchlistButton"));
-const LikeDislikeButton = dynamic(() => import("@/app/components/controls/rating/LikeDislikeButton"));
-const PlayToggleButton = dynamic(() => import("@/app/components/controls/video/PlayToggleButton"));
-const MuteToggleButton = dynamic(() => import("@/app/components/controls/video/MuteToggleButton"));
-const ProgressBar = dynamic(() => import("@/app/components/controls/video/ProgressBar"));
 
 interface dialogProps extends MovieProps {
   onClose: () => void,
@@ -27,17 +23,13 @@ interface dialogProps extends MovieProps {
 const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
 
   const {
-    continueWatchingVideoElement,
     currentVideoPause,
     setIsPlaying,
     setDialogOpen
   } = useVideoContext();
 
   const dialogRef = useRef<HTMLDialogElement | null>(null);
-  const router = useRouter();
-  const pathName = usePathname();
-  const searchParams = useSearchParams();
-  const showDialog = searchParams.get('showDialog');
+  const dialogVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const closeDialog = useCallback(() => {
     if (dialogRef.current?.open) {
@@ -55,27 +47,19 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
   }, []);
 
   useEffect(() => {
-    const handleDialogOpen = () => {
-      if (showDialog === movieProps.title) {
-        openDialog();
-        setDialogOpen(true);
-        currentVideoPause();
-      } else {
-        if (dialogRef.current?.open) {
-          dialogRef.current.close();
-        }
-        setDialogOpen(false);
-      }
-    };
+    openDialog();
+    setDialogOpen(true);
+    currentVideoPause();
 
-    handleDialogOpen();
+    const dialogVideo = dialogVideoRef.current;
+    dialogVideo?.load();
 
     return () => {
       if (dialogRef.current?.open) {
         dialogRef.current.close();
       }
     };
-  }, [showDialog, movieProps.title, currentVideoPause, openDialog, setDialogOpen]);
+  }, [currentVideoPause, openDialog, setDialogOpen]);
 
   // const dialogPositionX = dialogRef.current?.getBoundingClientRect().width;
   // const dialogPositionY = dialogRef.current?.getBoundingClientRect().height;
@@ -84,36 +68,31 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
     const handleClickOutside = (event: MouseEvent) => {
       if (event.target === dialogRef.current) {
         closeDialog();
-        router.push(pathName)
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [closeDialog, pathName, router]);
+  }, [closeDialog]);
 
-  const dialog: JSX.Element | null = showDialog === movieProps.title ? (
+  return (
     <dialog
       ref={dialogRef}
-      className={
-        "z-50 backdrop:bg-black/60 flex" +
-        styles['overflow-css'] + ' ' +
-        styles['dialog-wrapper']
-      }
+      className={`z-50 flex ${styles['overflow-css']} ${styles['dialog-wrapper']}`}
       aria-label={`Open video dialog for ${movieProps.title}`}
     >
       <div className="flex flex-col relative top-0 w-full h-full ">
         {/* ***** Dialog Close Button ***** */}
         <div className='absolute right-12'>
-          <Link
-            href={pathName}
+          <button
+            type="button"
             onClick={closeDialog}
             className={styles['close-btn-style']}
-            scroll={false}
+            aria-label="Close dialog"
           >
             <X className='size-6' />
-          </Link>
+          </button>
         </div>
 
         {/* ***** Logo Img ***** */}
@@ -130,7 +109,7 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
         {/* Top-Dialog Video */}
         <div className='relative'>
           <VideoModals
-            ref={continueWatchingVideoElement as React.RefObject<HTMLVideoElement>}
+            ref={dialogVideoRef as React.RefObject<HTMLVideoElement>}
             id={movieProps.id as number}
             source={movieProps.videoSource as string}
             imageString={movieProps.imageString as string}
@@ -140,9 +119,10 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
             enableAutoPlay={false}
             enableControls={false}
             isCurrentMovieVideo={false}
+            preload="auto"
           />
           <ProgressBar
-            videoModalRef={continueWatchingVideoElement as React.RefObject<HTMLVideoElement>}
+            videoModalRef={dialogVideoRef as React.RefObject<HTMLVideoElement>}
             id={movieProps.movieId as number}
             progressStyle={styles.progressStyle}
           />
@@ -154,7 +134,7 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
             <div className='flex space-x-2'>
               {/****** play-pause button ******/}
               <PlayToggleButton
-                videoModalRef={continueWatchingVideoElement as React.RefObject<HTMLVideoElement>}
+                videoModalRef={dialogVideoRef as React.RefObject<HTMLVideoElement>}
                 id={movieProps.movieId as number}
                 buttonStyle={`
                   ${styles['dialog-playButton']} 
@@ -180,7 +160,7 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
 
             {/***** on/off sound button *****/}
             <MuteToggleButton
-              videoModalRef={continueWatchingVideoElement as React.RefObject<HTMLVideoElement>}
+              videoModalRef={dialogVideoRef as React.RefObject<HTMLVideoElement>}
               buttonStyle={styles['dialog-circleButtonSize'] + ' ' + styles['dialog-muteButton']}
               iconStyle='text-zinc-500'
             />
@@ -256,9 +236,7 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
         </div>
       </div>
     </dialog>
-  ) : null
-
-  return dialog
+  )
 }
 
 export default Dialog;

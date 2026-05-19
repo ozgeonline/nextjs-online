@@ -1,19 +1,19 @@
 "use client"
 
 import { MovieProps } from "@/app/types/props";
-import styles from "./card.module.css";
+import styles from "./cards.module.css";
 import PreviewCard from './PreviewCard';
 import { useUIContext } from '@/app/components/providers/UIContext';
 import svgDataList from "@/app/data/SvgData";
 
-interface top10Props extends MovieProps {
-  index:number
+interface Top10CardProps extends MovieProps {
+  index: number
 }
 
-export default function Top10TVShows({
+export default function Top10Card({
   index,
   ...movieProps
-}: top10Props) {
+}: Top10CardProps) {
   const { setIsHover } = useUIContext();
   const svgData = svgDataList[index];
 
@@ -27,9 +27,10 @@ export default function Top10TVShows({
       className={`${styles.top10cardWrapper} relative flex`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave} 
-      aria-label={`${movieProps.movieId}.poster`}
+      aria-label={`${movieProps.title ?? "Movie"} top 10 poster card`}
     >
       <svg
+        aria-hidden="true"
         id={svgData.id}
         width={svgData.width}
         height={svgData.height}

@@ -9,7 +9,7 @@ import styles from "../home.module.css"
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
-const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
+const PreviewCard = dynamic(() => import('@/app/components/widgets/cards/PreviewCard'));
 const BrowseSortSelect = dynamic(() => import('@/app/components/controls/sort/BrowseSortSelect'));
 
 type SortOrder = "default" | "asc" | "desc";

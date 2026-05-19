@@ -12,6 +12,7 @@ type VideoProps = {
   enableAutoPlay:boolean;
   enableLoop:boolean;
   isCurrentMovieVideo: boolean;
+  preload?: "none" | "metadata" | "auto";
   children?:React.ReactNode;
   handleVideoClick?:() => void;
 };
@@ -27,6 +28,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
     enableAutoPlay = false,
     enableLoop,
     isCurrentMovieVideo=true,
+    preload = "metadata",
     children,
     handleVideoClick
   }, ref) => {
@@ -75,6 +77,7 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
           aria-label={alt}
           muted
           playsInline
+          preload={preload}
           className={videoStyle}
           loop={enableLoop}
           autoPlay={enableAutoPlay}

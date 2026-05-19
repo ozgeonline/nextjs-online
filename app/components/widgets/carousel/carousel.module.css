@@ -40,6 +40,12 @@
 }
 
 /*wrapper*/
+.lastVisibleSlide :global(.preview-card-panel) {
+  left: auto;
+  right: 0;
+  transform-origin: right top;
+}
+
 .emptyContinueSection {
   width: 100%;
   min-height: calc(25vw + 2.25rem);

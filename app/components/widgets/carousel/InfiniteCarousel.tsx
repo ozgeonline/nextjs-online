@@ -154,14 +154,25 @@ export default function InfiniteCarousel({
     }, 500);
   };
 
+  const visibleStartIndex = canLoop && hasMoved ? stepSize : 0;
+  const visibleEndIndex = visibleStartIndex + slidesPerView - 1;
+
   const renderSlides = renderedSlides.map(({ child, keyPrefix }, index) => {
     if (!React.isValidElement(child)) return null;
+
+    const isLastVisibleSlide = index === visibleEndIndex;
+    const isNearLastVisibleTop10Slide = Boolean(sliderButtonSectionTop10) && index >= visibleEndIndex - 1;
 
     return (
       <div
         key={`${keyPrefix}-${child.key ?? index}`}
         aria-label={`${index}.slide`}
         style={{ width: `${slideWidth}px` }}
+        className={
+          isLastVisibleSlide || isNearLastVisibleTop10Slide
+            ? styles.lastVisibleSlide
+            : undefined
+        }
       >
         <div
           style={{ width: `${slideWidth}px` }}

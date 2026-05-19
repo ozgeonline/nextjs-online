@@ -1,13 +1,13 @@
 "use client"
 
 import { PlayCircle } from 'lucide-react'
-import { PreviewCard_Info } from "./PreviewCard_Info"
+import { PreviewCardInfo } from "./PreviewCardInfo"
 import { useEffect, useState } from 'react';
 import { useSearchParams } from "next/navigation";
 import { MovieProps } from "@/app/types/props";
 import dynamic from 'next/dynamic';
 import { useUIContext } from '@/app/components/providers/UIContext';
-import styles from "./card.module.css";
+import styles from "./cards.module.css";
 
 const PosterImage = dynamic(() => import('@/app/components/ui/assets/PosterImage'));
 const DialogTriggerButton = dynamic(() => import('@/app/components/controls/dialog/DialogTriggerButton'));
@@ -31,25 +31,18 @@ export default function PreviewCard({
   const showDialog = searchParams.get('showDialog')
 
   useEffect(() => {
-    if (showDialog === movieProps.title) {
-      setOpenDialog(true)
-    } else {
-      setOpenDialog(false)
-    }
-  }, [showDialog, openDialog, movieProps.title]);
+    setOpenDialog(showDialog === movieProps.title)
+  }, [showDialog, movieProps.title]);
 
   const handleMouseEnter = () => setIsHover(true);
   const handleMouseLeave = () => setIsHover(false);
-  // useEffect(() => {
-  //   console.log("isHover in PreviewCard:", isHover);
-  // }, [isHover]);
 
   return (
     <div
       className="group/card relative "
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      aria-label={`${movieProps.movieId}.poster`}
+      aria-label={`${movieProps.title ?? "Movie"} poster card`}
     >
       <div
         className={`
@@ -68,7 +61,10 @@ export default function PreviewCard({
             {...movieProps}
             buttonStyle="absolute z-50 top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 outline-none"
           >
-            <PlayCircle className="invisible max-xl:visible text-zinc-300 size-8 outline-none" aria-label={movieProps.title} />
+            <PlayCircle
+              className="invisible max-xl:visible text-zinc-300 size-8 outline-none"
+              aria-hidden="true"
+            />
           </DialogTriggerButton>
         )}
 
@@ -76,6 +72,7 @@ export default function PreviewCard({
 
       <div
         className={`
+          preview-card-panel
           ${styles.previewCardDefault}
           ${!openDialog
             ? ` xl:group-hover/card:visible xl:group-hover/card:scale-150 xl:group-hover/card:z-50 `
@@ -88,7 +85,7 @@ export default function PreviewCard({
           imageText={`${movieProps.title}-movie big poster`}
           imageStyle="rounded-t-sm w-full h-full "
         />
-        <PreviewCard_Info
+        <PreviewCardInfo
           {...movieProps}
           infohover={`
             ${isHover ? 'opacity-100 z-50' : 'opacity-45 -z-50'}

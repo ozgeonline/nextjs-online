@@ -1,23 +1,22 @@
 "use client"
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useVideoContext } from '@/app/components/providers/VideoContext';
 import VideoModals from '@/app/components/widgets/video_widgets/VideoModals';
-import styles from "./card.module.css";
+import styles from "./cards.module.css";
 
 const MuteToggleButton = dynamic(() => import('@/app/components/controls/video/MuteToggleButton'));
 const PlayToggleButton = dynamic(() => import('@/app/components/controls/video/PlayToggleButton'));
 const ProgressBar = dynamic(() => import('@/app/components/controls/video/ProgressBar'));
 
 interface VideoPlayerProps {
-  movieId:number;
+  movieId: number;
   imageString: string;
   videoSource: string;
-  title:string;
-  alt: string;
+  title: string;
 }
 
-const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>((props, ref) => {
+const ContinueWatchingCard = forwardRef<HTMLVideoElement, VideoPlayerProps>((props, ref) => {
 
   const {
     continueWatchingVideoElement,
@@ -43,42 +42,30 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
     }
   }, [continueWatchingVideoElement, setContinueWatchingVideoElement]);
 
-  const handleVideoClick = useCallback(() => {
-    const allVideos = document.querySelectorAll('video.continueVideo') as NodeListOf<HTMLVideoElement>;
-
-    allVideos.forEach((video) => {
-      video.dataset.movieId = video.dataset.movieId || String(props.movieId);
-      
-      if (video instanceof HTMLVideoElement && video.dataset.movieId !== String(props.movieId) && !isDialogOpen) {
-        video.pause();
-      }
-    });
-  }, [isDialogOpen, props.movieId]);
-
   return (
     <div className="z-50 relative">
-      {savedTime[props.movieId as number] > 0 && (
+      {savedTime[props.movieId] > 0 && (
         <VideoModals
-          ref={localVideoRef  as React.RefObject<HTMLVideoElement>}
-          id={props.movieId as number}
+          ref={localVideoRef as React.RefObject<HTMLVideoElement>}
+          id={props.movieId}
           enableLoop={false}
           enableAutoPlay={false}
           enableControls={false}
           isCurrentMovieVideo={false}
-          imageString={props.imageString as string}
-          source={props.videoSource as string}
-          alt={props.title as string}
+          imageString={props.imageString}
+          source={props.videoSource}
+          alt={`${props.title} continue watching video`}
           videoStyle={`
-            ${styles.cardSize + ' ' + styles.continueVideoSyle} 
-            continueVideo 
+            ${styles.cardSize + ' ' + styles.continueVideoStyle} 
+            continueWatchingVideo 
           `}
-          handleVideoClick={handleVideoClick}
         >
           <PlayToggleButton 
             videoModalRef={localVideoRef as React.RefObject<HTMLVideoElement>}
-            id={props.movieId as number}
+            id={props.movieId}
             playIconStyle='fill-white '
             playButtonPosition={styles.playButtonPosition}
+            pauseOtherVideosSelector="video.continueWatchingVideo"
           />
           <MuteToggleButton 
             videoModalRef={localVideoRef as React.RefObject<HTMLVideoElement>}
@@ -86,7 +73,7 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
           />
           <ProgressBar
             videoModalRef={localVideoRef as React.RefObject<HTMLVideoElement>}
-            id={props.movieId as number}
+            id={props.movieId}
             progressStyle={styles.progressBar}
           />
         </VideoModals>
@@ -95,6 +82,6 @@ const ContinueWatchingCardModal = forwardRef<HTMLVideoElement, VideoPlayerProps>
   );
 });
 
-ContinueWatchingCardModal.displayName = "ContinueWatchingCardModal";
-export default ContinueWatchingCardModal;
+ContinueWatchingCard.displayName = "ContinueWatchingCard";
+export default ContinueWatchingCard;
 

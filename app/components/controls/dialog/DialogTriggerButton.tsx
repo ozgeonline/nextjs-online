@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
@@ -34,6 +33,14 @@ export default function DialogTriggerButton({
     return `${pathName}?${nextParams.toString()}`;
   }, [movieTitle, pathName, searchParams]);
 
+  const closeHref = useMemo(() => {
+    const nextParams = new URLSearchParams(searchParams.toString());
+    nextParams.delete("showDialog");
+    const nextQuery = nextParams.toString();
+
+    return nextQuery ? `${pathName}?${nextQuery}` : pathName;
+  }, [pathName, searchParams]);
+
   useEffect(() => {
     if (!movieTitle) return;
 
@@ -61,12 +68,14 @@ export default function DialogTriggerButton({
   const clickOpenDialog = () => {
     if (!movieTitle) return;
 
+    window.history.pushState(null, "", dialogHref);
     setIsDialogMounted(true);
     setDialogOpen(true);
     currentVideoPause();
   }
 
   const clickCloseDialog = () => {
+    window.history.pushState(null, "", closeHref);
     setIsDialogMounted(false);
     setDialogOpen(false);
     currentVideoPlay();
@@ -78,16 +87,14 @@ export default function DialogTriggerButton({
 
   return (
     <>
-      <Link
-        href={dialogHref}
+      <button
+        type="button"
         className={buttonStyle}
-        scroll={false}
         aria-label={`Open dialog for ${movieTitle}`}
         onClick={clickOpenDialog}
-        prefetch={false}
       >
         {children}
-      </Link>
+      </button>
 
       {isDialogMounted && 
         <Dialog

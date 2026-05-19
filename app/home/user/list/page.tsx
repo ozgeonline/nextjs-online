@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
 const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
-const PreviewCard = dynamic(() => import('@/app/components/widgets/card_widgets/PreviewCard'));
+const PreviewCard = dynamic(() => import('@/app/components/widgets/cards/PreviewCard'));
 
 async function getData(userId: string) {
   const data = await prisma.watchList.findMany({

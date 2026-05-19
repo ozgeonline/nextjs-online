@@ -29,6 +29,10 @@
   font-weight: 500;
 }
 
+.dialog-wrapper::backdrop {
+  background-color: rgb(0 0 0 / 0.1);
+}
+
 /*************************************** Video ***************************************/
 .videoStyle {
   z-index: -20;

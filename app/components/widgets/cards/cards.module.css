@@ -1,4 +1,4 @@
-/* .previewCardWrapper:not(:hover) {
+﻿/* .previewCardWrapper:not(:hover) {
   opacity: 0.99;
 } */
 
@@ -33,7 +33,7 @@
   transform: scale(1);
 }
 
-/**************************************** PreviewCard_Info Styles ****************************************/
+/**************************************** PreviewCardInfo Styles ****************************************/
 .infoWrapper {
   width: 100%;
   position: absolute;
@@ -47,7 +47,7 @@
 }
 
 /**************************************** Continue Watching Card Styles ****************************************/
-.continueVideoSyle {
+.continueVideoStyle {
   width: 100%;
   object-fit: cover;
   border-top-left-radius: calc(var(--radius));
@@ -151,3 +151,4 @@
     height: 10.5vw;
   }
 }
+
