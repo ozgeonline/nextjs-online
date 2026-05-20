@@ -49,11 +49,31 @@ const VideoModal = forwardRef<HTMLVideoElement, VideoProps>((
     //console.log("active",isActive)
 
     useEffect(() => {
-      if (videoModalRef?.current && savedTime[id] ) {
-        videoModalRef.current.currentTime = savedTime[id];
-        handleVideoTimeUpdate(id, savedTime[id]);
+      const video = videoModalRef.current;
+      const resumeTime = savedTime[id] ?? 0;
+
+      if (!video || resumeTime <= 0) return;
+
+      const seekToSavedTime = () => {
+        const safeResumeTime = Number.isFinite(video.duration)
+          ? Math.min(resumeTime, Math.max(video.duration - 1, 0))
+          : resumeTime;
+
+        video.currentTime = safeResumeTime;
+        handleVideoTimeUpdate(id, safeResumeTime);
+      };
+
+      if (video.readyState >= video.HAVE_METADATA) {
+        seekToSavedTime();
+        return;
       }
-    }, [isDialogOpen]);
+
+      video.addEventListener("loadedmetadata", seekToSavedTime, { once: true });
+
+      return () => {
+        video.removeEventListener("loadedmetadata", seekToSavedTime);
+      };
+    }, [handleVideoTimeUpdate, id, savedTime, isDialogOpen]);
 
     const handleEnded = () => {
       markAsWatched(id, true);

@@ -12,6 +12,7 @@ import React, {
 
 const WATCHED_VIDEOS_STORAGE_KEY = "watchedVideos";
 const VIDEO_TIMES_STORAGE_KEY = "videoTimes";
+const VIDEO_TIME_SAVE_INTERVAL_SECONDS = 5;
 
 function readNumberArrayFromStorage(key: string) {
   try {
@@ -100,6 +101,7 @@ export const useVideoContext = () => {
 export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const lastSavedSecondRef = useRef<Record<number, number>>({});
 
   const [isActive, setIsActive] = useState<boolean>(true);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -138,8 +140,20 @@ export const VideoProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
   const handleVideoTimeUpdate = useCallback((id: number, currentTime: number) => {
+    const roundedTime = Math.floor(currentTime);
+    const lastSavedSecond = lastSavedSecondRef.current[id] ?? 0;
+
+    if (
+      roundedTime <= 0 ||
+      roundedTime === lastSavedSecond ||
+      roundedTime - lastSavedSecond < VIDEO_TIME_SAVE_INTERVAL_SECONDS
+    ) {
+      return;
+    }
+
+    lastSavedSecondRef.current[id] = roundedTime;
+
     setSavedTime((prev) => {
-      const roundedTime = Math.floor(currentTime);
       if (roundedTime <= 0 || prev[id] === roundedTime) return prev;
 
       const updatedTimes = { ...prev, [id]: roundedTime };

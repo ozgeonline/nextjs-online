@@ -61,7 +61,12 @@ export function useCarouselBreakpointSettings(
     if (!sliderElement) return;
 
     const updateSliderWidth = () => {
-      setSliderWidth(sliderElement.clientWidth);
+      const measuredWidth =
+        sliderElement.clientWidth ||
+        sliderElement.parentElement?.clientWidth ||
+        window.innerWidth;
+
+      setSliderWidth(measuredWidth);
     };
 
     updateSliderWidth();

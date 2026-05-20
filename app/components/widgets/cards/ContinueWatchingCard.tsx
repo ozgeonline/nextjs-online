@@ -6,6 +6,7 @@ import VideoModals from '@/app/components/widgets/video_widgets/VideoModals';
 import MuteToggleButton from '@/app/components/controls/video/MuteToggleButton';
 import PlayToggleButton from '@/app/components/controls/video/PlayToggleButton';
 import ProgressBar from '@/app/components/controls/video/ProgressBar';
+import PosterImage from '@/app/components/ui/assets/PosterImage';
 import styles from "./cards.module.css";
 
 interface ContinueWatchingCardProps {
@@ -43,7 +44,14 @@ function ContinueWatchingCard({
   }
 
   return (
-    <div className="z-50 relative">
+    <div className={`z-50 relative w-full overflow-hidden ${styles.cardSize}`}>
+      <PosterImage
+        imageString={imageString}
+        imageText={`${title} continue watching poster`}
+        imageStyle={`
+          absolute inset-0 h-full w-full rounded-t-sm brightness-50
+        `}
+      />
       <VideoModals
         ref={localVideoRef}
         id={movieId}
@@ -55,7 +63,7 @@ function ContinueWatchingCard({
         source={videoSource}
         alt={`${title} continue watching video`}
         videoStyle={`
-          ${styles.cardSize} ${styles.continueVideoStyle} 
+          relative h-full w-full ${styles.continueVideoStyle} 
           continueWatchingVideo 
         `}
       >

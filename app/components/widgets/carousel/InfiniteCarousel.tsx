@@ -29,10 +29,10 @@ export default function InfiniteCarousel({
   filterWatchedVideos = false,
 
 }: InfiniteCarouselProps) {
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderViewportRef = useRef<HTMLDivElement>(null);
   const { isHover } = useUIContext();
   const { hasSavedTime, savedTime } = useVideoContext();
-  const { sliderWidth, slidesPerView } = useCarouselBreakpointSettings(sliderRef);
+  const { sliderWidth, slidesPerView } = useCarouselBreakpointSettings(sliderViewportRef);
 
   // Keeps the current visual order of slides 
   // so infinite looping can reorder React nodes without direct DOM mutation.
@@ -49,7 +49,12 @@ export default function InfiniteCarousel({
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const transitionTimerRef = useRef<number | null>(null);
 
-  const slideWidth = sliderWidth > 0 ? sliderWidth / slidesPerView : 0;
+  const fallbackSliderWidth =
+    sliderWidth ||
+    sliderViewportRef.current?.clientWidth ||
+    sliderViewportRef.current?.parentElement?.clientWidth ||
+    (typeof window !== "undefined" ? window.innerWidth : 0);
+  const slideWidth = fallbackSliderWidth > 0 ? fallbackSliderWidth / slidesPerView : 0;
   const slidesArray = useMemo(() => React.Children.toArray(slides), [slides]);
 
   const visibleSlides = useMemo(() => {
@@ -66,7 +71,7 @@ export default function InfiniteCarousel({
   const canLoop = orderedSlides.length > slidesPerView;
 
   // Prevents controls/title from rendering before the carousel has a measurable width.
-  const isContentLoaded = sliderWidth > 0;
+  const isContentLoaded = fallbackSliderWidth > 0;
   const savedTimeLength = Object.keys(savedTime).length;
 
   // One navigation step equals the number of slides currently visible in the viewport.
@@ -95,15 +100,10 @@ export default function InfiniteCarousel({
     };
   }, []);
 
-  if (visibleSlides.length === 0) {
-    return continueCard
-      ? (
-        <div
-          className={styles.emptyContinueSection}
-          aria-hidden="true"
-        />
-      )
-      : null;
+  const hasVisibleSlides = visibleSlides.length > 0;
+
+  if (!hasVisibleSlides && !continueCard) {
+    return null;
   }
 
   const renderedSlides = canLoop
@@ -167,7 +167,7 @@ export default function InfiniteCarousel({
       <div
         key={`${keyPrefix}-${child.key ?? index}`}
         aria-label={`${index}.slide`}
-        style={{ width: `${slideWidth}px` }}
+        style={{ width: `${slideWidth}px`, minWidth: `${slideWidth}px`, flexShrink: 0 }}
         className={
           isLastVisibleSlide || isNearLastVisibleTop10Slide
             ? styles.lastVisibleSlide
@@ -175,7 +175,7 @@ export default function InfiniteCarousel({
         }
       >
         <div
-          style={{ width: `${slideWidth}px` }}
+          style={{ width: `${slideWidth}px`, minWidth: `${slideWidth}px` }}
           className="px-[0.5vw]"
         >
           {child}
@@ -186,13 +186,14 @@ export default function InfiniteCarousel({
 
   return (
     <div
+      ref={sliderViewportRef}
       className={`
         animate-slide-X 
          ${isHover ? 'opacity-100 z-50' : 'opacity-95'}
       `}
       aria-label='Carousel wrapper'
     >
-      {isContentLoaded && (
+      {isContentLoaded && hasVisibleSlides && (
         <h2 className={`
           ${sectionTitleStyle} 
           relative title sm:text-2xl px-2 
@@ -200,60 +201,68 @@ export default function InfiniteCarousel({
           {sectionTitle}
         </h2>
       )}
-      <div
-        ref={sliderRef}
-        className="flex"
-        style={{
-          transform: `translateX(${trackTranslate}px)`,
-          transition: isTransitioning ? "transform 0.5s ease" : "none",
-        }}
-      >
-        {renderSlides}
-      </div>
-
-      <div className='relative w-full h-full z-50'>
-        {isContentLoaded && (
-          <div>
-            <button
-              onClick={() => handleClick("prev")}
-              aria-label='Previous Button'
-              className={
-                `${styles.prevButton} ${styles.carouselButtons} group/prev ` +
-                `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
-                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
-                `${canLoop && hasMoved ? "block" : "hidden"}`
-              }
-            >
-              <ChevronLeft
-                className={`
-                  ${styles.buttonIcon}
-                  group-hover/prev:text-white 
-                `}
-              />
-            </button>
-            <button
-              onClick={() => handleClick("next")}
-              aria-label='Next Button'
-              className={
-                `${styles.nextButton} ${styles.carouselButtons} group/next ` +
-                `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
-                `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
-                `${canLoop && (!continueCard || savedTimeLength > slidesPerView)
-                  ? "block"
-                  : "hidden"
-                }`
-              }
-            >
-              <ChevronRight
-                className={`
-                  ${styles.buttonIcon}
-                  group-hover/next:text-white
-                `}
-              />
-            </button>
+      {hasVisibleSlides ? (
+        <>
+          <div
+            className="flex"
+            style={{
+              transform: `translateX(${trackTranslate}px)`,
+              transition: isTransitioning ? "transform 0.5s ease" : "none",
+            }}
+          >
+            {renderSlides}
           </div>
-        )}
-      </div>
+
+          <div className='relative w-full h-full z-50'>
+            {isContentLoaded && (
+              <div>
+                <button
+                  onClick={() => handleClick("prev")}
+                  aria-label='Previous Button'
+                  className={
+                    `${styles.prevButton} ${styles.carouselButtons} group/prev ` +
+                    `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
+                    `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
+                    `${canLoop && hasMoved ? "block" : "hidden"}`
+                  }
+                >
+                  <ChevronLeft
+                    className={`
+                      ${styles.buttonIcon}
+                      group-hover/prev:text-white 
+                    `}
+                  />
+                </button>
+                <button
+                  onClick={() => handleClick("next")}
+                  aria-label='Next Button'
+                  className={
+                    `${styles.nextButton} ${styles.carouselButtons} group/next ` +
+                    `${sliderButtonSection && styles.sliderButtonSectionSize} ` +
+                    `${sliderButtonSectionTop10 && styles.sliderButtonSectionTop10Size} ` +
+                    `${canLoop && (!continueCard || savedTimeLength > slidesPerView)
+                      ? "block"
+                      : "hidden"
+                    }`
+                  }
+                >
+                  <ChevronRight
+                    className={`
+                      ${styles.buttonIcon}
+                      group-hover/next:text-white
+                    `}
+                  />
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <div
+          className={styles.emptyContinueSection}
+          aria-hidden="true"
+        />
+      )}
     </div>
   )
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useVideoContext } from "@/app/components/providers/VideoContext";
 
 type ProgressBarProps = {
   videoModalRef: React.RefObject<HTMLVideoElement>;
@@ -10,7 +9,6 @@ type ProgressBarProps = {
 };
 
 export default function ProgressBar({ videoModalRef, progressStyle, id }: ProgressBarProps) {
-  const { handleVideoTimeUpdate } = useVideoContext();
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -22,10 +20,6 @@ export default function ProgressBar({ videoModalRef, progressStyle, id }: Progre
 
       const progressPercent = (video.currentTime / video.duration) * 100;
       setProgress(progressPercent);
-
-      if (id !== undefined) {
-        handleVideoTimeUpdate(id, video.currentTime);
-      }
     };
 
     updateProgress();
@@ -36,7 +30,7 @@ export default function ProgressBar({ videoModalRef, progressStyle, id }: Progre
       video.removeEventListener("timeupdate", updateProgress);
       video.removeEventListener("loadedmetadata", updateProgress);
     };
-  }, [videoModalRef, id, handleVideoTimeUpdate]);
+  }, [videoModalRef]);
 
   const updateVideoProgress = (clientX: number, target: HTMLDivElement) => {
     const video = videoModalRef.current;
@@ -49,10 +43,6 @@ export default function ProgressBar({ videoModalRef, progressStyle, id }: Progre
 
     video.currentTime = progressTime;
     setProgress(progressPercent * 100);
-
-    if (id !== undefined) {
-      handleVideoTimeUpdate(id, progressTime);
-    }
   };
 
   const handleProgressClick = (event: React.MouseEvent<HTMLDivElement>) => {

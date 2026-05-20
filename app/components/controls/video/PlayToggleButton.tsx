@@ -2,6 +2,7 @@
 
 import { PauseCircle, Play } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 import RedCircle_Animation from "@/app/components/animation/RedCircle_Animation";
 
@@ -12,6 +13,7 @@ type PlayToggleButtonProps = {
   playIconStyle?: string;
   playButtonPosition: string;
   pauseOtherVideosSelector?: string;
+  onPlayRequest?: () => void;
 };
 
 function isAbortPlaybackError(error: unknown) {
@@ -25,10 +27,12 @@ export default function PlayToggleButton({
   playIconStyle,
   playButtonPosition,
   pauseOtherVideosSelector,
+  onPlayRequest,
 }: PlayToggleButtonProps) {
   const { setIsPlaying } = useVideoContext();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
+  const [videoOverlayRect, setVideoOverlayRect] = useState<DOMRect | null>(null);
 
   useEffect(() => {
     const video = videoModalRef.current;
@@ -76,6 +80,29 @@ export default function PlayToggleButton({
     };
   }, [videoModalRef]);
 
+  useEffect(() => {
+    if (!isVideoLoading) {
+      setVideoOverlayRect(null);
+      return;
+    }
+
+    const updateOverlayRect = () => {
+      const video = videoModalRef.current;
+      if (video) {
+        setVideoOverlayRect(video.getBoundingClientRect());
+      }
+    };
+
+    updateOverlayRect();
+    window.addEventListener("resize", updateOverlayRect);
+    window.addEventListener("scroll", updateOverlayRect, true);
+
+    return () => {
+      window.removeEventListener("resize", updateOverlayRect);
+      window.removeEventListener("scroll", updateOverlayRect, true);
+    };
+  }, [isVideoLoading, videoModalRef]);
+
   const handlePlayToggle = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
@@ -92,6 +119,7 @@ export default function PlayToggleButton({
       }
 
       setIsVideoLoading(true);
+      onPlayRequest?.();
       video
         .play()
         .then(() => {
@@ -114,7 +142,22 @@ export default function PlayToggleButton({
 
   return (
     <>
-      {isVideoLoading && <RedCircle_Animation />}
+      {isVideoLoading && videoOverlayRect &&
+        createPortal(
+          <div
+            className="pointer-events-none fixed z-[1000]"
+            style={{
+              top: videoOverlayRect.top,
+              left: videoOverlayRect.left,
+              width: videoOverlayRect.width,
+              height: videoOverlayRect.height,
+            }}
+          >
+            <RedCircle_Animation />
+          </div>,
+          document.body,
+        )
+      }
       <button
         type="button"
         aria-label={isVideoPlaying ? "Pause video" : "Play video"}

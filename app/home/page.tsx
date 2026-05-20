@@ -98,7 +98,7 @@ export default async function HomePage() {
                 {initialData.map((data) => (
                   <div
                     key={data.id}
-                    className="w-auto h-full"
+                    className="relative w-full h-full"
                     aria-label={`${data.id}. Home Page Movie`}
                   >
                     <ContinueWatchingCard
