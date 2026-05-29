@@ -51,10 +51,17 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
     setDialogOpen(true);
     currentVideoPause();
 
+    // Bulletproof Scroll Lock
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
     const dialogVideo = dialogVideoRef.current;
     dialogVideo?.load();
 
     return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+
       if (dialogRef.current?.open) {
         dialogRef.current.close();
       }

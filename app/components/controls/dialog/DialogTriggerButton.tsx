@@ -75,7 +75,7 @@ export default function DialogTriggerButton({
   }
 
   const clickCloseDialog = () => {
-    window.history.pushState(null, "", closeHref);
+    window.history.pushState(null, "", closeHref); //next 14.1+
     setIsDialogMounted(false);
     setDialogOpen(false);
     currentVideoPlay();
@@ -96,7 +96,7 @@ export default function DialogTriggerButton({
         {children}
       </button>
 
-      {isDialogMounted && 
+      {isDialogMounted &&
         <Dialog
           onClose={() => clickCloseDialog()}
           {...movieProps}

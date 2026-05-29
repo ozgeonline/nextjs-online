@@ -1,11 +1,11 @@
 import { getServerSession } from "next-auth"
 import { ReactNode, Suspense } from "react"
-import { authOptions } from "../utils/auth"
+import { authOptions } from "@/app/utils/auth"
 import { redirect } from "next/navigation"
-import Navbar from "../components/navbar/Navbar"
-import BoxLoading_Animation from "../components/animation/BoxLoading_Animation"
+import Navbar from "@/app/components/navbar/Navbar"
+import BoxLoadingAnimation from "@/app/components/animation/BoxLoadingAnimation"
 
-export default async function HomeLayout({children} : {children: ReactNode}){
+export default async function HomeLayout({ children }: { children: ReactNode }) {
   const session = await getServerSession(authOptions)
 
   if (!session?.user) {
@@ -15,11 +15,11 @@ export default async function HomeLayout({children} : {children: ReactNode}){
   return (
     <div className="w-full relative">
       <Navbar />
-        <div className="w-full h-full">
-          <Suspense fallback={<BoxLoading_Animation />}>
-            {children}
-          </Suspense>
-        </div>
+      <div className="w-full h-full">
+        <Suspense fallback={<BoxLoadingAnimation />}>
+          {children}
+        </Suspense>
+      </div>
     </div>
   )
 }

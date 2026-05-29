@@ -4,7 +4,7 @@ import { PauseCircle, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
-import RedCircle_Animation from "@/app/components/animation/RedCircle_Animation";
+import RedCircleAnimation from "@/app/components/animation/RedCircleAnimation";
 
 type PlayToggleButtonProps = {
   videoModalRef: React.RefObject<HTMLVideoElement>;
@@ -33,6 +33,12 @@ export default function PlayToggleButton({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [videoOverlayRect, setVideoOverlayRect] = useState<DOMRect | null>(null);
+  const [videoOverlayTarget, setVideoOverlayTarget] = useState<HTMLElement | null>(null);
+
+  const setOverlayPosition = (video: HTMLVideoElement) => {
+    setVideoOverlayRect(video.getBoundingClientRect());
+    setVideoOverlayTarget(video.closest("dialog") ?? document.body);
+  };
 
   useEffect(() => {
     const video = videoModalRef.current;
@@ -52,7 +58,6 @@ export default function PlayToggleButton({
         setIsVideoLoading(true);
       }
     };
-    const handleCanPlay = () => setIsVideoLoading(false);
     const handleError = () => {
       setIsVideoPlaying(false);
       setIsVideoLoading(false);
@@ -63,9 +68,6 @@ export default function PlayToggleButton({
     video.addEventListener("pause", handlePause);
     video.addEventListener("waiting", handleWaiting);
     video.addEventListener("stalled", handleWaiting);
-    video.addEventListener("loadeddata", handleCanPlay);
-    video.addEventListener("canplay", handleCanPlay);
-    video.addEventListener("canplaythrough", handleCanPlay);
     video.addEventListener("error", handleError);
 
     return () => {
@@ -73,9 +75,6 @@ export default function PlayToggleButton({
       video.removeEventListener("pause", handlePause);
       video.removeEventListener("waiting", handleWaiting);
       video.removeEventListener("stalled", handleWaiting);
-      video.removeEventListener("loadeddata", handleCanPlay);
-      video.removeEventListener("canplay", handleCanPlay);
-      video.removeEventListener("canplaythrough", handleCanPlay);
       video.removeEventListener("error", handleError);
     };
   }, [videoModalRef]);
@@ -83,13 +82,14 @@ export default function PlayToggleButton({
   useEffect(() => {
     if (!isVideoLoading) {
       setVideoOverlayRect(null);
+      setVideoOverlayTarget(null);
       return;
     }
 
     const updateOverlayRect = () => {
       const video = videoModalRef.current;
       if (video) {
-        setVideoOverlayRect(video.getBoundingClientRect());
+        setOverlayPosition(video);
       }
     };
 
@@ -118,6 +118,7 @@ export default function PlayToggleButton({
         });
       }
 
+      setOverlayPosition(video);
       setIsVideoLoading(true);
       onPlayRequest?.();
       video
@@ -142,10 +143,10 @@ export default function PlayToggleButton({
 
   return (
     <>
-      {isVideoLoading && videoOverlayRect &&
+      {isVideoLoading && videoOverlayRect && videoOverlayTarget &&
         createPortal(
           <div
-            className="pointer-events-none fixed z-[1000]"
+            className="pointer-events-none fixed z-[2147483647]"
             style={{
               top: videoOverlayRect.top,
               left: videoOverlayRect.left,
@@ -153,9 +154,9 @@ export default function PlayToggleButton({
               height: videoOverlayRect.height,
             }}
           >
-            <RedCircle_Animation />
+            <RedCircleAnimation />
           </div>,
-          document.body,
+          videoOverlayTarget,
         )
       }
       <button

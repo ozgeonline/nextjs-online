@@ -1,10 +1,10 @@
 import { ReactNode, Suspense } from "react"
 import dynamic from "next/dynamic"
 
-const AuthBackgroundImage = dynamic(() => import("@/app/components/ui/assets/AuthBackgroundImage"));
-const LogoImage = dynamic(() => import("@/app/components/ui/assets/LogoImage"));
-const LanguageSelect = dynamic(() => import("@/app/components/ui/preAuthLanding/LanguageSelect"));
-const SignInLink = dynamic(() => import("@/app/components/controls/auth/SignInLink"));
+import AuthBackgroundImage from "@/app/components/ui/assets/AuthBackgroundImage";
+import LogoImage from "@/app/components/ui/assets/LogoImage";
+import LanguageSelect from "@/app/components/ui/preAuthLanding/LanguageSelect";
+import SignInLink from "@/app/components/controls/auth/SignInLink";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (

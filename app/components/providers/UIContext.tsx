@@ -9,7 +9,7 @@ import React, {
   useState
 } from 'react';
 import { createPortal } from 'react-dom';
-import RedCircle_Animation from '../animation/RedCircle_Animation';
+import RedCircleAnimation from '@/app/components/animation/RedCircleAnimation';
 
 interface UIContextType {
   isHover: boolean;
@@ -18,7 +18,7 @@ interface UIContextType {
   setIsOpen: (open: boolean) => void;
   isLoading: boolean;
   setIsLoading: (loading: boolean) => void;
-  triggerNavigation: (callback: () => void) => void; 
+  triggerNavigation: (callback: () => void) => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -65,7 +65,7 @@ export const UIProvider: React.FC<{ children: React.ReactNode }> = ({ children }
     isLoading && (
       createPortal(
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]">
-          <RedCircle_Animation />
+          <RedCircleAnimation />
         </div>,
         document.body
       )

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
-import RedCircle_Animation from "@/app/components/animation/RedCircle_Animation";
+import RedCircleAnimation from "@/app/components/animation/RedCircleAnimation";
 import styles from "./select.module.css";
 
 export type SortOrder = "default" | "asc" | "desc";
@@ -93,7 +93,7 @@ export default function BrowseSortSelect({ initialSortOrder }: BrowseSortSelectP
             ${styles.animationWrapper} -translate-x-1/2 -translate-y-1/2 backdrop-brightness-50
           `}
         >
-          <RedCircle_Animation />
+          <RedCircleAnimation />
         </div>
       )}
 

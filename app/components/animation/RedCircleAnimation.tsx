@@ -4,7 +4,7 @@ type RedCircleAnimationProps = {
   className?: string;
 };
 
-export default function RedCircle_Animation({ className }: RedCircleAnimationProps) {
+export default function RedCircleAnimation({ className }: RedCircleAnimationProps) {
   return (
     <div
       className={`
