@@ -12,4 +12,5 @@ export interface MovieProps {
   watchList?: boolean;
   watchlistId?: string;
   movieId?: number;
+  movieReactionIsLiked?: boolean | null;
 }

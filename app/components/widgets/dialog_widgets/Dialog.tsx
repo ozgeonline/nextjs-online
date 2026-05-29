@@ -161,7 +161,11 @@ const Dialog = ({ onClose, ...movieProps }: dialogProps) => {
 
               {/***** non-dynamic like button-ui *******/}
               <div onClick={(e) => e.stopPropagation()}>
-                <LikeDislikeButton likeBtnStyle={styles['dialog-circleButtonSize']} />
+                <LikeDislikeButton
+                  likeBtnStyle={styles['dialog-circleButtonSize']}
+                  movieId={movieProps.movieId ?? 0}
+                  initialIsLiked={movieProps.movieReactionIsLiked}
+                />
               </div>
             </div>
 

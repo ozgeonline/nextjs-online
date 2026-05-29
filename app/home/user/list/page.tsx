@@ -29,6 +29,14 @@ async function getData(userId: string) {
           cast: true,
           genres: true,
           category: true,
+          Reactions: {
+            where: {
+              userId: userId,
+            },
+            select: {
+              isLiked: true,
+            },
+          },
         },
       }
     },
@@ -70,6 +78,7 @@ export default async function Watchlist() {
                       watchList={true}
                       watchlistId={movie.id}
                       movieId={movie.Movie?.id as number}
+                      movieReactionIsLiked={movie.Movie?.Reactions[0]?.isLiked ?? null}
                       imageCardWrapper={true}
                       imageStyle="rounded-sm"    />
                   </div>

@@ -78,6 +78,7 @@ model Movie {
   genres       String
   WatchLists   WatchList[] // Relation to WatchList model
   WatchHistory WatchHistory[]
+  Reactions    MovieReaction[]
   createdAt    DateTime       @default(now())
 }
 
@@ -98,4 +99,16 @@ model WatchHistory {
   Movie        Movie?   @relation(fields: [movieId], references: [id])
   movieId      Int?
   createdAt    DateTime @default(now())
+}
+
+model MovieReaction {
+  id        String   @id @default(uuid())
+  userId    String
+  movieId   Int
+  isLiked   Boolean
+  Movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, movieId])
 }

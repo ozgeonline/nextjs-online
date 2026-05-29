@@ -37,6 +37,14 @@ async function getData(userId: string) {
         where: {
           userId: userId,
         },
+      },
+      Reactions: {
+        where: {
+          userId: userId,
+        },
+        select: {
+          isLiked: true,
+        },
       }
     },
     orderBy: {
@@ -78,6 +86,7 @@ export default async function HomePage() {
             watchList={movie?.WatchLists?.length > 0 ? true : false}
             watchlistId={movie?.WatchLists[0]?.id as string}
             movieId={movie?.id}
+            movieReactionIsLiked={movie?.Reactions[0]?.isLiked ?? null}
           />
 
           <UIProvider> {/* //! */}
@@ -188,6 +197,7 @@ const Section: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
             watchList={movie.WatchLists.length > 0 ? true : false}
             watchlistId={movie.WatchLists[0]?.id as string}
             movieId={movie.id}
+            movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
             imageCardWrapper={true}
             imageStyle="rounded-sm"
           />
@@ -222,6 +232,7 @@ const SectionTop10: React.FC<SectionProps> = ({ sectionTitle, movies }) => (
           watchList={movie.WatchLists.length > 0 ? true : false}
           watchlistId={movie.WatchLists[0]?.id as string}
           movieId={movie.id}
+          movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
         />
       ))}
     </InfiniteCarousel>

@@ -44,6 +44,14 @@ async function getData(
       where: { 
         userId: userId
       }
+    },
+    Reactions: {
+      where: {
+        userId: userId,
+      },
+      select: {
+        isLiked: true,
+      },
     }
   }
   
@@ -197,6 +205,7 @@ export default async function CategoryPage({
                     watchList={movie.WatchLists.length > 0 ? true : false}
                     watchlistId={movie.WatchLists[0]?.id as string}
                     movieId={movie.id}
+                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
                     imageCardWrapper={true}
                     imageStyle="rounded-sm" 
                   />
@@ -226,6 +235,7 @@ export default async function CategoryPage({
                     watchList={movie.WatchLists.length > 0 ? true : false}
                     watchlistId={movie.WatchLists[0]?.id as string}
                     movieId={movie.id}
+                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
                     imageCardWrapper={true}
                     imageStyle="rounded-sm max-lg:brightness-75 w-full h-full"
                   />
@@ -263,7 +273,9 @@ export default async function CategoryPage({
               duration={movie.duration}
               watchList={movie.WatchLists.length > 0 ? true : false}
               watchlistId={movie.WatchLists[0]?.id as string}
-              movieId={movie.id} id={movie.id}
+              movieId={movie.id}
+              movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+              id={movie.id}
             />
             </>
           )}
@@ -297,6 +309,7 @@ export default async function CategoryPage({
                     watchList={movie.WatchLists.length > 0 ? true : false}
                     watchlistId={movie.WatchLists[0]?.id as string}
                     movieId={movie.id}
+                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
                     imageCardWrapper={true}
                     imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
                 </div>
