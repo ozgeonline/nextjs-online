@@ -1,7 +1,7 @@
 import { authOptions } from "@/app/utils/auth";
 import prisma from "@/app/utils/db";
 import { getServerSession } from "next-auth/next";
-import MovieVideo from "@/app/components/widgets/video_widgets/MovieVideo";
+import MovieVideo from "@/app/components/widgets/video-widgets/MovieVideo";
 import dynamic from 'next/dynamic';
 import { UIProvider } from "@/app/components/providers/UIContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
@@ -23,10 +23,10 @@ function parseSortOrder(sortOrder?: string): SortOrder {
 }
 
 async function getData(
-  category: string, 
-  userId: string, 
-  sortOrder: SortOrder, 
-  query: string 
+  category: string,
+  userId: string,
+  sortOrder: SortOrder,
+  query: string
 ) {
   const selectFields = {
     id: true,
@@ -41,7 +41,7 @@ async function getData(
     genres: true,
     category: true,
     WatchLists: {
-      where: { 
+      where: {
         userId: userId
       }
     },
@@ -54,7 +54,7 @@ async function getData(
       },
     }
   }
-  
+
   switch (category) {
     case "shows": {
       const data = await prisma.movie.findMany({
@@ -72,9 +72,9 @@ async function getData(
     }
     case "new": {
       const data = await prisma.movie.findMany({
-        where: { release : 2024 },
+        where: { release: 2024 },
         select: selectFields,
-        take:50,
+        take: 50,
         orderBy: { createdAt: "asc", },
       })
       return data
@@ -90,8 +90,8 @@ async function getData(
       const data = await prisma.movie.findMany({
         where: {
           OR: [
-            { title: { contains: query, mode: 'insensitive'} },
-            { genres: { contains: query, mode: 'insensitive'} } 
+            { title: { contains: query, mode: 'insensitive' } },
+            { genres: { contains: query, mode: 'insensitive' } }
           ]
         },
         select: selectFields,
@@ -100,7 +100,7 @@ async function getData(
     }
     case "kids": {
       const data = await prisma.movie.findMany({
-        where: { age : {lte:7} },
+        where: { age: { lte: 7 } },
         select: selectFields,
       })
       return data
@@ -136,192 +136,192 @@ interface CategoryPageProps {
 }
 
 export default async function CategoryPage({
-    params,
-    searchParams
-  }: CategoryPageProps) {
+  params,
+  searchParams
+}: CategoryPageProps) {
 
-    const resolvedSearchParams = await searchParams;
-    const resolvedParams = await params;
-    const genre = resolvedParams.genre ?? '';
-    const session = await getServerSession(authOptions);
-    const sortOrder = parseSortOrder(resolvedSearchParams.sortOrder);
-    const query = resolvedSearchParams.query || '';
-    const data = await getData(
-      genre, 
-      session?.user?.email ?? '', 
-      sortOrder,
-      query
+  const resolvedSearchParams = await searchParams;
+  const resolvedParams = await params;
+  const genre = resolvedParams.genre ?? '';
+  const session = await getServerSession(authOptions);
+  const sortOrder = parseSortOrder(resolvedSearchParams.sortOrder);
+  const query = resolvedSearchParams.query || '';
+  const data = await getData(
+    genre,
+    session?.user?.email ?? '',
+    sortOrder,
+    query
+  );
+  const movie = data.length > 0 ? data[0] : null;
+
+  data.forEach((movie) => {
+    movie.title = normalizeTurkishCharacters(movie.title);
+  });
+
+  if (sortOrder !== 'default') {
+    data.sort((a, b) =>
+      sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
     );
-    const movie = data.length > 0 ? data[0] : null;
-        
-    data.forEach((movie) => {
-      movie.title = normalizeTurkishCharacters(movie.title);
-    });
+  }
 
-    if(sortOrder !== 'default') {
-      data.sort((a, b) => 
-        sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
-      );
-    }
-
-    const sectionTitle =  
-      genre === "new" ? "New on web" : 
-      genre === "kids" ? "We Think You’ll Love These" : 
-      movie?.category === "show" ? "Popular TV Series" :
-      movie?.category === "movie" ? "Popular Movie Series" : 
-      "more Series"
+  const sectionTitle =
+    genre === "new" ? "New on web" :
+      genre === "kids" ? "We Think You’ll Love These" :
+        movie?.category === "show" ? "Popular TV Series" :
+          movie?.category === "movie" ? "Popular Movie Series" :
+            "more Series"
 
   return (
     <VideoProvider>
       <UIProvider>
         <div className="overflow-hidden mb-10 h-full">
-        {genre === "audio" ? (
-          <>
-          <div className="top-14 sm:top-24 pb-[55vh] relative padding-layout">
-            <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
-              <h1 className="text-2xl md:text-3xl">
-                Browse by sort
-              </h1>
-              <BrowseSortSelect
-                initialSortOrder={sortOrder}
-              />
-            </div>
-
-            <div className={styles['genre-grid-layout']}>
-              {data.map((movie) => (
-                <div key={movie.title} className="relative w-full">
-                  <PreviewCard
-                    key={movie.id}
-                    id={movie.id}
-                    imageString={movie.imageString}
-                    videoSource={movie.videoSource}
-                    title={movie.title}
-                    overview={movie.overview}
-                    age={movie.age}
-                    cast={movie.cast}
-                    genres={movie.genres}
-                    release={movie.release}
-                    duration={movie.duration}
-                    watchList={movie.WatchLists.length > 0 ? true : false}
-                    watchlistId={movie.WatchLists[0]?.id as string}
-                    movieId={movie.id}
-                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-                    imageCardWrapper={true}
-                    imageStyle="rounded-sm" 
-                  />
-                </div>
-              ))}
-            </div>
-        </div>
-        </>
-        
-        ) : genre === "query" && data.length>0  ? (
-          <div className="flex flex-col top-14 sm:top-32 relative padding-layout pb-[55vh]">
-            <div className={styles['genre-grid-layout']}>
-              {data.map((movie) => (
-                <div key={movie.title} className="relative w-full">
-                  <PreviewCard
-                    key={movie.id}
-                    id={movie.id} 
-                    imageString={movie.imageString}
-                    videoSource={movie.videoSource}
-                    title={movie.title}
-                    overview={movie.overview}
-                    age={movie.age}
-                    cast={movie.cast}
-                    genres={movie.genres}
-                    release={movie.release}
-                    duration={movie.duration}
-                    watchList={movie.WatchLists.length > 0 ? true : false}
-                    watchlistId={movie.WatchLists[0]?.id as string}
-                    movieId={movie.id}
-                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-                    imageCardWrapper={true}
-                    imageStyle="rounded-sm max-lg:brightness-75 w-full h-full"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
-        ) : genre === "query" && data.length === 0 ? (
-          <div className="absolute top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
-            <p>{`Your search for "${query}" did not have any matches.`}</p>
-            <p>Suggestions:</p>
-            <ul className="list-disc ml-10">
-              <li>Try different keywords</li>
-              <li>Looking for a movie or TV show?</li>
-              <li>Try using a movie, TV show title</li>
-              <li>Try a genre, like comedy, romantic, sports, or drama</li>
-            </ul>
-          </div>
-
-        ):(
-          <>
-          {movie &&  genre !== "new" && (
+          {genre === "audio" ? (
             <>
-            <MovieVideo
-              key={movie.id}
-              imageString={movie.imageString}
-              videoSource={movie.videoSource}
-              title={movie.title}
-              overview={movie.overview}
-              cast={movie.cast}
-              genres={movie.genres}
-              age={movie.age}
-              release={movie.release}
-              duration={movie.duration}
-              watchList={movie.WatchLists.length > 0 ? true : false}
-              watchlistId={movie.WatchLists[0]?.id as string}
-              movieId={movie.id}
-              movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-              id={movie.id}
-            />
+              <div className="top-14 sm:top-24 pb-[55vh] relative padding-layout">
+                <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
+                  <h1 className="text-2xl md:text-3xl">
+                    Browse by sort
+                  </h1>
+                  <BrowseSortSelect
+                    initialSortOrder={sortOrder}
+                  />
+                </div>
+
+                <div className={styles['genre-grid-layout']}>
+                  {data.map((movie) => (
+                    <div key={movie.title} className="relative w-full">
+                      <PreviewCard
+                        key={movie.id}
+                        id={movie.id}
+                        imageString={movie.imageString}
+                        videoSource={movie.videoSource}
+                        title={movie.title}
+                        overview={movie.overview}
+                        age={movie.age}
+                        cast={movie.cast}
+                        genres={movie.genres}
+                        release={movie.release}
+                        duration={movie.duration}
+                        watchList={movie.WatchLists.length > 0 ? true : false}
+                        watchlistId={movie.WatchLists[0]?.id as string}
+                        movieId={movie.id}
+                        movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                        imageCardWrapper={true}
+                        imageStyle="rounded-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+
+          ) : genre === "query" && data.length > 0 ? (
+            <div className="flex flex-col top-14 sm:top-32 relative padding-layout pb-[55vh]">
+              <div className={styles['genre-grid-layout']}>
+                {data.map((movie) => (
+                  <div key={movie.title} className="relative w-full">
+                    <PreviewCard
+                      key={movie.id}
+                      id={movie.id}
+                      imageString={movie.imageString}
+                      videoSource={movie.videoSource}
+                      title={movie.title}
+                      overview={movie.overview}
+                      age={movie.age}
+                      cast={movie.cast}
+                      genres={movie.genres}
+                      release={movie.release}
+                      duration={movie.duration}
+                      watchList={movie.WatchLists.length > 0 ? true : false}
+                      watchlistId={movie.WatchLists[0]?.id as string}
+                      movieId={movie.id}
+                      movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                      imageCardWrapper={true}
+                      imageStyle="rounded-sm max-lg:brightness-75 w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          ) : genre === "query" && data.length === 0 ? (
+            <div className="absolute top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
+              <p>{`Your search for "${query}" did not have any matches.`}</p>
+              <p>Suggestions:</p>
+              <ul className="list-disc ml-10">
+                <li>Try different keywords</li>
+                <li>Looking for a movie or TV show?</li>
+                <li>Try using a movie, TV show title</li>
+                <li>Try a genre, like comedy, romantic, sports, or drama</li>
+              </ul>
+            </div>
+
+          ) : (
+            <>
+              {movie && genre !== "new" && (
+                <>
+                  <MovieVideo
+                    key={movie.id}
+                    imageString={movie.imageString}
+                    videoSource={movie.videoSource}
+                    title={movie.title}
+                    overview={movie.overview}
+                    cast={movie.cast}
+                    genres={movie.genres}
+                    age={movie.age}
+                    release={movie.release}
+                    duration={movie.duration}
+                    watchList={movie.WatchLists.length > 0 ? true : false}
+                    watchlistId={movie.WatchLists[0]?.id as string}
+                    movieId={movie.id}
+                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                    id={movie.id}
+                  />
+                </>
+              )}
+
+              <div
+                className={`
+                  relative padding-layout 
+                  ${genre === "new" ? styles.newSectionWrapper : styles.sectionsWrapper}
+                `}
+              >
+                <InfiniteCarousel
+                  sliderButtonSection={true}
+                  sectionTitle={sectionTitle}
+                  id={data.map(movie => movie.id)}
+                  key={data.map(movie => movie.id).join('-')}
+                >
+                  {data.map((movie) => (
+                    <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
+                      <PreviewCard
+                        key={movie.id}
+                        id={movie.id}
+                        imageString={movie.imageString}
+                        videoSource={movie.videoSource}
+                        title={movie.title}
+                        overview={movie.overview}
+                        age={movie.age}
+                        cast={movie.cast}
+                        genres={movie.genres}
+                        release={movie.release}
+                        duration={movie.duration}
+                        watchList={movie.WatchLists.length > 0 ? true : false}
+                        watchlistId={movie.WatchLists[0]?.id as string}
+                        movieId={movie.id}
+                        movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                        imageCardWrapper={true}
+                        imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
+                    </div>
+                  ))}
+                </InfiniteCarousel>
+              </div>
             </>
           )}
-
-          <div 
-            className={`
-              relative padding-layout 
-              ${genre === "new" ? styles.newSectionWrapper : styles.sectionsWrapper}
-            `}
-          >
-            <InfiniteCarousel 
-              sliderButtonSection={true}
-              sectionTitle={sectionTitle}
-              id={data.map(movie => movie.id)}
-              key={data.map(movie => movie.id).join('-')}
-            >
-              {data.map((movie) => (
-                <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
-                  <PreviewCard 
-                    key={movie.id}
-                    id={movie.id}
-                    imageString={movie.imageString}
-                    videoSource={movie.videoSource}
-                    title={movie.title}
-                    overview={movie.overview}
-                    age={movie.age}
-                    cast={movie.cast}
-                    genres={movie.genres}
-                    release={movie.release}
-                    duration={movie.duration}
-                    watchList={movie.WatchLists.length > 0 ? true : false}
-                    watchlistId={movie.WatchLists[0]?.id as string}
-                    movieId={movie.id}
-                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-                    imageCardWrapper={true}
-                    imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
-                </div>
-              ))}
-            </InfiniteCarousel>
-          </div>
-          </>
-        )}
         </div>
 
         <div className=" -z-10">
-        <Footer />
+          <Footer />
         </div>
       </UIProvider>
     </VideoProvider>

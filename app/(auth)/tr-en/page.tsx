@@ -47,9 +47,7 @@ export default async function Tr({ searchParams }: TrPageProps) {
 
       <LandingFeatureSections features={content.features} />
       <FAQ
-        title={content.faq.title}
-        readyText={content.faq.readyText}
-        items={content.faq.items}
+        faq={content.faq}
         emailInput={content.emailInput}
       />
       <Footer

@@ -54,6 +54,7 @@ export default function InfiniteCarousel({
     sliderViewportRef.current?.clientWidth ||
     sliderViewportRef.current?.parentElement?.clientWidth ||
     (typeof window !== "undefined" ? window.innerWidth : 0);
+
   const slideWidth = fallbackSliderWidth > 0 ? fallbackSliderWidth / slidesPerView : 0;
   const slidesArray = useMemo(() => React.Children.toArray(slides), [slides]);
 

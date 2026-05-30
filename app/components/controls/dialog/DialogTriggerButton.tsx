@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { useVideoContext } from "@/app/components/providers/VideoContext";
 import { MovieProps } from "@/app/types/props";
-import Dialog from "@/app/components/widgets/dialog_widgets/Dialog";
+import Dialog from "@/app/components/widgets/dialog-widgets/Dialog";
 
 interface DialogTriggerButtonProps extends MovieProps {
   buttonStyle: string;

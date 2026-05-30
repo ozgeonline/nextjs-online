@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { Subtitles, X } from 'lucide-react'
 import { useVideoContext } from '@/app/components/providers/VideoContext'
-import VideoModals from '@/app/components/widgets/video_widgets/VideoModals'
+import VideoModals from '@/app/components/widgets/video-widgets/VideoModals'
 import Image from 'next/image'
 import { MovieProps } from '@/app/types/props'
 import MovieInfo from "@/app/components/widgets/info/MovieInfo";

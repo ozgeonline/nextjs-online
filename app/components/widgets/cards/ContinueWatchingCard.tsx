@@ -2,7 +2,7 @@
 
 import { memo, useEffect, useRef } from 'react';
 import { useVideoContext } from '@/app/components/providers/VideoContext';
-import VideoModals from '@/app/components/widgets/video_widgets/VideoModals';
+import VideoModals from '@/app/components/widgets/video-widgets/VideoModals';
 import MuteToggleButton from '@/app/components/controls/video/MuteToggleButton';
 import PlayToggleButton from '@/app/components/controls/video/PlayToggleButton';
 import ProgressBar from '@/app/components/controls/video/ProgressBar';

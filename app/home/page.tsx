@@ -11,7 +11,7 @@ import PreviewCard from "@/app/components/widgets/cards/PreviewCard";
 import Top10Card from "@/app/components/widgets/cards/Top10Card";
 import Footer from "@/app/components/ui/preAuthLanding/Footer";
 
-const MovieVideo = dynamic(() => import("@/app/components/widgets/video_widgets/MovieVideo"));
+const MovieVideo = dynamic(() => import("@/app/components/widgets/video-widgets/MovieVideo"));
 const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
 
 async function getData(userId: string) {

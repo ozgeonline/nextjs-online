@@ -6,16 +6,12 @@ import LoginInput from "@/app/components/controls/auth/LoginInput"
 import type { LandingContent } from '@/app/data/preAuthLandingContent'
 
 type FAQProps = {
-  title: string
-  readyText: string
-  items: LandingContent["faq"]["items"]
+  faq: LandingContent["faq"]
   emailInput: LandingContent["emailInput"]
 }
 
 export default function FAQ({
-  title,
-  readyText,
-  items,
+  faq,
   emailInput,
 }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -27,9 +23,9 @@ export default function FAQ({
   return (
     <section className='flex flex-col justify-center items-center py-20 px-8 border-t-8 bg-black'>
       <h2 className='text-lg sm:text-2xl lg:text-5xl font-extrabold mb-7'>
-        {title}
+        {faq.title}
       </h2>
-      {items.map((data, index) => (
+      {faq.items.map((data, index) => (
         <div
           key={data.id}
           className='flex flex-col justify-center items-center w-full'
@@ -69,7 +65,7 @@ export default function FAQ({
 
       <div className='flex flex-col justify-center mt-12'>
         <div className='lg:text-xl text-center mx-6 mb-2'>
-          {readyText}
+          {faq.readyText}
         </div>
         <LoginInput
           placeholder={emailInput.placeholder}
