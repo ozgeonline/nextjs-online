@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useTransition } from "react";
-import { useUIContext } from "../../providers/UIContext";
+import { useUIContext } from "@/app/components/providers/UIContext";
 
 interface Props {
   path: string;

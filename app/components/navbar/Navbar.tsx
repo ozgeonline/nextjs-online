@@ -4,13 +4,12 @@ import { links } from "@/app/data/Navlinks.constant"
 import NavbarLink from "@/app/components/navbar/navigation/NavbarLinks"
 import LogoImage from "@/app/components/ui/assets/LogoImage"
 import Link from "next/link"
-import dynamic from 'next/dynamic';
 import styles from "@/app/components/navbar/navbar.module.css"
 import { UIProvider } from "@/app/components/providers/UIContext"
-const DropdownNavbarMenu = dynamic(() => import('@/app/components/navbar/navigation/DropdownNavbarMenu'));
-const SearchMovieInput = dynamic(() => import('@/app/components/navbar/features/SearchMovieInput'));
-const ScrollingElementSSR = dynamic(() => import('@/app/components/navbar/features/ScrollingElementSSR'));
-const UserSettingsMenu = dynamic(() => import('@/app/components/navbar/features/UserSettingsMenu'));
+import DropdownNavbarMenu from "@/app/components/navbar/navigation/DropdownNavbarMenu"
+import SearchMovieInput from "@/app/components/navbar/features/SearchMovieInput"
+import ScrollingElementSSR from "@/app/components/navbar/features/ScrollingElementSSR"
+import UserSettingsMenu from "@/app/components/navbar/features/UserSettingsMenu"
 
 export default function Navbar() {
 

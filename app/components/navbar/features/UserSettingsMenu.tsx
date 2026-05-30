@@ -8,6 +8,13 @@ import Image  from "next/image"
 import UserSettingsToggleButton from "./UserSettingsToggleButton"
 import styles from "../navbar.module.css"
 
+const userSettingsMenuItems = [
+  { label: "Manage Profiles", Icon: Pencil },
+  { label: "Transfer Profiles", Icon: FolderSync },
+  { label: "Account", Icon: UserRound },
+  { label: "Help Center", Icon: HelpCircle },
+];
+
 export default async function UserSettingsMenu() {
   const session = await getServerSession(authOptions)
 
@@ -47,25 +54,12 @@ export default async function UserSettingsMenu() {
 
           {/* Menu Info */}
           <div className="px-3 space-y-1 *:hover:cursor-not-allowed *:flex *:items-center">
-            <div className="hover:underline">
-              <Pencil className={styles.infoIcon} />
-              <span className="ps-2">Manage Profiles</span>
-            </div>
-
-            <div className="hover:underline">
-              <FolderSync className={styles.infoIcon}/>
-              <span className="ps-2">Transfer Profiles</span>
-            </div>
-
-            <div className="hover:underline">
-              <UserRound className={styles.infoIcon}/>
-              <span className="ps-2">Account</span>
-            </div>
-            
-            <div className="hover:underline">
-              <HelpCircle className={styles.infoIcon}/>
-              <span className="ps-2">Help Center</span>
-            </div>
+            {userSettingsMenuItems.map(({ label, Icon }) => (
+              <div key={label} className="hover:underline">
+                <Icon className={styles.infoIcon} />
+                <span className="ps-2">{label}</span>
+              </div>
+            ))}
           </div>
 
           {/* User Sign Out Button */}
