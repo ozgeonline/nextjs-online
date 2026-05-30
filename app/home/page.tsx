@@ -9,7 +9,7 @@ import { UIProvider } from "@/app/components/providers/UIContext";
 import ContinueWatchingCard from "@/app/components/widgets/cards/ContinueWatchingCard";
 import PreviewCard from "@/app/components/widgets/cards/PreviewCard";
 import Top10Card from "@/app/components/widgets/cards/Top10Card";
-import Footer from "@/app/components/ui/preAuthLanding/Footer";
+import Footer from "@/app/components/layout/Footer";
 
 const MovieVideo = dynamic(() => import("@/app/components/widgets/video-widgets/MovieVideo"));
 const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));

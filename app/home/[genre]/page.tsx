@@ -1,20 +1,23 @@
-import { authOptions } from "@/app/utils/auth";
-import prisma from "@/app/utils/db";
+import type { Prisma } from "@prisma/client";
 import { getServerSession } from "next-auth/next";
-import MovieVideo from "@/app/components/widgets/video-widgets/MovieVideo";
-import dynamic from 'next/dynamic';
+import { notFound } from "next/navigation";
+
+import BrowseSortSelect from "@/app/components/controls/sort/BrowseSortSelect";
 import { UIProvider } from "@/app/components/providers/UIContext";
 import { VideoProvider } from "@/app/components/providers/VideoContext";
-import styles from "../home.module.css"
-import Footer from "@/app/components/ui/preAuthLanding/Footer";
-
-const InfiniteCarousel = dynamic(() => import('@/app/components/widgets/carousel/InfiniteCarousel'));
-const PreviewCard = dynamic(() => import('@/app/components/widgets/cards/PreviewCard'));
-const BrowseSortSelect = dynamic(() => import('@/app/components/controls/sort/BrowseSortSelect'));
+import Footer from "@/app/components/layout/Footer";
+import PreviewCard from "@/app/components/widgets/cards/PreviewCard";
+import InfiniteCarousel from "@/app/components/widgets/carousel/InfiniteCarousel";
+import MovieVideo from "@/app/components/widgets/video-widgets/MovieVideo";
+import { authOptions } from "@/app/utils/auth";
+import prisma from "@/app/utils/db";
+import styles from "../home.module.css";
 
 type SortOrder = "default" | "asc" | "desc";
+type ValidCategory = typeof VALID_CATEGORIES[number];
 
 const SORT_ORDERS: SortOrder[] = ["default", "asc", "desc"];
+const VALID_CATEGORIES = ["shows", "movies", "new", "audio", "query", "kids"] as const;
 
 function parseSortOrder(sortOrder?: string): SortOrder {
   return SORT_ORDERS.includes(sortOrder as SortOrder)
@@ -22,13 +25,12 @@ function parseSortOrder(sortOrder?: string): SortOrder {
     : "default";
 }
 
-async function getData(
-  category: string,
-  userId: string,
-  sortOrder: SortOrder,
-  query: string
-) {
-  const selectFields = {
+function isValidCategory(category: string): category is ValidCategory {
+  return VALID_CATEGORIES.includes(category as ValidCategory);
+}
+
+function getMovieSelect(userId: string) {
+  return {
     id: true,
     title: true,
     imageString: true,
@@ -42,88 +44,114 @@ async function getData(
     category: true,
     WatchLists: {
       where: {
-        userId: userId
-      }
+        userId,
+      },
+      select: {
+        id: true,
+      },
     },
     Reactions: {
       where: {
-        userId: userId,
+        userId,
       },
       select: {
         isLiked: true,
       },
-    }
-  }
+    },
+  } as const satisfies Prisma.MovieSelect;
+}
+
+type CategoryMovie = Prisma.MovieGetPayload<{
+  select: ReturnType<typeof getMovieSelect>
+}>;
+
+async function getData(
+  category: ValidCategory,
+  userId: string,
+  sortOrder: SortOrder,
+  query: string
+): Promise<CategoryMovie[]> {
+  const selectFields = getMovieSelect(userId);
 
   switch (category) {
-    case "shows": {
-      const data = await prisma.movie.findMany({
+    case "shows":
+      return prisma.movie.findMany({
         where: { category: "show" },
         select: selectFields,
-      })
-      return data
-    }
-    case "movies": {
-      const data = await prisma.movie.findMany({
+      });
+
+    case "movies":
+      return prisma.movie.findMany({
         where: { category: "movie" },
         select: selectFields,
-      })
-      return data
-    }
-    case "new": {
-      const data = await prisma.movie.findMany({
-        where: { release: 2024 },
+      });
+
+    case "new":
+      return prisma.movie.findMany({
         select: selectFields,
         take: 50,
-        orderBy: { createdAt: "asc", },
-      })
-      return data
-    }
-    case "audio": {
-      const data = await prisma.movie.findMany({
+        orderBy: [
+          { release: "desc" },
+          { createdAt: "desc" },
+        ],
+      });
+
+    case "audio":
+      return prisma.movie.findMany({
         select: selectFields,
-        orderBy: sortOrder === 'asc' || sortOrder === 'desc' ? { title: sortOrder } : undefined
-      })
-      return data
-    }
-    case "query": {
-      const data = await prisma.movie.findMany({
+        orderBy: sortOrder === "default" ? undefined : { title: sortOrder },
+      });
+
+    case "query":
+      if (!query) {
+        return [];
+      }
+
+      return prisma.movie.findMany({
         where: {
           OR: [
-            { title: { contains: query, mode: 'insensitive' } },
-            { genres: { contains: query, mode: 'insensitive' } }
-          ]
+            { title: { contains: query, mode: "insensitive" } },
+            { genres: { contains: query, mode: "insensitive" } },
+          ],
         },
         select: selectFields,
-      })
-      return data
-    }
-    case "kids": {
-      const data = await prisma.movie.findMany({
+      });
+
+    case "kids":
+      return prisma.movie.findMany({
         where: { age: { lte: 7 } },
         select: selectFields,
-      })
-      return data
-    }
-    default: {
-      throw new Error("Invalid Category");
-    }
+      });
   }
 }
 
-const normalizeTurkishCharacters = (str: string) => {
-  return str
-    .replace(/ö/g, "o")
-    .replace(/Ö/g, "O")
-    .replace(/ç/g, "c")
-    .replace(/Ç/g, "C")
-    .replace(/ş/g, "s")
-    .replace(/Ş/g, "S")
-    .replace(/ı/g, "i")
-    .replace(/İ/g, "I")
-    .replace(/ğ/g, "g")
-    .replace(/Ğ/g, "G");
-};
+function getPreviewCardProps(movie: CategoryMovie) {
+  return {
+    id: movie.id,
+    imageString: movie.imageString,
+    videoSource: movie.videoSource,
+    title: movie.title,
+    overview: movie.overview,
+    age: movie.age,
+    cast: movie.cast,
+    genres: movie.genres,
+    release: movie.release,
+    duration: movie.duration,
+    watchList: movie.WatchLists.length > 0,
+    watchlistId: movie.WatchLists[0]?.id,
+    movieId: movie.id,
+    movieReactionIsLiked: movie.Reactions[0]?.isLiked ?? null,
+  };
+}
+
+function getSectionTitle(genre: ValidCategory, movie: CategoryMovie | null) {
+  if (genre === "new") return "New on web";
+  if (genre === "kids") return "We Think You'll Love These";
+  if (movie?.category === "show") return "Popular TV Series";
+  if (movie?.category === "movie") return "Popular Movie Series";
+
+  return "More Series";
+}
 
 interface CategoryPageProps {
   params: Promise<{
@@ -132,110 +160,66 @@ interface CategoryPageProps {
   searchParams: Promise<{
     sortOrder?: string;
     query?: string;
-  }>
+  }>;
 }
 
 export default async function CategoryPage({
   params,
-  searchParams
+  searchParams,
 }: CategoryPageProps) {
-
   const resolvedSearchParams = await searchParams;
   const resolvedParams = await params;
-  const genre = resolvedParams.genre ?? '';
+  const genre = resolvedParams.genre ?? "";
+
+  if (!isValidCategory(genre)) {
+    notFound();
+  }
+
   const session = await getServerSession(authOptions);
   const sortOrder = parseSortOrder(resolvedSearchParams.sortOrder);
-  const query = resolvedSearchParams.query || '';
+  const query = resolvedSearchParams.query?.trim() || "";
   const data = await getData(
     genre,
-    session?.user?.email ?? '',
+    session?.user?.email ?? "",
     sortOrder,
     query
   );
-  const movie = data.length > 0 ? data[0] : null;
-
-  data.forEach((movie) => {
-    movie.title = normalizeTurkishCharacters(movie.title);
-  });
-
-  if (sortOrder !== 'default') {
-    data.sort((a, b) =>
-      sortOrder === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
-    );
-  }
-
-  const sectionTitle =
-    genre === "new" ? "New on web" :
-      genre === "kids" ? "We Think You’ll Love These" :
-        movie?.category === "show" ? "Popular TV Series" :
-          movie?.category === "movie" ? "Popular Movie Series" :
-            "more Series"
+  const movie = data[0] ?? null;
+  const movieIds = data.map((movie) => movie.id);
+  const sectionTitle = getSectionTitle(genre, movie);
 
   return (
     <VideoProvider>
       <UIProvider>
         <div className="overflow-hidden mb-10 h-full">
           {genre === "audio" ? (
-            <>
-              <div className="top-14 sm:top-24 pb-[55vh] relative padding-layout">
-                <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24 ">
-                  <h1 className="text-2xl md:text-3xl">
-                    Browse by sort
-                  </h1>
-                  <BrowseSortSelect
-                    initialSortOrder={sortOrder}
-                  />
-                </div>
-
-                <div className={styles['genre-grid-layout']}>
-                  {data.map((movie) => (
-                    <div key={movie.title} className="relative w-full">
-                      <PreviewCard
-                        key={movie.id}
-                        id={movie.id}
-                        imageString={movie.imageString}
-                        videoSource={movie.videoSource}
-                        title={movie.title}
-                        overview={movie.overview}
-                        age={movie.age}
-                        cast={movie.cast}
-                        genres={movie.genres}
-                        release={movie.release}
-                        duration={movie.duration}
-                        watchList={movie.WatchLists.length > 0 ? true : false}
-                        watchlistId={movie.WatchLists[0]?.id as string}
-                        movieId={movie.id}
-                        movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-                        imageCardWrapper={true}
-                        imageStyle="rounded-sm"
-                      />
-                    </div>
-                  ))}
-                </div>
+            <div className="top-14 sm:top-24 pb-[55vh] relative padding-layout">
+              <div className="flex max-sm:flex-col max-sm:space-y-2 sm:justify-between sm:items-center mb-14 sm:mb-24">
+                <h1 className="text-2xl md:text-3xl">
+                  Browse by sort
+                </h1>
+                <BrowseSortSelect initialSortOrder={sortOrder} />
               </div>
-            </>
 
+              <div className={styles["genre-grid-layout"]}>
+                {data.map((movie) => (
+                  <div key={movie.id} className="relative w-full">
+                    <PreviewCard
+                      {...getPreviewCardProps(movie)}
+                      imageCardWrapper={true}
+                      imageStyle="rounded-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           ) : genre === "query" && data.length > 0 ? (
             <div className="flex flex-col top-14 sm:top-32 relative padding-layout pb-[55vh]">
-              <div className={styles['genre-grid-layout']}>
+              <div className={styles["genre-grid-layout"]}>
                 {data.map((movie) => (
-                  <div key={movie.title} className="relative w-full">
+                  <div key={movie.id} className="relative w-full">
                     <PreviewCard
-                      key={movie.id}
-                      id={movie.id}
-                      imageString={movie.imageString}
-                      videoSource={movie.videoSource}
-                      title={movie.title}
-                      overview={movie.overview}
-                      age={movie.age}
-                      cast={movie.cast}
-                      genres={movie.genres}
-                      release={movie.release}
-                      duration={movie.duration}
-                      watchList={movie.WatchLists.length > 0 ? true : false}
-                      watchlistId={movie.WatchLists[0]?.id as string}
-                      movieId={movie.id}
-                      movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                      {...getPreviewCardProps(movie)}
                       imageCardWrapper={true}
                       imageStyle="rounded-sm max-lg:brightness-75 w-full h-full"
                     />
@@ -243,7 +227,6 @@ export default async function CategoryPage({
                 ))}
               </div>
             </div>
-
           ) : genre === "query" && data.length === 0 ? (
             <div className="absolute top-[30vh] left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs space-y-2">
               <p>{`Your search for "${query}" did not have any matches.`}</p>
@@ -255,63 +238,38 @@ export default async function CategoryPage({
                 <li>Try a genre, like comedy, romantic, sports, or drama</li>
               </ul>
             </div>
-
           ) : (
             <>
               {movie && genre !== "new" && (
-                <>
-                  <MovieVideo
-                    key={movie.id}
-                    imageString={movie.imageString}
-                    videoSource={movie.videoSource}
-                    title={movie.title}
-                    overview={movie.overview}
-                    cast={movie.cast}
-                    genres={movie.genres}
-                    age={movie.age}
-                    release={movie.release}
-                    duration={movie.duration}
-                    watchList={movie.WatchLists.length > 0 ? true : false}
-                    watchlistId={movie.WatchLists[0]?.id as string}
-                    movieId={movie.id}
-                    movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
-                    id={movie.id}
-                  />
-                </>
+                <MovieVideo
+                  {...getPreviewCardProps(movie)}
+                  id={movie.id}
+                />
               )}
 
               <div
                 className={`
-                  relative padding-layout 
+                  relative padding-layout
                   ${genre === "new" ? styles.newSectionWrapper : styles.sectionsWrapper}
                 `}
               >
                 <InfiniteCarousel
                   sliderButtonSection={true}
                   sectionTitle={sectionTitle}
-                  id={data.map(movie => movie.id)}
-                  key={data.map(movie => movie.id).join('-')}
+                  id={movieIds}
+                  key={movieIds.join("-")}
                 >
                   {data.map((movie) => (
-                    <div key={movie.id} className="relative w-full h-full " aria-label={`${movie.id}.Slider-item`}>
+                    <div
+                      key={movie.id}
+                      className="relative w-full h-full"
+                      aria-label={`${movie.id}.Slider-item`}
+                    >
                       <PreviewCard
-                        key={movie.id}
-                        id={movie.id}
-                        imageString={movie.imageString}
-                        videoSource={movie.videoSource}
-                        title={movie.title}
-                        overview={movie.overview}
-                        age={movie.age}
-                        cast={movie.cast}
-                        genres={movie.genres}
-                        release={movie.release}
-                        duration={movie.duration}
-                        watchList={movie.WatchLists.length > 0 ? true : false}
-                        watchlistId={movie.WatchLists[0]?.id as string}
-                        movieId={movie.id}
-                        movieReactionIsLiked={movie.Reactions[0]?.isLiked ?? null}
+                        {...getPreviewCardProps(movie)}
                         imageCardWrapper={true}
-                        imageStyle="rounded-sm max-lg:brightness-75 w-full h-full" />
+                        imageStyle="rounded-sm max-lg:brightness-75 w-full h-full"
+                      />
                     </div>
                   ))}
                 </InfiniteCarousel>
@@ -320,10 +278,10 @@ export default async function CategoryPage({
           )}
         </div>
 
-        <div className=" -z-10">
+        <div className="-z-10">
           <Footer />
         </div>
       </UIProvider>
     </VideoProvider>
-  )
+  );
 }

@@ -4,7 +4,7 @@ import { authOptions } from "@/app/utils/auth";
 import LoginInput from "@/app/components/controls/auth/LoginInput";
 import LandingFeatureSections from "@/app/components/ui/preAuthLanding/LandingFeatureSections";
 import FAQ from "@/app/components/ui/preAuthLanding/FAQ";
-import Footer from "@/app/components/ui/preAuthLanding/Footer";
+import Footer from "@/app/components/layout/Footer";
 import { normalizeLocale, preAuthLandingContent } from "@/app/data/preAuthLandingContent";
 
 type TrPageProps = {

@@ -1,11 +1,11 @@
-import LanguageSelect from "@/app/components/ui/preAuthLanding/LanguageSelect"
-import { preAuthLandingContent } from "@/app/data/preAuthLandingContent"
+import LanguageSelect from "@/app/components/ui/preAuthLanding/LanguageSelect";
+import { preAuthLandingContent } from "@/app/data/preAuthLandingContent";
 
 type FooterProps = {
-  contactText?: string
-  brand?: string
-  links?: readonly string[]
-}
+  contactText?: string;
+  brand?: string;
+  links?: readonly string[];
+};
 
 export default function Footer({
   contactText = "Questions? Contact us.",
@@ -33,5 +33,5 @@ export default function Footer({
         </p>
       </div>
     </footer>
-  )
+  );
 }

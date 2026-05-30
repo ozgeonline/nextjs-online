@@ -11,7 +11,7 @@ import styles from "./auth.module.css"
 import GithubSignInButton from "@/app/components/controls/auth/GithubSignInButton";
 import GoogleSignInButton from "@/app/components/controls/auth/GoogleSignInButton";
 import AuthEmailInput from "./AuthEmailInput";
-import Footer from "@/app/components/ui/preAuthLanding/Footer";
+import Footer from "@/app/components/layout/Footer";
 
 type AuthLoginPageProps = {
   mode: "login" | "signup"
